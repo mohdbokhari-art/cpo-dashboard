@@ -2,17 +2,10 @@
 <html lang="ms">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#020812">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="CPO Dashboard">
-<meta name="description" content="Dashboard Statistik Rampasan dan Serbuan — CPO BPF KKM">
-<link rel="manifest" id="pwa-manifest">
-<title>Dashboard CPO — BPF KKM</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Eksekutif — Penguatkuasa Farmasi</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
   :root {
@@ -202,37 +195,6 @@
   .btn-json:hover {
     background: rgba(0,255,136,0.08);
     box-shadow: 0 0 14px rgba(0,255,136,0.3);
-  }
-  .btn-gdrive {
-    background: transparent;
-    border: 1px solid rgba(0,132,255,0.5);
-    color: var(--neon-blue);
-  }
-  .btn-gdrive:hover {
-    background: rgba(0,132,255,0.08);
-    box-shadow: 0 0 14px rgba(0,132,255,0.3);
-  }
-  .btn-pdf {
-    background: transparent;
-    border: 1px solid rgba(255,0,144,0.5);
-    color: var(--neon-pink);
-  }
-  .btn-pdf:hover:not(:disabled) {
-    background: rgba(255,0,144,0.08);
-    box-shadow: 0 0 14px rgba(255,0,144,0.3);
-  }
-  .btn-word {
-    background: transparent;
-    border: 1px solid rgba(0,245,255,0.5);
-    color: var(--neon-cyan);
-  }
-  .btn-word:hover:not(:disabled) {
-    background: rgba(0,245,255,0.08);
-    box-shadow: 0 0 14px rgba(0,245,255,0.3);
-  }
-  .btn-pdf:disabled, .btn-word:disabled {
-    opacity: 0.35;
-    cursor: not-allowed;
   }
 
   .logo-mark {
@@ -1087,6 +1049,82 @@
     background: linear-gradient(90deg, #0a1628, #0040ff, #00f5ff, #00ff88, #ffe600, #ff6b00, #ff0090);
   }
 
+
+  /* ── VISUAL SECTION TOGGLE ── */
+  .vsec-wrap {
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .vsec-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 18px;
+    background: var(--bg-card);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .vsec-header:hover { background: rgba(0,245,255,0.04); }
+  .vsec-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--neon-cyan);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .vsec-title small {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: none;
+  }
+  .vsec-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 11px;
+    border-radius: 6px;
+    border: 1px solid rgba(0,245,255,0.2);
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .vsec-toggle:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+  .vsec-arrow {
+    display: inline-block;
+    font-size: 10px;
+    transition: transform 0.25s;
+  }
+  .vsec-arrow.up { transform: rotate(180deg); }
+  .vsec-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, opacity 0.3s ease;
+    opacity: 0;
+    background: var(--bg-card);
+    border-top: none;
+  }
+  .vsec-body.open {
+    max-height: 3000px;
+    opacity: 1;
+    border-top: 1px solid var(--border);
+  }
+  .vsec-inner { padding: 16px; }
+
   /* ── NEGERI TABLE ── */
   .negeri-table { width: 100%; border-collapse: collapse; }
 
@@ -1566,17 +1604,285 @@
   }
 
   /* Slide animation for panels */
-  #panel-analysis, #panel-table {
+  #panel-analysis, #panel-table, #panel-laporan {
     overflow: hidden;
     transition: max-height 0.4s ease, opacity 0.3s ease;
     max-height: 9999px;
     opacity: 1;
   }
-  #panel-analysis.hidden, #panel-table.hidden {
+  #panel-analysis.hidden, #panel-table.hidden, #panel-laporan.hidden {
     max-height: 0 !important;
     opacity: 0;
     pointer-events: none;
   }
+
+  /* ══ LAPORAN PANEL ══ */
+  .laporan-panel {
+    background: var(--bg-card);
+    border: 1px solid rgba(197,160,60,0.25);
+    border-radius: 12px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    position: relative;
+  }
+  .laporan-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(197,160,60,0.7), #c5a03c, rgba(197,160,60,0.7), transparent);
+  }
+  .laporan-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 22px;
+    border-bottom: 1px solid rgba(197,160,60,0.12);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .laporan-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .laporan-icon {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(197,160,60,0.4);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    color: #c5a03c;
+    background: rgba(197,160,60,0.06);
+    flex-shrink: 0;
+  }
+  .laporan-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #c5a03c;
+    text-transform: uppercase;
+  }
+  .laporan-subtitle {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+  }
+  .laporan-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .btn-laporan-pdf {
+    padding: 7px 16px;
+    background: transparent;
+    border: 1px solid rgba(255,0,144,0.5);
+    color: var(--neon-pink);
+    border-radius: 6px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .btn-laporan-pdf:hover {
+    background: rgba(255,0,144,0.08);
+    box-shadow: 0 0 14px rgba(255,0,144,0.3);
+  }
+  .btn-laporan-word {
+    padding: 7px 16px;
+    background: transparent;
+    border: 1px solid rgba(0,245,255,0.5);
+    color: var(--neon-cyan);
+    border-radius: 6px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 12px; font-weight: 600;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .btn-laporan-word:hover {
+    background: rgba(0,245,255,0.08);
+    box-shadow: 0 0 14px rgba(0,245,255,0.3);
+  }
+
+  /* Report title input area */
+  .laporan-title-area {
+    padding: 16px 22px 0;
+  }
+  .laporan-title-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .laporan-title-label::after {
+    content: 'Auto-jana daripada tapisan aktif — boleh diedit';
+    font-size: 9px;
+    color: rgba(197,160,60,0.5);
+    letter-spacing: 0.5px;
+    text-transform: none;
+  }
+  .laporan-title-input {
+    width: 100%;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(197,160,60,0.25);
+    border-radius: 7px;
+    color: #c5a03c;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 9px 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .laporan-title-input:focus {
+    border-color: rgba(197,160,60,0.6);
+    box-shadow: 0 0 12px rgba(197,160,60,0.15);
+  }
+
+  /* Preview container */
+  .laporan-preview-wrap {
+    padding: 20px 22px 22px;
+  }
+  .laporan-preview-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .laporan-preview-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(197,160,60,0.2), transparent);
+  }
+
+  /* The actual preview box — styled like official document */
+  .laporan-preview-doc {
+    background: #fff;
+    color: #1a1a1a;
+    border-radius: 6px;
+    padding: 40px 48px 36px;
+    font-family: Arial, 'Times New Roman', serif;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(197,160,60,0.2);
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .prev-org-header {
+    text-align: center;
+    border-bottom: 2.5px solid #1a2e5a;
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+  }
+  .prev-org-line {
+    font-size: 9.5pt;
+    font-weight: bold;
+    color: #1a2e5a;
+    letter-spacing: 0.8px;
+    line-height: 1.65;
+  }
+  .prev-doc-title {
+    font-size: 13pt;
+    font-weight: bold;
+    color: #1a2e5a;
+    margin: 10px 0 4px;
+    line-height: 1.4;
+  }
+  .prev-doc-sub {
+    font-size: 9pt;
+    color: #555;
+    font-style: italic;
+  }
+  .prev-meta-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 8.5pt;
+    color: #666;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .prev-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+    margin-top: 4px;
+  }
+  .prev-table thead tr {
+    background: #1a2e5a;
+    color: #fff;
+  }
+  .prev-table thead th {
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 9pt;
+    border: 1px solid #1a2e5a;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .prev-table thead th:first-child { text-align: left; }
+  .prev-table tbody tr:nth-child(even) { background: #f2f5fb; }
+  .prev-table tbody td {
+    padding: 7px 12px;
+    border: 1px solid #c8d4e8;
+    text-align: right;
+    font-size: 9.5pt;
+  }
+  .prev-table tbody td:first-child {
+    text-align: left;
+    font-weight: 600;
+    color: #1a2e5a;
+  }
+  .prev-table tfoot tr {
+    background: #c5a03c;
+    color: #1a1a1a;
+  }
+  .prev-table tfoot td {
+    padding: 8px 12px;
+    border: 1px solid #a88830;
+    text-align: right;
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+  .prev-table tfoot td:first-child {
+    text-align: left;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+  }
+  .prev-footer {
+    margin-top: 22px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+    font-size: 8pt;
+    color: #888;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    line-height: 1.5;
+  }
+  .prev-footer-left { flex: 1; min-width: 200px; }
+  .prev-footer-right { text-align: right; white-space: nowrap; }
 
   .filter-badge {
     display: inline-flex; align-items: center; justify-content: center;
@@ -1882,368 +2188,13 @@
     font-size: 11px;
     color: var(--neon-green);
   }
-  /* ══════════════════════════════════════════
-     MOBILE OVERRIDES — optimised for Android
-     ══════════════════════════════════════════ */
-
-  /* Safe area insets for notch/punch-hole phones */
-  .wrapper {
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-
-  /* Header — compact on mobile */
-  header {
-    padding: 12px 16px;
-    position: sticky; top: 0;
-  }
-  .header-title h1 {
-    font-size: 14px;
-    letter-spacing: 1px;
-    line-height: 1.3;
-  }
-  .header-title p {
-    font-size: 9px;
-    letter-spacing: 0.5px;
-  }
-  .live-indicator { font-size: 10px; gap: 5px; }
-  .live-dot { width: 6px; height: 6px; }
-
-  /* Tools bar — stack vertically on mobile */
-  .tools-bar {
-    margin: 12px 12px 0;
-    flex-direction: column;
-    border-radius: 10px;
-  }
-  .tool-divider {
-    width: auto; height: 1px;
-    margin: 0 12px;
-  }
-  .tool-card {
-    padding: 12px 16px;
-    gap: 10px;
-  }
-  .tool-icon { font-size: 18px; width: 28px; }
-  .tool-title { font-size: 12px; letter-spacing: 1px; }
-  .tool-desc { font-size: 10px; }
-  .tool-note { font-size: 10px; }
-  .tool-btn { font-size: 12px; padding: 7px 14px; letter-spacing: 1px; }
-
-  /* Upload status */
-  .upload-status { margin: 6px 12px 0; font-size: 11px; }
-  .progress-wrap { margin: 4px 12px 0; }
-
-  /* Main content — tighter padding */
-  .main-content { padding: 14px 12px; }
-
-  /* Filter master bar */
-  .filter-master-bar { padding: 10px 12px; gap: 8px; border-radius: 8px; }
-  .filter-tab-btn { font-size: 10px; padding: 5px 10px; }
-  .filter-reset { font-size: 10px; padding: 4px 10px; }
-  .filter-title { font-size: 12px; letter-spacing: 1.5px; }
-
-  /* Filter panels — single column on mobile */
-  .filter-grid {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 10px;
-  }
-  .filter-label { font-size: 9px; }
-  .filter-select { font-size: 11px; padding: 6px 8px; }
-  .filter-select[multiple] { height: 72px; }
-  .filter-panel { padding: 14px 12px; border-radius: 10px; margin-bottom: 12px; }
-  .filter-sub-label { font-size: 10px; margin-bottom: 10px; }
-  .filter-text-row { grid-template-columns: 1fr !important; gap: 10px; }
-  .tag-input-field { font-size: 11px; }
-
-  /* Shortcut bar */
-  .shortcut-bar { padding: 8px 12px; border-radius: 0 0 8px 8px; }
-  .shortcut-label { font-size: 8px; }
-  .shortcut-chip { font-size: 9px; padding: 3px 8px 3px 10px; }
-  .shortcut-add-btn { font-size: 9px; padding: 3px 10px; }
-
-  /* KPI cards — 2x2 grid on mobile */
-  .cards-row {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-  .kpi-card { padding: 14px 12px 12px; border-radius: 10px; }
-  .kpi-icon { font-size: 18px; margin-bottom: 6px; }
-  .kpi-label { font-size: 9px; letter-spacing: 0.5px; }
-  .kpi-value { font-size: 20px; letter-spacing: 0; }
-  .kpi-sub { font-size: 8px; }
-  .kpi-baseline { font-size: 8px; }
-  .kpi-baseline-val { font-size: 9px; }
-
-  /* Charts row — single column */
-  .charts-row {
-    grid-template-columns: 1fr !important;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  .chart-panel { padding: 14px 12px; border-radius: 10px; }
-  .panel-title { font-size: 11px; letter-spacing: 1.5px; margin-bottom: 10px; }
-  .chart-container { height: 200px !important; }
-
-  /* Bottom row — single column */
-  .bottom-row {
-    grid-template-columns: 1fr !important;
-    gap: 12px;
-  }
-  .heatmap-panel { padding: 14px 12px; border-radius: 10px; }
-  #map-container { height: 260px !important; }
-
-  /* Negeri table */
-  .negeri-table { font-size: 11px; }
-  .negeri-table th, .negeri-table td { padding: 5px 8px; font-size: 10px; }
-  #negeri-table-wrap { max-height: 280px; }
-
-  /* Section toggle bar */
-  .section-toggle-bar { padding: 10px 12px; border-radius: 8px; gap: 8px; }
-  .toggle-bar-label { font-size: 9px; letter-spacing: 1px; }
-  .section-toggle-btn { font-size: 10px; padding: 6px 12px; border-radius: 16px; gap: 6px; }
-  .toggle-dot { width: 6px; height: 6px; }
-
-  /* Exec analysis panel */
-  .exec-analysis-panel { border-radius: 10px; }
-  .exec-header { padding: 14px 14px 12px; flex-wrap: wrap; gap: 8px; }
-  .exec-title { font-size: 12px; letter-spacing: 2px; }
-  .exec-subtitle { font-size: 9px; }
-  .exec-icon { width: 30px; height: 30px; font-size: 14px; }
-  .analysis-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
-  .analysis-block { padding: 12px 10px !important; }
-  .block-label { font-size: 9px !important; }
-  .block-value { font-size: 16px !important; }
-  .block-desc { font-size: 9px !important; }
-  .analysis-section-title { font-size: 10px !important; letter-spacing: 1.5px !important; }
-  .insight-item { padding: 8px 10px !important; gap: 8px !important; }
-  .insight-icon { font-size: 14px !important; }
-  .insight-item div { font-size: 11px !important; line-height: 1.5 !important; }
-
-  /* Chatbox */
-  .chatbox-panel { border-radius: 10px; margin-bottom: 12px; }
-  .chatbox-header { padding: 12px 14px; }
-  .chatbox-ai-badge { font-size: 9px; padding: 2px 8px; }
-  .chatbox-title { font-size: 12px; }
-  .chatbox-subtitle { font-size: 9px; }
-  .chatbox-toggle-btn { font-size: 10px; padding: 5px 12px; }
-  .chat-quick-prompts { padding: 8px 12px; gap: 6px; }
-  .quick-prompt-btn { font-size: 10px; padding: 5px 10px; border-radius: 14px; }
-  .chat-messages { max-height: 260px; padding: 10px 12px; }
-  .msg-bubble { font-size: 12px; padding: 8px 12px; }
-  .msg-time { font-size: 9px; }
-  .chat-input-area { padding: 8px 12px; gap: 6px; }
-  #chat-input { font-size: 12px; }
-  .chat-send-btn { font-size: 11px; padding: 8px 14px; }
-
-  /* Modals */
-  .sc-modal { min-width: unset !important; width: calc(100vw - 40px) !important; max-width: 400px !important; padding: 20px 18px !important; }
-  .sc-modal h3 { font-size: 13px !important; }
-  .sc-modal input { font-size: 12px !important; }
-
-  /* Dashboard footer */
-  .dashboard-footer { padding: 14px 16px; margin-top: 20px; }
-  .footer-title { font-size: 11px; letter-spacing: 1.5px; }
-  .footer-sub { font-size: 9px; }
-
-  /* ── PWA INSTALL BANNER ── */
-  #pwa-install-banner {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: linear-gradient(135deg, #0a1628 0%, #0d1f3c 100%);
-    border-top: 1px solid rgba(197,160,60,0.4);
-    padding: 14px 16px;
-    padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 -4px 24px rgba(0,0,0,0.5);
-    transform: translateY(100%);
-    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  #pwa-install-banner.show { transform: translateY(0); }
-  .pwa-banner-icon {
-    width: 44px; height: 44px;
-    background: linear-gradient(135deg, #0a1628, #1a3560);
-    border: 1px solid rgba(197,160,60,0.5);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
-    box-shadow: 0 0 12px rgba(197,160,60,0.2);
-  }
-  .pwa-banner-text { flex: 1; min-width: 0; }
-  .pwa-banner-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    color: #c5a03c;
-    letter-spacing: 1px;
-  }
-  .pwa-banner-sub {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    color: var(--text-muted);
-    margin-top: 2px;
-    line-height: 1.4;
-  }
-  .pwa-banner-btns { display: flex; gap: 8px; flex-shrink: 0; }
-  .pwa-btn-install {
-    padding: 8px 16px;
-    background: linear-gradient(135deg, rgba(197,160,60,0.15), rgba(197,160,60,0.08));
-    border: 1px solid rgba(197,160,60,0.6);
-    color: #c5a03c;
-    border-radius: 8px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-  }
-  .pwa-btn-install:active { transform: scale(0.96); }
-  .pwa-btn-dismiss {
-    width: 32px; height: 32px;
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.1);
-    color: var(--text-muted);
-    border-radius: 8px;
-    font-size: 14px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s;
-  }
-  .pwa-btn-dismiss:active { background: rgba(255,107,0,0.1); color: var(--neon-orange); }
-
-  /* ── LAPORAN PANEL (mobile) ── */
-  .laporan-panel {
-    background: var(--bg-card);
-    border: 1px solid rgba(197,160,60,0.25);
-    border-radius: 10px;
-    margin-bottom: 14px;
-    overflow: hidden;
-    position: relative;
-  }
-  .laporan-panel::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(197,160,60,0.7), #c5a03c, rgba(197,160,60,0.7), transparent);
-  }
-  .laporan-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 14px;
-    border-bottom: 1px solid rgba(197,160,60,0.1);
-    flex-wrap: wrap; gap: 8px;
-  }
-  .laporan-header-left { display: flex; align-items: center; gap: 10px; }
-  .laporan-icon {
-    width: 32px; height: 32px;
-    border: 1px solid rgba(197,160,60,0.4); border-radius: 7px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; color: #c5a03c;
-    background: rgba(197,160,60,0.06); flex-shrink: 0;
-  }
-  .laporan-panel-title {
-    font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 700;
-    letter-spacing: 1.5px; color: #c5a03c; text-transform: uppercase;
-  }
-  .laporan-panel-sub {
-    font-family: 'Share Tech Mono', monospace; font-size: 9px;
-    color: var(--text-muted); margin-top: 2px;
-  }
-  .laporan-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
-  .btn-laporan-pdf, .btn-laporan-word {
-    padding: 6px 14px;
-    border-radius: 6px;
-    font-family: 'Rajdhani', sans-serif; font-size: 11px; font-weight: 600;
-    letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
-    display: flex; align-items: center; gap: 5px;
-  }
-  .btn-laporan-pdf {
-    background: transparent; border: 1px solid rgba(255,0,144,0.5); color: var(--neon-pink);
-  }
-  .btn-laporan-pdf:active { background: rgba(255,0,144,0.1); }
-  .btn-laporan-word {
-    background: transparent; border: 1px solid rgba(0,245,255,0.5); color: var(--neon-cyan);
-  }
-  .btn-laporan-word:active { background: rgba(0,245,255,0.1); }
-
-  /* Title input area */
-  .laporan-title-area { padding: 12px 14px 0; }
-  .laporan-title-label {
-    font-family: 'Share Tech Mono', monospace; font-size: 9px;
-    color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase;
-    margin-bottom: 5px;
-  }
-  .laporan-title-input {
-    width: 100%;
-    background: rgba(0,0,0,0.35);
-    border: 1px solid rgba(197,160,60,0.25); border-radius: 7px;
-    color: #c5a03c;
-    font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 600;
-    padding: 8px 12px; outline: none;
-    transition: border-color 0.2s;
-  }
-  .laporan-title-input:focus { border-color: rgba(197,160,60,0.6); }
-
-  /* Preview wrap */
-  .laporan-preview-wrap { padding: 14px 14px 16px; }
-  .laporan-preview-label {
-    font-family: 'Share Tech Mono', monospace; font-size: 9px;
-    color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase;
-    margin-bottom: 10px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .laporan-preview-label::after {
-    content: ''; flex: 1; height: 1px;
-    background: linear-gradient(90deg, rgba(197,160,60,0.2), transparent);
-  }
-
-  /* Scrollable preview on mobile */
-  .laporan-preview-scroll {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    border-radius: 6px;
-  }
-  .laporan-preview-doc {
-    background: #fff; color: #1a1a1a;
-    border-radius: 6px;
-    padding: 24px 20px 20px;
-    font-family: Arial, sans-serif;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(197,160,60,0.2);
-    min-width: 540px; /* force scroll on narrow screens */
-  }
-  .prev-org-header {
-    text-align: center; border-bottom: 2px solid #1a2e5a;
-    padding-bottom: 12px; margin-bottom: 14px;
-  }
-  .prev-org-line { font-size: 8pt; font-weight: bold; color: #1a2e5a; letter-spacing: 0.5px; line-height: 1.6; }
-  .prev-doc-title { font-size: 11pt; font-weight: bold; color: #1a2e5a; margin: 8px 0 3px; line-height: 1.3; }
-  .prev-meta-row { display:flex; justify-content:space-between; font-size:7.5pt; color:#666; margin-bottom:12px; flex-wrap:wrap; gap:3px; }
-  .prev-table { width:100%; border-collapse:collapse; font-size:8.5pt; }
-  .prev-table thead tr { background:#1a2e5a; color:#fff; }
-  .prev-table thead th { padding:6px 10px; text-align:center; border:1px solid #1a2e5a; font-weight:700; font-size:7.5pt; }
-  .prev-table thead th:first-child { text-align:left; }
-  .prev-table tbody tr:nth-child(even) { background:#f2f5fb; }
-  .prev-table tbody td { padding:5px 10px; border:1px solid #c8d4e8; text-align:right; font-size:8.5pt; }
-  .prev-table tbody td:first-child { text-align:left; font-weight:600; color:#1a2e5a; }
-  .prev-table tfoot tr { background:#c5a03c; }
-  .prev-table tfoot td { padding:6px 10px; border:1px solid #a88830; text-align:right; font-size:8.5pt; font-weight:700; color:#1a1a1a; }
-  .prev-table tfoot td:first-child { text-align:left; font-weight:800; }
-  .prev-footer { margin-top:16px; border-top:1px solid #ccc; padding-top:8px; font-size:7pt; color:#888; line-height:1.5; }
-
-  /* Panel hidden state */
-  #panel-analysis, #panel-laporan {
-    overflow: hidden;
-    transition: max-height 0.4s ease, opacity 0.3s ease;
-    max-height: 9999px; opacity: 1;
-  }
-  #panel-analysis.hidden, #panel-laporan.hidden {
-    max-height: 0 !important; opacity: 0; pointer-events: none;
-  }
 
 </style>
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+</head>
 <body>
 <div class="scanline"></div>
 <div class="loading-overlay" id="loading">
@@ -2257,7 +2208,7 @@
     <div class="header-left">
       <div class="header-title">
         <h1>Statistik Rampasan dan Serbuan
-		2018 - Mac 2026</h1>
+		</h1>
         <p>BAHAGIAN PENGUATKUASAAN FARMASI — KEMENTERIAN KESIHATAN MALAYSIA</p>
       </div>
     </div>
@@ -2269,35 +2220,46 @@
     </div>
   </header>
 
-  <!-- PWA INSTALL BANNER -->
-  <div id="pwa-install-banner">
-    <div class="pwa-banner-icon">📊</div>
-    <div class="pwa-banner-text">
-      <div class="pwa-banner-title">PASANG SEBAGAI APP</div>
-      <div class="pwa-banner-sub">Tambah ke skrin utama untuk akses pantas tanpa browser</div>
+  <!-- UPLOAD -->
+  <div class="upload-section" id="upload-zone" onclick="document.getElementById('file-input').click()">
+    <input type="file" id="file-input" accept=".xlsx,.xls" onchange="handleFile(event)">
+    <div class="upload-icon">📂</div>
+    <div class="upload-text">
+      <h3>Muat Naik Fail Excel</h3>
+      <p>Seret & lepas atau klik untuk memilih fail .xlsx / .xls</p>
     </div>
-    <div class="pwa-banner-btns">
-      <button class="pwa-btn-install" onclick="pwaTriggerInstall()">⊕ PASANG</button>
-      <button class="pwa-btn-dismiss" onclick="pwaDismiss()">✕</button>
-    </div>
+    <button class="upload-btn" onclick="event.stopPropagation(); document.getElementById('file-input').click()">PILIH FAIL</button>
   </div>
+  <div class="upload-status" id="upload-status"></div>
+  <div class="progress-wrap" id="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
 
-  <!-- DATA SOURCE PANEL — JSON only -->
+
+  <!-- JSON CONVERTER & LOADER -->
   <div class="tools-bar" id="tools-bar">
+    <div class="tool-card" id="tool-convert">
+      <div class="tool-icon">⚙</div>
+      <div class="tool-body">
+        <div class="tool-title">TUKAR EXCEL → JSON</div>
+        <div class="tool-desc">Tukar .xlsx/.xls kepada fail .json untuk rendering lebih pantas</div>
+        <div class="tool-note" id="convert-note"></div>
+      </div>
+      <button class="tool-btn btn-convert" onclick="document.getElementById('excel-convert-input').click()">PILIH EXCEL</button>
+      <input type="file" id="excel-convert-input" accept=".xlsx,.xls" style="display:none" onchange="convertToJson(event)">
+    </div>
+
+    <div class="tool-divider"></div>
+
     <div class="tool-card" id="tool-json">
       <div class="tool-icon">⚡</div>
       <div class="tool-body">
         <div class="tool-title">MUAT NAIK JSON</div>
-        <div class="tool-desc">Pilih fail .json dari storan telefon</div>
+        <div class="tool-desc">Muat naik fail .json yang telah ditukar — rendering lebih pantas berbanding Excel</div>
         <div class="tool-note" id="json-note"></div>
       </div>
       <button class="tool-btn btn-json" onclick="document.getElementById('json-upload-input').click()">PILIH JSON</button>
       <input type="file" id="json-upload-input" accept=".json" style="display:none" onchange="loadFromJson(event)">
     </div>
   </div>
-
-  <div class="upload-status" id="upload-status"></div>
-  <div class="progress-wrap" id="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
 
   <!-- MAIN -->
   <div class="main-content" id="main-content">
@@ -2588,46 +2550,101 @@
     </div>
 
     <!-- CHARTS -->
-    <div class="charts-row">
-      <div class="chart-panel">
-        <div class="panel-title">TREND TAHUNAN <span>serbuan &amp; nilai rampasan</span></div>
-        <div class="chart-container">
-          <canvas id="chart-trend"></canvas>
-        </div>
+    <!-- VSEC 1: TREND & KATEGORI -->
+    <div class="vsec-wrap">
+      <div class="vsec-header" onclick="toggleVsec('trend')">
+        <div class="vsec-title">📊 TREND TAHUNAN &amp; KATEGORI ITEM <small>serbuan · nilai · agihan</small></div>
+        <button class="vsec-toggle" id="vsec-btn-trend" onclick="event.stopPropagation();toggleVsec('trend')">
+          <span class="vsec-arrow" id="vsec-arrow-trend">▼</span> PAPARKAN
+        </button>
       </div>
-      <div class="chart-panel">
-        <div class="panel-title">KATEGORI ITEM <span>agihan</span></div>
-        <div class="chart-container">
-          <canvas id="chart-kategori"></canvas>
+      <div class="vsec-body" id="vsec-body-trend">
+        <div class="vsec-inner">
+          <div class="charts-row" style="margin-bottom:0">
+            <div class="chart-panel">
+              <div class="panel-title">TREND TAHUNAN <span>serbuan &amp; nilai rampasan</span></div>
+              <div class="chart-container">
+                <canvas id="chart-trend"></canvas>
+              </div>
+            </div>
+            <div class="chart-panel">
+              <div class="panel-title">KATEGORI ITEM <span>agihan</span></div>
+              <div class="chart-container">
+                <canvas id="chart-kategori"></canvas>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- BOTTOM ROW — ranking negeri sahaja -->
-    <div class="bottom-row" style="grid-template-columns:1fr">
-      <!-- NEGERI TABLE -->
-      <div class="chart-panel">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap">
-          <div class="panel-title" style="margin-bottom:0">RANKING NEGERI <span id="negeri-metric-label">bilangan serbuan</span></div>
-          <select class="filter-select" id="negeri-metric" onchange="updateNegeriTable()" style="height:auto;padding:6px 10px;font-size:11px;width:auto;min-width:180px;border-color:rgba(0,245,255,0.25)">
-            <option value="serbuan">Bilangan Serbuan</option>
-            <option value="kuantiti">Kuantiti Rampasan</option>
-            <option value="perkara">Bilangan Perkara Dirampas</option>
-            <option value="harga">Nilai Rampasan (RM)</option>
-          </select>
-        </div>
-        <div id="negeri-table-wrap" style="overflow-y:auto;max-height:340px">
-          <table class="negeri-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Negeri</th>
-                <th id="negeri-col-label">Serbuan</th>
-                <th style="min-width:100px">Bar</th>
-              </tr>
-            </thead>
-            <tbody id="negeri-tbody"></tbody>
-          </table>
+    <!-- VSEC 2: PETA & RANKING -->
+    <div class="vsec-wrap">
+      <div class="vsec-header" onclick="toggleVsec('peta')">
+        <div class="vsec-title">📍 TABURAN KAWASAN RAMPASAN &amp; RANKING NEGERI <small>peta · ranking</small></div>
+        <button class="vsec-toggle" id="vsec-btn-peta" onclick="event.stopPropagation();toggleVsec('peta')">
+          <span class="vsec-arrow" id="vsec-arrow-peta">▼</span> PAPARKAN
+        </button>
+      </div>
+      <div class="vsec-body" id="vsec-body-peta">
+        <div class="vsec-inner">
+          <div class="bottom-row" style="margin-bottom:0">
+            <div class="heatmap-panel">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+                <div class="panel-title" style="margin-bottom:0">
+                  TABURAN KAWASAN RAMPASAN <span>berdasarkan:</span>
+                </div>
+                <div style="min-width:220px">
+                  <select class="filter-select" id="heatmap-metric" onchange="updateHeatmap(); updateHeatmapMeta();">
+                    <option value="serbuan">Bilangan Serbuan</option>
+                    <option value="kuantiti">Kuantiti Rampasan</option>
+                    <option value="perkara">Bilangan Perkara Dirampas</option>
+                    <option value="nilai">Nilai Rampasan</option>
+                  </select>
+                </div>
+              </div>
+              <div class="map-view-tabs">
+                <button class="map-view-tab active" id="mvtab-negeri" onclick="switchMapView('negeri')">🗺️ NEGERI</button>
+                <button class="map-view-tab" id="mvtab-poskod" onclick="switchMapView('poskod')">📍 POSKOD</button>
+              </div>
+              <div id="map-container">
+                <div id="malaysia-map" style="width:100%;height:100%;"></div>
+              </div>
+              <div id="map-container-poskod" style="display:none;width:100%;height:380px;border-radius:8px;overflow:hidden;border:1px solid rgba(0,132,255,0.15);">
+                <div id="poskod-map" style="width:100%;height:100%;border-radius:8px;"></div>
+              </div>
+              <div class="map-legend">
+                <span>Rendah</span>
+                <div class="legend-gradient"></div>
+                <span>Tinggi</span>
+              </div>
+              <div id="heatmap-meta" style="margin-top:8px;font-size:11px;color:var(--text-muted);font-family:'Share Tech Mono',monospace"></div>
+            </div>
+            <div class="chart-panel">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px;flex-wrap:wrap">
+                <div class="panel-title" style="margin-bottom:0">RANKING NEGERI <span id="negeri-metric-label">bilangan serbuan</span></div>
+                <select class="filter-select" id="negeri-metric" onchange="updateNegeriTable()" style="height:auto;padding:6px 10px;font-size:11px;width:auto;min-width:180px;border-color:rgba(0,245,255,0.25)">
+                  <option value="serbuan">Bilangan Serbuan</option>
+                  <option value="kuantiti">Kuantiti Rampasan</option>
+                  <option value="perkara">Bilangan Perkara Dirampas</option>
+                  <option value="harga">Nilai Rampasan (RM)</option>
+                </select>
+              </div>
+              <div id="negeri-table-wrap" style="overflow-y:auto;max-height:340px">
+                <table class="negeri-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Negeri</th>
+                      <th id="negeri-col-label">Serbuan</th>
+                      <th style="min-width:100px">Bar</th>
+                    </tr>
+                  </thead>
+                  <tbody id="negeri-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -2648,9 +2665,13 @@
             <span class="toggle-dot" id="dot-analysis"></span>
             <span>⬡ Analisis Eksekutif</span>
           </button>
+          <button class="section-toggle-btn inactive" id="toggle-table" onclick="toggleSection('table')">
+            <span class="toggle-dot" id="dot-table"></span>
+            <span>📋 Senarai Terperinci</span>
+          </button>
           <button class="section-toggle-btn inactive" id="toggle-laporan" onclick="toggleSection('laporan')" style="border-color:rgba(197,160,60,0.35);color:#c5a03c">
             <span class="toggle-dot" id="dot-laporan" style="background:#c5a03c;box-shadow:0 0 6px #c5a03c"></span>
-            <span>📄 Laporan Tahunan</span>
+            <span>📄 Laporan Ringkasan Tahunan</span>
           </button>
         </div>
       </div>
@@ -2682,21 +2703,56 @@
           <div id="analysis-content">
             <div class="analysis-empty">
               <div style="font-size:32px;opacity:0.3">📊</div>
-              <div>Muat naik fail JSON dan pilih penapis untuk menjana analisis eksekutif.</div>
+              <div>Muat naik fail Excel dan pilih penapis untuk menjana analisis eksekutif.</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- LAPORAN RINGKASAN TAHUNAN PANEL -->
+      <!-- DATA TABLE -->
+      <div id="panel-table" class="hidden">
+        <div class="data-table-panel" id="data-table-panel">
+          <div class="table-header-row">
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+              <div class="panel-title" style="margin-bottom:0">SENARAI DATA TERPERINCI</div>
+              <div id="table-count" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-muted)"></div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+              <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-muted)">
+                Paparan: <span id="showing-rows" style="color:var(--neon-cyan)">—</span> / <span id="total-rows-count" style="color:var(--neon-cyan)">—</span> baris
+              </div>
+              <button class="btn-download" id="btn-download" onclick="downloadExcel()">
+                ⬇ MUAT TURUN EXCEL
+                <span id="download-count" style="background:rgba(0,245,255,0.15);padding:2px 8px;border-radius:10px;margin-left:6px"></span>
+              </button>
+              <button class="btn-collapse" onclick="toggleSection('table')" title="Sembunyikan">✕</button>
+            </div>
+          </div>
+
+          <div id="data-table-wrap">
+            <div class="analysis-empty"><div style="font-size:28px;opacity:0.3">📋</div><div>Tiada data untuk dipaparkan.</div></div>
+          </div>
+
+          <div id="pagination-wrap" style="display:flex;align-items:center;justify-content:space-between;padding:12px 0 0;flex-wrap:wrap;gap:8px">
+            <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-muted)" id="page-info"></div>
+            <div style="display:flex;gap:6px" id="pagination-btns"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- LAPORAN RINGKASAN TAHUNAN PANEL            -->
+      <!-- ══════════════════════════════════════════ -->
       <div id="panel-laporan" class="hidden">
         <div class="laporan-panel">
+
+          <!-- Header row: title + download buttons -->
           <div class="laporan-header">
             <div class="laporan-header-left">
               <div class="laporan-icon">📄</div>
               <div>
-                <div class="laporan-panel-title">LAPORAN RINGKASAN TAHUNAN</div>
-                <div class="laporan-panel-sub">Preview &amp; jana laporan rasmi</div>
+                <div class="laporan-title">LAPORAN RINGKASAN TAHUNAN</div>
+                <div class="laporan-subtitle">Preview laporan rasmi — jana PDF atau Word</div>
               </div>
             </div>
             <div class="laporan-actions">
@@ -2706,25 +2762,28 @@
             </div>
           </div>
 
+          <!-- Editable report title -->
           <div class="laporan-title-area">
-            <div class="laporan-title-label">TAJUK LAPORAN (boleh diedit)</div>
+            <div class="laporan-title-label">TAJUK LAPORAN</div>
             <input type="text" id="laporan-tajuk-input" class="laporan-title-input"
-              placeholder="Tajuk dijana daripada tapisan aktif..."
+              placeholder="Tajuk laporan akan dijana secara automatik..."
               oninput="renderLaporanPreview()">
           </div>
 
+          <!-- Preview -->
           <div class="laporan-preview-wrap">
             <div class="laporan-preview-label">PREVIEW DOKUMEN</div>
-            <div class="laporan-preview-scroll">
-              <div id="laporan-preview-doc" class="laporan-preview-doc">
-                <div style="text-align:center;padding:30px;color:#aaa;font-family:Arial,sans-serif;font-size:10pt">
-                  Muat naik data terlebih dahulu untuk preview laporan.
-                </div>
+            <div id="laporan-preview-doc" class="laporan-preview-doc">
+              <div style="text-align:center;padding:40px;color:#aaa;font-family:Arial,sans-serif;font-size:11pt">
+                Muat naik data terlebih dahulu untuk preview laporan.
               </div>
             </div>
           </div>
+
         </div>
       </div>
+
+    </div>
 
 
   <!-- FOOTER -->
@@ -2953,11 +3012,66 @@ function summarizeFilteredData(data) {
 }
 
 // ─────────────────────────────────────────────
-// STATUS & PROGRESS HELPERS
+// FILE UPLOAD
 // ─────────────────────────────────────────────
+const uploadZone = document.getElementById('upload-zone');
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
+});
+
+function handleFile(evt) {
+  const file = evt.target.files[0];
+  if (file) processFile(file);
+}
+
+function processFile(file) {
+  showLoading('MEMBACA FAIL EXCEL...');
+  setStatus(`📂 Membaca: ${file.name}`, '#00f5ff');
+  showProgress(10);
+  hasMapFitted = false;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      showProgress(40);
+      setLoadingText('MEMPROSES DATA...');
+      const wb = XLSX.read(e.target.result, { type: 'array', cellDates: true });
+      const sheetName = wb.SheetNames[0];
+      const ws = wb.Sheets[sheetName];
+      showProgress(70);
+      const json = XLSX.utils.sheet_to_json(ws, { raw: true, defval: '' });
+      if (json.length === 0) { hideLoading(); setStatus('⚠️ Tiada data dalam fail ini.', '#ff6b00'); return; }
+
+      detectColumns(Object.keys(json[0]));
+      rawData = preprocessData(json);
+      showProgress(90);
+      setLoadingText('MEMBINA DASHBOARD...');
+
+      setTimeout(() => {
+        buildFilters();
+        applyFilters();
+        document.getElementById('main-content').style.display = 'block';
+        document.getElementById('analysis-section').style.display = 'block';
+        document.getElementById('row-count').textContent = rawData.length.toLocaleString('ms-MY');
+        enableChat();
+        showProgress(100);
+        setTimeout(() => { hideLoading(); setStatus(`✅ ${file.name} — ${rawData.length.toLocaleString('ms-MY')} rekod dimuatkan`, '#00ff88'); }, 250);
+      }, 60);
+    } catch(err) {
+      hideLoading();
+      setStatus('❌ Ralat membaca fail: ' + err.message, '#ff0090');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
 function setStatus(msg, color='#00ff88') {
   const el = document.getElementById('upload-status');
-  if (el) { el.textContent = msg; el.style.color = color; }
+  el.textContent = msg; el.style.color = color;
 }
 
 function showProgress(pct) {
@@ -3241,6 +3355,41 @@ const chartDefaults = {
     y: { ticks: { color: '#5580a0', font: { family: "'Share Tech Mono'", size: 10 } }, grid: { color: 'rgba(0,132,255,0.06)' } }
   }
 };
+
+
+// ─────────────────────────────────────────────
+// VISUAL SECTION TOGGLE — default: hidden
+// ─────────────────────────────────────────────
+const vsecState = { trend: false, peta: false };
+
+function toggleVsec(id) {
+  vsecState[id] = !vsecState[id];
+  const body  = document.getElementById('vsec-body-' + id);
+  const arrow = document.getElementById('vsec-arrow-' + id);
+  const btn   = document.getElementById('vsec-btn-' + id);
+  if (!body) return;
+
+  if (vsecState[id]) {
+    body.classList.add('open');
+    if (arrow) arrow.classList.add('up');
+    if (btn)   btn.innerHTML = '<span class="vsec-arrow up" id="vsec-arrow-' + id + '">▼</span> SEMBUNYIKAN';
+    // Invalidate map bila peta section dibuka
+    if (id === 'peta') {
+      setTimeout(() => {
+        if (window.liveMap)   liveMap.invalidateSize();
+        if (window.poskodMap) poskodMap.invalidateSize();
+      }, 380);
+    }
+    // Update charts bila trend section dibuka
+    if (id === 'trend' && typeof updateCharts === 'function') {
+      setTimeout(updateCharts, 50);
+    }
+  } else {
+    body.classList.remove('open');
+    if (arrow) arrow.classList.remove('up');
+    if (btn)   btn.innerHTML = '<span class="vsec-arrow" id="vsec-arrow-' + id + '">▼</span> PAPARKAN';
+  }
+}
 
 function updateCharts() {
   const summary = currentSummary || summarizeFilteredData(filteredData);
@@ -3979,7 +4128,7 @@ document.addEventListener('mousemove', e => {
 // ─────────────────────────────────────────────
 // SECTION TOGGLE
 // ─────────────────────────────────────────────
-const sectionState = { analysis: false, laporan: false };
+const sectionState = { analysis: false, table: false, laporan: false };
 
 function toggleSection(id) {
   sectionState[id] = !sectionState[id];
@@ -3989,6 +4138,7 @@ function toggleSection(id) {
   if (sectionState[id]) {
     panel.classList.remove('hidden');
     btn.classList.remove('inactive');
+    if (id === 'table') renderTable();
     if (id === 'analysis') triggerAnalysis();
     if (id === 'laporan') { autoGenerateLaporanTajuk(); renderLaporanPreview(); }
   } else {
@@ -4378,14 +4528,50 @@ function downloadExcel() {
 }
 
 // ─────────────────────────────────────────────
+// CONVERT EXCEL → JSON & DOWNLOAD
+// ─────────────────────────────────────────────
+function convertToJson(evt) {
+  const file = evt.target.files[0];
+  if (!file) return;
+  const note = document.getElementById('convert-note');
+  note.style.color = 'var(--neon-cyan)';
+  note.textContent = '⏳ Membaca fail...';
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const wb = XLSX.read(e.target.result, { type: 'array', cellDates: false });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const json = XLSX.utils.sheet_to_json(ws, { raw: true, defval: '' });
+
+      if (json.length === 0) { note.style.color='var(--neon-orange)'; note.textContent = '⚠️ Tiada data dalam fail.'; return; }
+
+      const payload = JSON.stringify({ _meta: { source: file.name, rows: json.length, exported: new Date().toISOString() }, data: json });
+      const blob = new Blob([payload], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const base = file.name.replace(/\.(xlsx|xls)$/i, '');
+      a.download = base + '_data.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      note.style.color = 'var(--neon-green)';
+      note.textContent = `✅ ${json.length.toLocaleString('ms-MY')} baris ditukar & dimuat turun`;
+    } catch(err) {
+      note.style.color = 'var(--neon-pink)';
+      note.textContent = '❌ Ralat: ' + err.message;
+    }
+    evt.target.value = '';
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ─────────────────────────────────────────────
 // LOAD FROM JSON FILE
 // ─────────────────────────────────────────────
-let _laporanSourceFile = '';
-
 function loadFromJson(evt) {
   const file = evt.target.files[0];
   if (!file) return;
-  _laporanSourceFile = file.name;
   const note = document.getElementById('json-note');
   note.style.color = 'var(--neon-cyan)';
   note.textContent = '⏳ Membaca JSON...';
@@ -4398,19 +4584,22 @@ function loadFromJson(evt) {
   reader.onload = function(e) {
     try {
       const parsed = JSON.parse(e.target.result);
-      const rows = parsed.data || parsed;
+      const rows = parsed.data || parsed; // support both wrapped {data:[]} and raw []
       if (!Array.isArray(rows) || rows.length === 0) {
         hideLoading();
         note.style.color = 'var(--neon-orange)';
         note.textContent = '⚠️ Format JSON tidak sah atau tiada data.';
         return;
       }
+
       showProgress(50);
       setLoadingText('MEMPROSES DATA...');
       detectColumns(Object.keys(rows[0]));
       rawData = preprocessData(rows);
+
       showProgress(85);
       setLoadingText('MEMBINA DASHBOARD...');
+
       setTimeout(() => {
         buildFilters();
         applyFilters();
@@ -4418,14 +4607,14 @@ function loadFromJson(evt) {
         document.getElementById('analysis-section').style.display = 'block';
         document.getElementById('row-count').textContent = rawData.length.toLocaleString('ms-MY');
         enableChat();
+        enableChat();
         showProgress(100);
         const src = parsed._meta ? parsed._meta.source : file.name;
         setTimeout(() => {
           hideLoading();
-          setStatus(`⚡ ${src} — ${rawData.length.toLocaleString('ms-MY')} rekod dimuatkan`, '#00ff88');
+          setStatus(`⚡ ${src} — ${rawData.length.toLocaleString('ms-MY')} rekod dimuatkan dari JSON`, '#00ff88');
           note.style.color = 'var(--neon-green)';
           note.textContent = `✅ ${rawData.length.toLocaleString('ms-MY')} baris dimuatkan`;
-          if (sectionState['laporan']) { autoGenerateLaporanTajuk(); renderLaporanPreview(); }
         }, 200);
       }, 60);
     } catch(err) {
@@ -4438,7 +4627,6 @@ function loadFromJson(evt) {
   };
   reader.readAsText(file, 'utf-8');
 }
-
 // ══════════════════════════════════════════════
 // FILTER PANEL TOGGLE
 // ══════════════════════════════════════════════
@@ -4986,42 +5174,50 @@ ARAHAN:
   document.getElementById('chat-input').focus();
 }
 
-// ══════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════════════
 // LAPORAN RINGKASAN TAHUNAN
-// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
 
-function _fmtNum(n) { return Math.round(n).toLocaleString('ms-MY'); }
-function _fmtRM(n)  { return 'RM ' + n.toLocaleString('ms-MY', {minimumFractionDigits:2,maximumFractionDigits:2}); }
-function _titleCase(s) { return s.replace(/\b\w/g, c => c.toUpperCase()); }
+// ─── Helpers ─────────────────────────────────────────────────
+let _laporanSourceFile = '';   // nama fail yang diupload
 
-function _buildFooterText(dateStr, timeStr) {
-  const src = _laporanSourceFile || 'data yang dimuatkan';
-  return `Laporan dijana pada ${dateStr}, ${timeStr} melalui sistem komputer daripada fail "${src}". Tiada tandatangan diperlukan. Disediakan oleh Cawangan Perisikan dan Operasi (CPO) untuk kegunaan Bahagian Penguatkuasaan Farmasi, Kementerian Kesihatan Malaysia.`;
-}
-
-function buildLaporanRows() {
-  const s = currentSummary || summarizeFilteredData(filteredData);
-  const years = Object.keys(s.byYear).sort();
-  const rows = years.map(yr => {
-    const d = s.byYear[yr];
-    const perkara = filteredData.filter(r => r.__tahun === yr && r.__nama_produk).length;
-    return { tahun: yr, serbuan: d.serbuanSet.size, perkara, kuantiti: d.kuantiti, nilai: d.harga };
-  });
-  const total = {
-    tahun: 'JUMLAH',
-    serbuan:  rows.reduce((a,r)=>a+r.serbuan,0),
-    perkara:  rows.reduce((a,r)=>a+r.perkara,0),
-    kuantiti: rows.reduce((a,r)=>a+r.kuantiti,0),
-    nilai:    rows.reduce((a,r)=>a+r.nilai,0)
+// Hook: tangkap nama fail semasa upload — patch processFile & loadFromJson
+(function patchUploadHooks() {
+  const _origHandleFile = window.handleFile;
+  window.handleFile = function(evt) {
+    if (evt.target.files[0]) _laporanSourceFile = evt.target.files[0].name;
+    _origHandleFile && _origHandleFile(evt);
   };
-  return { rows, total };
-}
+  // loadFromJson dipanggil secara inline, kita patch via MutationObserver pada upload-status
+  const obs = new MutationObserver(() => {
+    const s = document.getElementById('upload-status');
+    if (s && s.textContent.includes('rekod dimuatkan')) {
+      // Bila laporan panel terbuka, auto-refresh
+      if (sectionState['laporan']) { autoGenerateLaporanTajuk(); renderLaporanPreview(); }
+    }
+  });
+  const statusEl = document.getElementById('upload-status');
+  if (statusEl) obs.observe(statusEl, { childList: true, characterData: true, subtree: true });
+})();
 
+// Patch loadFromJson untuk tangkap nama fail
+const _origLoadFromJson = window.loadFromJson;
+window.loadFromJson = function(evt) {
+  if (evt.target.files[0]) _laporanSourceFile = evt.target.files[0].name;
+  _origLoadFromJson && _origLoadFromJson(evt);
+};
+
+// ─── Auto-generate tajuk daripada tapisan aktif ───────────────
 function autoGenerateLaporanTajuk() {
   const inp = document.getElementById('laporan-tajuk-input');
-  if (!inp || !filteredData || !filteredData.length) return;
+  if (!inp || !filteredData || filteredData.length === 0) return;
 
+  const parts = [];
+
+  // Tahun
   const fTahun = [...document.getElementById('f-tahun').selectedOptions].map(o=>o.value).filter(Boolean);
+  // Kategori item / nama produk / kategori khas
   const fKatItem = [...document.getElementById('f-katitem').selectedOptions].map(o=>o.value).filter(Boolean);
   const fProduk = (window.tagState && window.tagState.namaproduk) ? [...window.tagState.namaproduk] : [];
   const fKatKhas = (window.tagState && window.tagState.katkhas) ? [...window.tagState.katkhas] : [];
@@ -5029,6 +5225,7 @@ function autoGenerateLaporanTajuk() {
   const fPengkelasan = document.getElementById('f-pengkelasan').value;
   const fKatPremis = [...(document.getElementById('f-katpremis')?.selectedOptions||[])].map(o=>o.value).filter(Boolean);
 
+  // Build product/subject string
   const subjekArr = [];
   if (fProduk.length) subjekArr.push(...fProduk.map(s => _titleCase(s)));
   else if (fKatKhas.length) subjekArr.push(...fKatKhas.map(s => _titleCase(s)));
@@ -5036,35 +5233,77 @@ function autoGenerateLaporanTajuk() {
   else if (fPengkelasan) subjekArr.push(_titleCase(fPengkelasan));
 
   let tajuk = 'Statistik Rampasan dan Serbuan';
-  if (subjekArr.length) tajuk += ' Berkaitan ' + subjekArr.slice(0,3).join(', ');
-  if (fKatPremis.length) tajuk += ' di ' + fKatPremis.slice(0,2).map(s=>_titleCase(s)).join('/');
+
+  if (subjekArr.length) tajuk += ' Berkaitan ' + subjekArr.slice(0, 3).join(', ');
+  if (fKatPremis.length) tajuk += ' di ' + fKatPremis.slice(0, 2).map(s => _titleCase(s)).join('/');
   if (fNegeri.length === 1) tajuk += ', ' + _titleCase(fNegeri[0].replace('NEGERI ','').replace('WP ','WP '));
 
   if (fTahun.length) {
     const sorted = fTahun.slice().sort();
-    tajuk += ' Tahun ' + (sorted.length === 1 ? sorted[0] : sorted[0] + '–' + sorted[sorted.length-1]);
+    if (sorted.length === 1) tajuk += ' Tahun ' + sorted[0];
+    else tajuk += ' Tahun ' + sorted[0] + '–' + sorted[sorted.length-1];
   } else {
-    const s2 = currentSummary || summarizeFilteredData(filteredData);
-    const yrs = Object.keys(s2.byYear).sort();
-    if (yrs.length) tajuk += ' Tahun ' + yrs[0] + (yrs.length > 1 ? '–' + yrs[yrs.length-1] : '');
+    // Use range from data
+    const s = currentSummary || summarizeFilteredData(filteredData);
+    const years = Object.keys(s.byYear).sort();
+    if (years.length) tajuk += ' Tahun ' + years[0] + (years.length > 1 ? '–' + years[years.length-1] : '');
   }
+
   inp.value = tajuk;
 }
 
+function _titleCase(str) {
+  return str.replace(/\b\w/g, c => c.toUpperCase());
+}
+
+// ─── Build data rows ──────────────────────────────────────────
+function buildLaporanRows() {
+  const s = currentSummary || summarizeFilteredData(filteredData);
+  const years = Object.keys(s.byYear).sort();
+
+  const rows = years.map(yr => {
+    const d = s.byYear[yr];
+    const perkara = filteredData.filter(r => r.__tahun === yr && r.__nama_produk).length;
+    const kuantiti = d.kuantiti;
+    return { tahun: yr, serbuan: d.serbuanSet.size, perkara, kuantiti, nilai: d.harga };
+  });
+
+  const total = {
+    tahun: 'JUMLAH',
+    serbuan: rows.reduce((a,r)=>a+r.serbuan,0),
+    perkara:  rows.reduce((a,r)=>a+r.perkara,0),
+    kuantiti: rows.reduce((a,r)=>a+r.kuantiti,0),
+    nilai:    rows.reduce((a,r)=>a+r.nilai,0)
+  };
+
+  return { rows, total };
+}
+
+function _fmtNum(n) { return Math.round(n).toLocaleString('ms-MY'); }
+function _fmtRM(n)  { return 'RM ' + n.toLocaleString('ms-MY', {minimumFractionDigits:2,maximumFractionDigits:2}); }
+
+function _buildFooterText(dateStr, timeStr) {
+  const src = _laporanSourceFile || 'data yang dimuatkan';
+  return `Laporan dijana pada ${dateStr}, ${timeStr} melalui sistem komputer daripada fail "${src}". Tiada tandatangan diperlukan. Disediakan oleh Cawangan Perisikan dan Operasi (CPO) untuk kegunaan Bahagian Penguatkuasaan Farmasi, Kementerian Kesihatan Malaysia.`;
+}
+
+// ─── Render preview in dashboard ─────────────────────────────
 function renderLaporanPreview() {
   const wrap = document.getElementById('laporan-preview-doc');
-  if (!filteredData || !filteredData.length) {
-    wrap.innerHTML = '<div style="text-align:center;padding:30px;color:#aaa;font-size:10pt">Tiada data. Muatkan fail JSON terlebih dahulu.</div>';
+  if (!filteredData || filteredData.length === 0) {
+    wrap.innerHTML = '<div style="text-align:center;padding:40px;color:#aaa;font-family:Arial,sans-serif;font-size:11pt">Tiada data. Muat naik fail data terlebih dahulu.</div>';
     return;
   }
+
   const { rows, total } = buildLaporanRows();
-  const tajukEl = document.getElementById('laporan-tajuk-input');
-  const tajuk = (tajukEl && tajukEl.value.trim()) || 'Statistik Rampasan dan Serbuan';
+  const tajukInput = document.getElementById('laporan-tajuk-input');
+  const tajuk = (tajukInput && tajukInput.value.trim()) || 'Statistik Rampasan dan Serbuan';
+
   const now = new Date();
   const dateStr = `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()}`;
   const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 
-  const bodyHtml = rows.map(r => `
+  const tableBodyHtml = rows.map(r => `
     <tr>
       <td>${r.tahun}</td>
       <td>${_fmtNum(r.serbuan)}</td>
@@ -5072,6 +5311,8 @@ function renderLaporanPreview() {
       <td>${_fmtNum(r.kuantiti)}</td>
       <td>${_fmtRM(r.nilai)}</td>
     </tr>`).join('');
+
+  const footerText = _buildFooterText(dateStr, timeStr);
 
   wrap.innerHTML = `
     <div class="prev-org-header">
@@ -5082,224 +5323,236 @@ function renderLaporanPreview() {
     </div>
     <div class="prev-meta-row">
       <span>Tarikh Jana: ${dateStr}, ${timeStr}</span>
-      <span>Rekod: ${_fmtNum(filteredData.length)}</span>
+      <span>Jumlah Rekod Dianalisis: ${_fmtNum(filteredData.length)} rekod</span>
     </div>
     <table class="prev-table">
-      <thead><tr>
-        <th>Tahun</th><th>Bil. Serbuan</th><th>Bil. Perkara Dirampas</th>
-        <th>Kuantiti (unit)</th><th>Nilai Rampasan (RM)</th>
-      </tr></thead>
-      <tbody>${bodyHtml}</tbody>
-      <tfoot><tr>
-        <td>JUMLAH</td>
-        <td>${_fmtNum(total.serbuan)}</td>
-        <td>${_fmtNum(total.perkara)}</td>
-        <td>${_fmtNum(total.kuantiti)}</td>
-        <td>${_fmtRM(total.nilai)}</td>
-      </tr></tfoot>
+      <thead>
+        <tr>
+          <th>Tahun</th>
+          <th>Bil. Serbuan</th>
+          <th>Bil. Perkara yang Dirampas</th>
+          <th>Kuantiti Rampasan (unit)</th>
+          <th>Nilai Rampasan (RM)</th>
+        </tr>
+      </thead>
+      <tbody>${tableBodyHtml}</tbody>
+      <tfoot>
+        <tr>
+          <td>JUMLAH</td>
+          <td>${_fmtNum(total.serbuan)}</td>
+          <td>${_fmtNum(total.perkara)}</td>
+          <td>${_fmtNum(total.kuantiti)}</td>
+          <td>${_fmtRM(total.nilai)}</td>
+        </tr>
+      </tfoot>
     </table>
-    <div class="prev-footer">${_buildFooterText(dateStr, timeStr)}</div>`;
+    <div class="prev-footer">
+      <div class="prev-footer-left">${footerText}</div>
+      <div class="prev-footer-right">CPO · BPF · KKM · ${now.getFullYear()}</div>
+    </div>`;
 }
 
+// ─── Generate PDF ─────────────────────────────────────────────
 function generateLaporanPdf() {
-  if (!filteredData || !filteredData.length) return;
+  if (!filteredData || filteredData.length === 0) return;
   const { rows, total } = buildLaporanRows();
-  const tajukEl = document.getElementById('laporan-tajuk-input');
-  const tajuk = (tajukEl && tajukEl.value.trim()) || 'Statistik Rampasan dan Serbuan';
+  const tajukInput = document.getElementById('laporan-tajuk-input');
+  const tajuk = (tajukInput && tajukInput.value.trim()) || 'Statistik Rampasan dan Serbuan';
+
   const now = new Date();
   const dateStr = `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()}`;
   const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
   const footerText = _buildFooterText(dateStr, timeStr);
 
-  const bodyHtml = rows.map(r => `<tr><td><strong>${r.tahun}</strong></td><td>${_fmtNum(r.serbuan)}</td><td>${_fmtNum(r.perkara)}</td><td>${_fmtNum(r.kuantiti)}</td><td>${_fmtRM(r.nilai)}</td></tr>`).join('');
+  const tableBodyHtml = rows.map(r => `
+    <tr>
+      <td><strong>${r.tahun}</strong></td>
+      <td>${_fmtNum(r.serbuan)}</td>
+      <td>${_fmtNum(r.perkara)}</td>
+      <td>${_fmtNum(r.kuantiti)}</td>
+      <td>${_fmtRM(r.nilai)}</td>
+    </tr>`).join('');
 
-  const html = `<!DOCTYPE html><html lang="ms"><head><meta charset="UTF-8">
+  const html = `<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
 <title>${tajuk}</title>
 <style>
-  @page{size:A4 portrait;margin:2cm 2.5cm}
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:Arial,sans-serif;font-size:11pt;color:#1a1a1a}
-  .hd{text-align:center;border-bottom:2.5px solid #1a2e5a;padding-bottom:14px;margin-bottom:16px}
-  .ol{font-size:9.5pt;font-weight:bold;color:#1a2e5a;letter-spacing:.8px;line-height:1.7}
-  .dt{font-size:13pt;font-weight:bold;color:#1a2e5a;margin:10px 0 3px;line-height:1.4}
-  .mr{display:flex;justify-content:space-between;font-size:8.5pt;color:#666;margin-bottom:14px;flex-wrap:wrap;gap:4px}
-  table{width:100%;border-collapse:collapse}
-  thead tr{background:#1a2e5a;color:#fff}
-  thead th{padding:8px 12px;text-align:center;font-size:9pt;border:1px solid #1a2e5a}
-  thead th:first-child{text-align:left}
-  tbody tr:nth-child(even){background:#f2f5fb}
-  td{padding:7px 12px;border:1px solid #c8d4e8;text-align:right;font-size:9.5pt}
-  td:first-child{text-align:left}
-  tfoot tr{background:#c5a03c}
-  tfoot td{padding:8px 12px;border:1px solid #a88830;text-align:right;font-size:9.5pt;font-weight:700;color:#1a1a1a}
-  tfoot td:first-child{text-align:left;letter-spacing:.5px}
-  .ft{margin-top:22px;border-top:1px solid #ccc;padding-top:10px;font-size:8pt;color:#888;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;line-height:1.55}
-  .fl{flex:1;min-width:200px}
-  .fr{text-align:right;white-space:nowrap}
-  @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
-</style></head><body>
-<div class="hd">
-  <div class="ol">KEMENTERIAN KESIHATAN MALAYSIA</div>
-  <div class="ol">BAHAGIAN PENGUATKUASAAN FARMASI</div>
-  <div class="ol">CAWANGAN PERISIKAN DAN OPERASI (CPO)</div>
-  <div class="dt">${tajuk.toUpperCase()}</div>
+  @page { size: A4 portrait; margin: 2cm 2.5cm; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: Arial, sans-serif; font-size: 11pt; color: #1a1a1a; background: #fff; }
+  .header { text-align: center; margin-bottom: 22px; border-bottom: 2.5px solid #1a2e5a; padding-bottom: 14px; }
+  .org-line { font-size: 9.5pt; font-weight: bold; color: #1a2e5a; letter-spacing: 0.8px; line-height: 1.7; }
+  .doc-title { font-size: 13pt; font-weight: bold; color: #1a2e5a; margin: 10px 0 3px; line-height: 1.4; }
+  .meta-row { display:flex; justify-content:space-between; font-size: 8.5pt; color: #666; margin-bottom: 16px; flex-wrap:wrap; gap:4px; }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: #1a2e5a; color: #fff; }
+  thead th { padding: 8px 12px; text-align: center; font-size: 9pt; border: 1px solid #1a2e5a; letter-spacing: 0.3px; }
+  thead th:first-child { text-align: left; }
+  tbody tr:nth-child(even) { background: #f2f5fb; }
+  tbody td { padding: 7px 12px; border: 1px solid #c8d4e8; text-align: right; font-size: 9.5pt; }
+  tbody td:first-child { text-align: left; }
+  tfoot tr { background: #c5a03c; }
+  tfoot td { padding: 8px 12px; border: 1px solid #a88830; text-align: right; font-size: 9.5pt; font-weight: 700; color: #1a1a1a; }
+  tfoot td:first-child { text-align: left; letter-spacing: 0.5px; }
+  .footer { margin-top: 24px; border-top: 1px solid #ccc; padding-top: 10px; font-size: 8pt; color: #888; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; line-height:1.55; }
+  .footer-left { flex:1; min-width:200px; }
+  .footer-right { text-align:right; white-space:nowrap; }
+  @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="org-line">KEMENTERIAN KESIHATAN MALAYSIA</div>
+  <div class="org-line">BAHAGIAN PENGUATKUASAAN FARMASI</div>
+  <div class="org-line">CAWANGAN PERISIKAN DAN OPERASI (CPO)</div>
+  <div class="doc-title">${tajuk.toUpperCase()}</div>
 </div>
-<div class="mr"><span>Tarikh Jana: ${dateStr}, ${timeStr}</span><span>Jumlah Rekod: ${_fmtNum(filteredData.length)} rekod</span></div>
+<div class="meta-row">
+  <span>Tarikh Jana: ${dateStr}, ${timeStr}</span>
+  <span>Jumlah Rekod Dianalisis: ${_fmtNum(filteredData.length)} rekod</span>
+</div>
 <table>
-  <thead><tr><th>Tahun</th><th>Bil. Serbuan</th><th>Bil. Perkara yang Dirampas</th><th>Kuantiti Rampasan (unit)</th><th>Nilai Rampasan (RM)</th></tr></thead>
-  <tbody>${bodyHtml}</tbody>
-  <tfoot><tr><td>JUMLAH</td><td>${_fmtNum(total.serbuan)}</td><td>${_fmtNum(total.perkara)}</td><td>${_fmtNum(total.kuantiti)}</td><td>${_fmtRM(total.nilai)}</td></tr></tfoot>
+  <thead>
+    <tr>
+      <th>Tahun</th>
+      <th>Bil. Serbuan</th>
+      <th>Bil. Perkara yang Dirampas</th>
+      <th>Kuantiti Rampasan (unit)</th>
+      <th>Nilai Rampasan (RM)</th>
+    </tr>
+  </thead>
+  <tbody>${tableBodyHtml}</tbody>
+  <tfoot>
+    <tr>
+      <td>JUMLAH</td>
+      <td>${_fmtNum(total.serbuan)}</td>
+      <td>${_fmtNum(total.perkara)}</td>
+      <td>${_fmtNum(total.kuantiti)}</td>
+      <td>${_fmtRM(total.nilai)}</td>
+    </tr>
+  </tfoot>
 </table>
-<div class="ft"><div class="fl">${footerText}</div><div class="fr">CPO · BPF · KKM · ${now.getFullYear()}</div></div>
-</body></html>`;
+<div class="footer">
+  <div class="footer-left">${footerText}</div>
+  <div class="footer-right">CPO · BPF · KKM · ${now.getFullYear()}</div>
+</div>
+</body>
+</html>`;
 
   const win = window.open('', '_blank');
-  if (!win) { alert('Benarkan pop-up untuk jana PDF.'); return; }
+  if (!win) { alert('Sila benarkan pop-up untuk menjana PDF.'); return; }
   win.document.write(html);
   win.document.close();
+  win.focus();
   setTimeout(() => win.print(), 600);
 }
 
+// ─── Generate Word (.doc RTF) ─────────────────────────────────
 function generateLaporanWord() {
-  if (!filteredData || !filteredData.length) return;
+  if (!filteredData || filteredData.length === 0) return;
   const { rows, total } = buildLaporanRows();
-  const tajukEl = document.getElementById('laporan-tajuk-input');
-  const tajuk = (tajukEl && tajukEl.value.trim()) || 'Statistik Rampasan dan Serbuan';
+  const tajukInput = document.getElementById('laporan-tajuk-input');
+  const tajuk = (tajukInput && tajukInput.value.trim()) || 'Statistik Rampasan dan Serbuan';
+
   const now = new Date();
   const dateStr = `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()}`;
   const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
   const footerText = _buildFooterText(dateStr, timeStr);
 
-  const C=[1500,1800,2400,2400,2400];
-  function rc(w,align,bold,txt){return`\\pard\\intbl${align==='r'?'\\qr':''}${bold?'\\b':''} ${txt}${bold?'\\b0':''} \\cell`;}
-  function rr(cells,w){let h='{\\trowd\\trgaph108\\trleft0';let c=0;w.forEach(x=>{c+=x;h+=`\\cellx${c}`;});return h+cells.join('')+'\\row}';}
+  // RTF column widths (twips): 1500, 1800, 2400, 2400, 2400
+  const COL = [1500,1800,2400,2400,2400];
+  function rtfCell(x, align, bold, text) {
+    return `\\pard\\intbl${align==='r'?'\\qr':''}${bold?'\\b':''} ${text}${bold?'\\b0':''} \\cell`;
+  }
+  function rtfRow(cells, widths) {
+    let header = '{\\trowd\\trgaph108\\trleft0';
+    let cum = 0;
+    widths.forEach(w => { cum += w; header += `\\cellx${cum}`; });
+    return header + cells.join('') + '\\row}';
+  }
 
-  const hdr=rr([rc(C[0],'l',true,'Tahun'),rc(C[1],'r',true,'Bil. Serbuan'),rc(C[2],'r',true,'Bil. Perkara Dirampas'),rc(C[3],'r',true,'Kuantiti Rampasan (unit)'),rc(C[4],'r',true,'Nilai Rampasan (RM)')],C);
-  const dr=rows.map(r=>rr([rc(C[0],'l',true,r.tahun),rc(C[1],'r',false,_fmtNum(r.serbuan)),rc(C[2],'r',false,_fmtNum(r.perkara)),rc(C[3],'r',false,_fmtNum(r.kuantiti)),rc(C[4],'r',false,_fmtRM(r.nilai))],C)).join('\n');
-  const tr=rr([rc(C[0],'l',true,'JUMLAH'),rc(C[1],'r',true,_fmtNum(total.serbuan)),rc(C[2],'r',true,_fmtNum(total.perkara)),rc(C[3],'r',true,_fmtNum(total.kuantiti)),rc(C[4],'r',true,_fmtRM(total.nilai))],C);
+  const headerRow = rtfRow([
+    rtfCell(COL[0],'l',true,'Tahun'),
+    rtfCell(COL[1],'r',true,'Bil. Serbuan'),
+    rtfCell(COL[2],'r',true,'Bil. Perkara Dirampas'),
+    rtfCell(COL[3],'r',true,'Kuantiti Rampasan (unit)'),
+    rtfCell(COL[4],'r',true,'Nilai Rampasan (RM)'),
+  ], COL);
 
-  const rtf=`{\\rtf1\\ansi\\ansicpg1252\\deff0\n{\\fonttbl{\\f0\\froman Times New Roman;}{\\f1\\fswiss Arial;}}\n{\\colortbl;\\red26\\green46\\blue90;\\red197\\green160\\blue60;}\n\\paperw11906\\paperh16838\\margl1417\\margr1417\\margt1134\\margb1134\n\\f1\\fs22\n\n{\\pard\\qc\\b\\fs22\\cf1 KEMENTERIAN KESIHATAN MALAYSIA\\par}\n{\\pard\\qc\\b\\fs22\\cf1 BAHAGIAN PENGUATKUASAAN FARMASI\\par}\n{\\pard\\qc\\b\\fs22\\cf1 CAWANGAN PERISIKAN DAN OPERASI (CPO)\\par}\n\\pard\\brdrb\\brdrs\\brdrw15\\par\n{\\pard\\qc\\b\\fs26\\cf1 ${tajuk.toUpperCase()}\\b0\\par}\n\\pard\\par\n{\\pard\\fs18 Tarikh Jana: ${dateStr}, ${timeStr}\\tab Rekod: ${_fmtNum(filteredData.length)} rekod\\par}\n\\pard\\par\n\n${hdr}\n${dr}\n${tr}\n\n\\pard\\par\n{\\pard\\brdrb\\brdrs\\brdrw5\\par}\n{\\pard\\fs17\\i ${footerText}\\i0\\par}\n{\\pard\\qr\\fs17 CPO \\u183? BPF \\u183? KKM \\u183? ${now.getFullYear()}\\par}\n}`;
+  const dataRows = rows.map(r => rtfRow([
+    rtfCell(COL[0],'l',true, r.tahun),
+    rtfCell(COL[1],'r',false, _fmtNum(r.serbuan)),
+    rtfCell(COL[2],'r',false, _fmtNum(r.perkara)),
+    rtfCell(COL[3],'r',false, _fmtNum(r.kuantiti)),
+    rtfCell(COL[4],'r',false, _fmtRM(r.nilai)),
+  ], COL)).join('\n');
 
-  const blob=new Blob([rtf],{type:'application/msword'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;
-  const ts=`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
-  const safeTajuk=tajuk.replace(/[^a-zA-Z0-9\u00C0-\u024F\s]/g,'').trim().replace(/\s+/g,'_').substring(0,50);
-  a.download=`Laporan_${safeTajuk}_${ts}.doc`;
+  const totalRow = rtfRow([
+    rtfCell(COL[0],'l',true,'JUMLAH'),
+    rtfCell(COL[1],'r',true, _fmtNum(total.serbuan)),
+    rtfCell(COL[2],'r',true, _fmtNum(total.perkara)),
+    rtfCell(COL[3],'r',true, _fmtNum(total.kuantiti)),
+    rtfCell(COL[4],'r',true, _fmtRM(total.nilai)),
+  ], COL);
+
+  const rtf = `{\\rtf1\\ansi\\ansicpg1252\\deff0
+{\\fonttbl{\\f0\\froman\\fcharset0 Times New Roman;}{\\f1\\fswiss\\fcharset0 Arial;}}
+{\\colortbl;\\red26\\green46\\blue90;\\red197\\green160\\blue60;}
+\\paperw11906\\paperh16838\\margl1417\\margr1417\\margt1134\\margb1134
+\\f1\\fs22
+
+{\\pard\\qc\\b\\fs22\\cf1 KEMENTERIAN KESIHATAN MALAYSIA\\par}
+{\\pard\\qc\\b\\fs22\\cf1 BAHAGIAN PENGUATKUASAAN FARMASI\\par}
+{\\pard\\qc\\b\\fs22\\cf1 CAWANGAN PERISIKAN DAN OPERASI (CPO)\\par}
+\\pard\\brdrb\\brdrs\\brdrw15\\par
+{\\pard\\qc\\b\\fs26\\cf1 ${tajuk.toUpperCase()}\\b0\\par}
+\\pard\\par
+{\\pard\\fs18 Tarikh Jana: ${dateStr}, ${timeStr}\\tab Jumlah Rekod Dianalisis: ${_fmtNum(filteredData.length)} rekod\\par}
+\\pard\\par
+
+${headerRow}
+${dataRows}
+${totalRow}
+
+\\pard\\par
+{\\pard\\brdrb\\brdrs\\brdrw5\\par}
+{\\pard\\fs17\\i ${footerText}\\i0\\par}
+{\\pard\\qr\\fs17 CPO · BPF · KKM · ${now.getFullYear()}\\par}
+}`;
+
+  const blob = new Blob([rtf], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const ts = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+  const safeTajuk = tajuk.replace(/[^a-zA-Z0-9\u00C0-\u024F\s]/g,'').trim().replace(/\s+/g,'_').substring(0,50);
+  a.download = `Laporan_${safeTajuk}_${ts}.doc`;
   a.click();
   URL.revokeObjectURL(url);
 }
 
-// Refresh laporan when filter changes
-let _lapDebounce=null;
-const _origApplyFilters=window.applyFilters;
-window.applyFilters=function(){
-  _origApplyFilters&&_origApplyFilters.apply(this,arguments);
-  if(!sectionState['laporan'])return;
-  clearTimeout(_lapDebounce);
-  _lapDebounce=setTimeout(()=>{autoGenerateLaporanTajuk();renderLaporanPreview();},400);
+// Auto-refresh preview bila tapisan berubah (debounced)
+let _laporanDebounce = null;
+function _scheduleLaporanRefresh() {
+  if (!sectionState['laporan']) return;
+  clearTimeout(_laporanDebounce);
+  _laporanDebounce = setTimeout(() => {
+    autoGenerateLaporanTajuk();
+    renderLaporanPreview();
+  }, 400);
+}
+
+// Patch applyFilters to refresh laporan when open
+const _origApplyFilters = window.applyFilters;
+window.applyFilters = function() {
+  _origApplyFilters && _origApplyFilters.apply(this, arguments);
+  _scheduleLaporanRefresh();
 };
-
-// ══════════════════════════════════════════════
-// PWA — Progressive Web App
-// ══════════════════════════════════════════════
-
-// 1. Inject manifest as blob (no separate file needed)
-(function injectManifest() {
-  const manifest = {
-    name: 'Dashboard CPO — BPF KKM',
-    short_name: 'CPO Dashboard',
-    description: 'Dashboard Statistik Rampasan dan Serbuan — Cawangan Perisikan dan Operasi, BPF KKM',
-    start_url: window.location.href,
-    display: 'standalone',
-    orientation: 'portrait-primary',
-    background_color: '#020812',
-    theme_color: '#020812',
-    icons: [
-      {
-        src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='24' fill='%23020812'/%3E%3Crect x='12' y='12' width='168' height='168' rx='16' fill='none' stroke='%2300f5ff' stroke-width='3'/%3E%3Ctext x='96' y='115' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='72' fill='%2300f5ff'%3E📊%3C/text%3E%3Ctext x='96' y='165' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='18' fill='%23c5a03c' letter-spacing='2'%3ECPO%3C/text%3E%3C/svg%3E",
-        sizes: '192x192',
-        type: 'image/svg+xml',
-        purpose: 'any maskable'
-      },
-      {
-        src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='64' fill='%23020812'/%3E%3Crect x='24' y='24' width='464' height='464' rx='40' fill='none' stroke='%2300f5ff' stroke-width='6'/%3E%3Ctext x='256' y='310' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='200' fill='%2300f5ff'%3E📊%3C/text%3E%3Ctext x='256' y='440' text-anchor='middle' font-family='Arial' font-weight='bold' font-size='52' fill='%23c5a03c' letter-spacing='4'%3ECPO%3C/text%3E%3C/svg%3E",
-        sizes: '512x512',
-        type: 'image/svg+xml',
-        purpose: 'any maskable'
-      }
-    ],
-    categories: ['productivity', 'utilities']
-  };
-  const blob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  document.getElementById('pwa-manifest').href = url;
-})();
-
-// 2. Register inline service worker for offline capability
-if ('serviceWorker' in navigator) {
-  const swCode = `
-const CACHE='cpo-dashboard-v1';
-const ASSETS=[self.registration.scope];
-self.addEventListener('install',e=>{
-  e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()));
-});
-self.addEventListener('activate',e=>{
-  e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
-});
-self.addEventListener('fetch',e=>{
-  e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match(self.registration.scope))));
-});
-  `;
-  const swBlob = new Blob([swCode], {type:'application/javascript'});
-  const swUrl = URL.createObjectURL(swBlob);
-  navigator.serviceWorker.register(swUrl, {scope: './'}).catch(()=>{});
-}
-
-// 3. PWA install prompt handling
-let _deferredPrompt = null;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  _deferredPrompt = e;
-  // Show banner after short delay
-  setTimeout(() => {
-    const banner = document.getElementById('pwa-install-banner');
-    if (banner && !sessionStorage.getItem('pwa-dismissed')) {
-      banner.classList.add('show');
-    }
-  }, 2500);
-});
-
-window.addEventListener('appinstalled', () => {
-  _deferredPrompt = null;
-  const banner = document.getElementById('pwa-install-banner');
-  if (banner) banner.classList.remove('show');
-});
-
-function pwaTriggerInstall() {
-  const banner = document.getElementById('pwa-install-banner');
-  if (_deferredPrompt) {
-    _deferredPrompt.prompt();
-    _deferredPrompt.userChoice.then(choice => {
-      _deferredPrompt = null;
-      if (banner) banner.classList.remove('show');
-    });
-  } else {
-    // Fallback instructions for browsers without native prompt
-    alert('Untuk pasang sebagai app:\n\nChrome Android:\n1. Ketik menu ⋮ (tiga titik) di penjuru kanan atas\n2. Pilih "Tambah ke skrin utama"\n3. Ketik "Tambah"\n\nSafari iOS:\n1. Ketik butang Kongsi ⎋\n2. Pilih "Tambah ke Skrin Utama"');
-    if (banner) banner.classList.remove('show');
-  }
-}
-
-function pwaDismiss() {
-  sessionStorage.setItem('pwa-dismissed', '1');
-  const banner = document.getElementById('pwa-install-banner');
-  if (banner) banner.classList.remove('show');
-}
 
 
 </script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </body>
 </html>
