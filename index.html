@@ -2220,46 +2220,20 @@
     </div>
   </header>
 
-  <!-- UPLOAD -->
-  <div class="upload-section" id="upload-zone" onclick="document.getElementById('file-input').click()">
-    <input type="file" id="file-input" accept=".xlsx,.xls" onchange="handleFile(event)">
-    <div class="upload-icon">📂</div>
-    <div class="upload-text">
-      <h3>Muat Naik Fail Excel</h3>
-      <p>Seret & lepas atau klik untuk memilih fail .xlsx / .xls</p>
+
+<!-- JSON LOADER -->
+<div class="tools-bar" id="tools-bar">
+  <div class="tool-card" id="tool-json">
+    <div class="tool-icon">⚡</div>
+    <div class="tool-body">
+      <div class="tool-title">MUAT NAIK JSON</div>
+      <div class="tool-desc">Muat naik fail .json yang telah ditukar — rendering lebih pantas berbanding Excel</div>
+      <div class="tool-note" id="json-note"></div>
     </div>
-    <button class="upload-btn" onclick="event.stopPropagation(); document.getElementById('file-input').click()">PILIH FAIL</button>
+    <button class="tool-btn btn-json" onclick="document.getElementById('json-upload-input').click()">PILIH JSON</button>
+    <input type="file" id="json-upload-input" accept=".json" style="display:none" onchange="loadFromJson(event)">
   </div>
-  <div class="upload-status" id="upload-status"></div>
-  <div class="progress-wrap" id="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
-
-
-  <!-- JSON CONVERTER & LOADER -->
-  <div class="tools-bar" id="tools-bar">
-    <div class="tool-card" id="tool-convert">
-      <div class="tool-icon">⚙</div>
-      <div class="tool-body">
-        <div class="tool-title">TUKAR EXCEL → JSON</div>
-        <div class="tool-desc">Tukar .xlsx/.xls kepada fail .json untuk rendering lebih pantas</div>
-        <div class="tool-note" id="convert-note"></div>
-      </div>
-      <button class="tool-btn btn-convert" onclick="document.getElementById('excel-convert-input').click()">PILIH EXCEL</button>
-      <input type="file" id="excel-convert-input" accept=".xlsx,.xls" style="display:none" onchange="convertToJson(event)">
-    </div>
-
-    <div class="tool-divider"></div>
-
-    <div class="tool-card" id="tool-json">
-      <div class="tool-icon">⚡</div>
-      <div class="tool-body">
-        <div class="tool-title">MUAT NAIK JSON</div>
-        <div class="tool-desc">Muat naik fail .json yang telah ditukar — rendering lebih pantas berbanding Excel</div>
-        <div class="tool-note" id="json-note"></div>
-      </div>
-      <button class="tool-btn btn-json" onclick="document.getElementById('json-upload-input').click()">PILIH JSON</button>
-      <input type="file" id="json-upload-input" accept=".json" style="display:none" onchange="loadFromJson(event)">
-    </div>
-  </div>
+</div>
 
   <!-- MAIN -->
   <div class="main-content" id="main-content">
