@@ -2222,18 +2222,18 @@
 
 
 <!-- JSON LOADER -->
-<div class="tools-bar" id="tools-bar">
-  <div class="tool-card" id="tool-json">
-    <div class="tool-icon">⚡</div>
-    <div class="tool-body">
-      <div class="tool-title">MUAT NAIK JSON</div>
-      <div class="tool-desc">Muat naik fail .json yang telah ditukar — rendering lebih pantas berbanding Excel</div>
-      <div class="tool-note" id="json-note"></div>
+  <div class="tools-bar" id="tools-bar">
+    <div class="tool-card" id="tool-json">
+      <div class="tool-icon">⚡</div>
+      <div class="tool-body">
+        <div class="tool-title">MUAT NAIK JSON</div>
+        <div class="tool-desc">Muat naik fail .json yang telah ditukar — rendering lebih pantas berbanding Excel</div>
+        <div class="tool-note" id="json-note"></div>
+      </div>
+      <button class="tool-btn btn-json" onclick="document.getElementById('json-upload-input').click()">PILIH JSON</button>
+      <input type="file" id="json-upload-input" accept=".json" style="display:none" onchange="loadFromJson(event)">
     </div>
-    <button class="tool-btn btn-json" onclick="document.getElementById('json-upload-input').click()">PILIH JSON</button>
-    <input type="file" id="json-upload-input" accept=".json" style="display:none" onchange="loadFromJson(event)">
   </div>
-</div>
 
   <!-- MAIN -->
   <div class="main-content" id="main-content">
