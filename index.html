@@ -469,36 +469,76 @@
   /* ══ MULTI-TAG INPUT ══ */
   .filter-group { position: relative; }
   .tag-input-wrap {
-    min-height: 36px;
+    min-height: 42px;
     background: rgba(0,0,0,0.4);
     border: 1px solid rgba(0,132,255,0.25);
     border-radius: 6px;
-    padding: 4px 6px;
-    display: flex; flex-wrap: wrap; align-items: center; gap: 4px;
+    padding: 6px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     cursor: text;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
   .tag-input-wrap:focus-within { border-color: var(--neon-cyan); box-shadow: 0 0 12px rgba(0,245,255,0.2); }
-  .tag-list { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+    width: 100%;
+  }
+  .tag-list:empty { display: none; }
   .tag-chip {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 2px 8px 2px 10px;
-    background: rgba(0,245,255,0.1); border: 1px solid rgba(0,245,255,0.3);
-    border-radius: 12px;
-    font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--neon-cyan);
-    letter-spacing: 0.3px; max-width: 160px; white-space: nowrap;
-    overflow: hidden; text-overflow: ellipsis;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px 4px 12px;
+    background: rgba(0,245,255,0.1);
+    border: 1px solid rgba(0,245,255,0.3);
+    border-radius: 20px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--neon-cyan);
+    letter-spacing: 0.3px;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     animation: chipIn 0.15s ease;
+    flex-shrink: 0;
   }
   @keyframes chipIn { from { opacity:0; transform:scale(0.85); } to { opacity:1; transform:scale(1); } }
-  .tag-remove { cursor: pointer; color: rgba(0,245,255,0.5); font-size: 12px; line-height:1; flex-shrink:0; transition: color 0.15s; padding: 0 1px; }
-  .tag-remove:hover { color: var(--neon-orange); }
-  .tag-input-field {
-    background: transparent; border: none; outline: none;
-    color: var(--text-primary); font-family: 'Exo 2', sans-serif; font-size: 12px;
-    min-width: 80px; flex: 1; padding: 2px 4px;
+  .tag-remove {
+    cursor: pointer;
+    color: rgba(0,245,255,0.5);
+    font-size: 14px;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: color 0.15s;
+    padding: 2px 4px;
+    margin: -2px -4px;
+    border-radius: 50%;
+    min-width: 22px;
+    min-height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .tag-input-field::placeholder { color: var(--text-muted); font-size: 11px; }
+  .tag-remove:hover, .tag-remove:active { color: #ff6b6b; background: rgba(255,107,107,0.15); }
+  .tag-input-field {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-family: 'Exo 2', sans-serif;
+    font-size: 13px;
+    width: 100%;
+    min-width: 0;
+    padding: 2px 4px;
+    -webkit-appearance: none;
+  }
+  .tag-input-field::placeholder { color: var(--text-muted); font-size: 12px; }
   .tag-suggestions {
     position: absolute; top: 100%; left: 0; right: 0;
     background: #080f1e; border: 1px solid rgba(0,245,255,0.25); border-top: none;
@@ -2403,8 +2443,8 @@
           <label class="filter-label">🔍 Nama Premis / Syarikat</label>
           <div class="tag-input-wrap" id="wrap-namapremis" onclick="focusTagInput('namapremis')">
             <div class="tag-list" id="tags-namapremis"></div>
-            <input class="tag-input-field" id="f-namapremis" type="text" placeholder="Taip & tekan Enter..." autocomplete="off"
-              oninput="showTagSuggestions('namapremis', this.value); onLiveSearch('namapremis')"
+            <input class="tag-input-field" id="f-namapremis" type="text" enterkeyhint="search" inputmode="search" placeholder="Taip & tekan Enter..." autocomplete="off"
+              oninput="showTagSuggestions('namapremis', this.value)"
               onkeydown="tagKeydown(event, 'namapremis')"
               onblur="hideTagSuggestions('namapremis', 200)">
           </div>
@@ -2414,8 +2454,8 @@
           <label class="filter-label">🔍 Alamat Premis</label>
           <div class="tag-input-wrap" id="wrap-alamat" onclick="focusTagInput('alamat')">
             <div class="tag-list" id="tags-alamat"></div>
-            <input class="tag-input-field" id="f-alamat" type="text" placeholder="Taip & tekan Enter..." autocomplete="off"
-              oninput="showTagSuggestions('alamat', this.value); onLiveSearch('alamat')"
+            <input class="tag-input-field" id="f-alamat" type="text" enterkeyhint="search" inputmode="search" placeholder="Taip & tekan Enter..." autocomplete="off"
+              oninput="showTagSuggestions('alamat', this.value)"
               onkeydown="tagKeydown(event, 'alamat')"
               onblur="hideTagSuggestions('alamat', 200)">
           </div>
@@ -2458,8 +2498,8 @@
           <label class="filter-label">🔍 Cari Kategori Khas</label>
           <div class="tag-input-wrap" id="wrap-katkhas" onclick="focusTagInput('katkhas')">
             <div class="tag-list" id="tags-katkhas"></div>
-            <input class="tag-input-field" id="f-katkhas" type="text" placeholder="Taip & tekan Enter..." autocomplete="off"
-              oninput="showTagSuggestions('katkhas', this.value); onLiveSearch('katkhas')"
+            <input class="tag-input-field" id="f-katkhas" type="text" enterkeyhint="search" inputmode="search" placeholder="Taip & tekan Enter..." autocomplete="off"
+              oninput="showTagSuggestions('katkhas', this.value)"
               onkeydown="tagKeydown(event, 'katkhas')"
               onblur="hideTagSuggestions('katkhas', 200)">
           </div>
@@ -2469,8 +2509,8 @@
           <label class="filter-label">🔍 Cari Nama Racun</label>
           <div class="tag-input-wrap" id="wrap-namaracun" onclick="focusTagInput('namaracun')">
             <div class="tag-list" id="tags-namaracun"></div>
-            <input class="tag-input-field" id="f-namaracun" type="text" placeholder="Taip & tekan Enter..." autocomplete="off"
-              oninput="showTagSuggestions('namaracun', this.value); onLiveSearch('namaracun')"
+            <input class="tag-input-field" id="f-namaracun" type="text" enterkeyhint="search" inputmode="search" placeholder="Taip & tekan Enter..." autocomplete="off"
+              oninput="showTagSuggestions('namaracun', this.value)"
               onkeydown="tagKeydown(event, 'namaracun')"
               onblur="hideTagSuggestions('namaracun', 200)">
           </div>
@@ -2480,8 +2520,8 @@
           <label class="filter-label">🔍 Cari Nama Produk</label>
           <div class="tag-input-wrap" id="wrap-namaproduk" onclick="focusTagInput('namaproduk')">
             <div class="tag-list" id="tags-namaproduk"></div>
-            <input class="tag-input-field" id="f-namaproduk" type="text" placeholder="Taip & tekan Enter..." autocomplete="off"
-              oninput="showTagSuggestions('namaproduk', this.value); onLiveSearch('namaproduk')"
+            <input class="tag-input-field" id="f-namaproduk" type="text" enterkeyhint="search" inputmode="search" placeholder="Taip & tekan Enter..." autocomplete="off"
+              oninput="showTagSuggestions('namaproduk', this.value)"
               onkeydown="tagKeydown(event, 'namaproduk')"
               onblur="hideTagSuggestions('namaproduk', 200)">
           </div>
@@ -2791,7 +2831,7 @@
     <div class="footer-inner">
       <div class="footer-text">
         <div class="footer-title">CPO 2026</div>
-        <div class="footer-sub">Untuk Kegunaan Cawangan Perisikan dan Operasi (CPO) Sahaja &nbsp;·&nbsp; Tiada Hak Cipta &nbsp;·&nbsp; Bukan untuk Tatapan Umum</div>
+        <div class="footer-sub">Version v6 &nbsp;·&nbsp; Untuk Kegunaan Cawangan Perisikan dan Operasi (CPO) Sahaja &nbsp;·&nbsp; Tiada Hak Cipta &nbsp;·&nbsp; Bukan untuk Tatapan Umum</div>
       </div>
     </div>
   </footer>
@@ -3179,12 +3219,6 @@ function resetFilters() {
     document.getElementById(id).value = '';
   });
   ['katkhas','namaracun','namaproduk','namapremis','alamat'].forEach(id => clearAllTags(id));
-  // Clear live search text
-  Object.keys(liveSearch).forEach(f => {
-    liveSearch[f] = '';
-    const inp = document.getElementById('f-' + f);
-    if (inp) inp.value = '';
-  });
   applyFilters();
 }
 
@@ -3265,47 +3299,11 @@ function applyFilters() {
     if (fSerbuan && r.__statusserbuan && r.__statusserbuan !== fSerbuan) return false;
     if (fTindakan && r.__tindakan !== fTindakan) return false;
     if (fOnline && r.__online && r.__online !== fOnline) return false;
-    // Tag filter ATAU live search (mana-mana yang aktif)
-    const _lsPremis = liveSearch.namapremis;
-    if (fNamaPremis.length && _lsPremis) {
-      if (!fNamaPremis.some(t => r.__namapremis_lc.includes(t)) && !r.__namapremis_lc.includes(_lsPremis)) return false;
-    } else if (fNamaPremis.length) {
-      if (!fNamaPremis.some(t => r.__namapremis_lc.includes(t))) return false;
-    } else if (_lsPremis) {
-      if (!r.__namapremis_lc.includes(_lsPremis)) return false;
-    }
-    const _lsAlamat = liveSearch.alamat;
-    if (fAlamat.length && _lsAlamat) {
-      if (!fAlamat.some(t => r.__alamat_lc.includes(t)) && !r.__alamat_lc.includes(_lsAlamat)) return false;
-    } else if (fAlamat.length) {
-      if (!fAlamat.some(t => r.__alamat_lc.includes(t))) return false;
-    } else if (_lsAlamat) {
-      if (!r.__alamat_lc.includes(_lsAlamat)) return false;
-    }
-    const _lsKatkhas = liveSearch.katkhas;
-    if (fKatKhas.length && _lsKatkhas) {
-      if (!fKatKhas.some(t => r.__katkhas_lc.includes(t)) && !r.__katkhas_lc.includes(_lsKatkhas)) return false;
-    } else if (fKatKhas.length) {
-      if (!fKatKhas.some(t => r.__katkhas_lc.includes(t))) return false;
-    } else if (_lsKatkhas) {
-      if (!r.__katkhas_lc.includes(_lsKatkhas)) return false;
-    }
-    const _lsRacun = liveSearch.namaracun;
-    if (fRacun.length && _lsRacun) {
-      if (!fRacun.some(t => r.__namaracun_lc.includes(t)) && !r.__namaracun_lc.includes(_lsRacun)) return false;
-    } else if (fRacun.length) {
-      if (!fRacun.some(t => r.__namaracun_lc.includes(t))) return false;
-    } else if (_lsRacun) {
-      if (!r.__namaracun_lc.includes(_lsRacun)) return false;
-    }
-    const _lsProduk = liveSearch.namaproduk;
-    if (fProduk.length && _lsProduk) {
-      if (!fProduk.some(t => r.__namaproduk_lc.includes(t)) && !r.__namaproduk_lc.includes(_lsProduk)) return false;
-    } else if (fProduk.length) {
-      if (!fProduk.some(t => r.__namaproduk_lc.includes(t))) return false;
-    } else if (_lsProduk) {
-      if (!r.__namaproduk_lc.includes(_lsProduk)) return false;
-    }
+    if (fNamaPremis.length && !fNamaPremis.some(t => r.__namapremis_lc.includes(t))) return false;
+    if (fAlamat.length && !fAlamat.some(t => r.__alamat_lc.includes(t))) return false;
+    if (fKatKhas.length && !fKatKhas.some(t => r.__katkhas_lc.includes(t))) return false;
+    if (fRacun.length   && !fRacun.some(t   => r.__namaracun_lc.includes(t))) return false;
+    if (fProduk.length  && !fProduk.some(t  => r.__namaproduk_lc.includes(t))) return false;
     return true;
   });
 
@@ -4837,23 +4835,6 @@ function renderShortcuts() {
 document.addEventListener('DOMContentLoaded', renderShortcuts);
 
 const tagState = { katkhas: [], namaracun: [], namaproduk: [], namapremis: [], alamat: [] };
-
-// Live search — teks yang sedang ditaip (tanpa perlu Enter)
-const liveSearch = { katkhas: '', namaracun: '', namaproduk: '', namapremis: '', alamat: '' };
-let liveDebounce = null;
-
-function onLiveSearch(field) {
-  const inp = document.getElementById('f-' + field);
-  if (!inp) return;
-  liveSearch[field] = inp.value.trim().toLowerCase();
-  // Update suggestion dropdown
-  showTagSuggestions(field, inp.value.trim());
-  // Debounce filter — 350ms untuk telefon (lebih toleran)
-  clearTimeout(liveDebounce);
-  liveDebounce = setTimeout(() => {
-    applyFilters();
-  }, 350);
-}
 let suggestTimeout = null;
 
 const tagColMap = {
@@ -4901,7 +4882,7 @@ function renderTags(field) {
     </span>
   `).join('');
   const inp = document.getElementById('f-' + field);
-  if (inp) inp.placeholder = tagState[field].length ? '' : 'Taip untuk cari...';
+  if (inp) inp.placeholder = tagState[field].length ? 'Tambah lagi...' : 'Taip untuk cari (Enter = simpan)';
 }
 
 function addTag(field, value) {
@@ -5459,6 +5440,34 @@ function generateLaporanPdf() {
   .footer-left { flex:1; min-width:200px; }
   .footer-right { text-align:right; white-space:nowrap; }
   @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+
+  @media (max-width: 600px) {
+    .tag-chip {
+      font-size: 12px;
+      padding: 5px 10px 5px 12px;
+      max-width: calc(100% - 8px);
+    }
+    .tag-remove {
+      min-width: 26px;
+      min-height: 26px;
+      font-size: 16px;
+    }
+    .tag-input-field {
+      font-size: 16px; /* Elak auto-zoom iOS */
+      padding: 4px;
+    }
+    .tag-input-wrap {
+      min-height: 48px;
+      padding: 8px 10px;
+    }
+    .tag-suggestions {
+      max-height: 200px;
+    }
+    .sug-item {
+      padding: 12px 14px !important;
+      font-size: 13px !important;
+    }
+  }
 </style>
 </head>
 <body>
