@@ -469,76 +469,36 @@
   /* ══ MULTI-TAG INPUT ══ */
   .filter-group { position: relative; }
   .tag-input-wrap {
-    min-height: 42px;
+    min-height: 36px;
     background: rgba(0,0,0,0.4);
     border: 1px solid rgba(0,132,255,0.25);
     border-radius: 6px;
-    padding: 6px 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+    padding: 4px 6px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 4px;
     cursor: text;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
   .tag-input-wrap:focus-within { border-color: var(--neon-cyan); box-shadow: 0 0 12px rgba(0,245,255,0.2); }
-  .tag-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    align-items: center;
-    width: 100%;
-  }
-  .tag-list:empty { display: none; }
+  .tag-list { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
   .tag-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 10px 4px 12px;
-    background: rgba(0,245,255,0.1);
-    border: 1px solid rgba(0,245,255,0.3);
-    border-radius: 20px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    color: var(--neon-cyan);
-    letter-spacing: 0.3px;
-    max-width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 2px 8px 2px 10px;
+    background: rgba(0,245,255,0.1); border: 1px solid rgba(0,245,255,0.3);
+    border-radius: 12px;
+    font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--neon-cyan);
+    letter-spacing: 0.3px; max-width: 160px; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
     animation: chipIn 0.15s ease;
-    flex-shrink: 0;
   }
   @keyframes chipIn { from { opacity:0; transform:scale(0.85); } to { opacity:1; transform:scale(1); } }
-  .tag-remove {
-    cursor: pointer;
-    color: rgba(0,245,255,0.5);
-    font-size: 14px;
-    line-height: 1;
-    flex-shrink: 0;
-    transition: color 0.15s;
-    padding: 2px 4px;
-    margin: -2px -4px;
-    border-radius: 50%;
-    min-width: 22px;
-    min-height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .tag-remove:hover, .tag-remove:active { color: #ff6b6b; background: rgba(255,107,107,0.15); }
+  .tag-remove { cursor: pointer; color: rgba(0,245,255,0.5); font-size: 12px; line-height:1; flex-shrink:0; transition: color 0.15s; padding: 0 1px; }
+  .tag-remove:hover { color: var(--neon-orange); }
   .tag-input-field {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--text-primary);
-    font-family: 'Exo 2', sans-serif;
-    font-size: 13px;
-    width: 100%;
-    min-width: 0;
-    padding: 2px 4px;
-    -webkit-appearance: none;
+    background: transparent; border: none; outline: none;
+    color: var(--text-primary); font-family: 'Exo 2', sans-serif; font-size: 12px;
+    min-width: 80px; flex: 1; padding: 2px 4px;
   }
-  .tag-input-field::placeholder { color: var(--text-muted); font-size: 12px; }
+  .tag-input-field::placeholder { color: var(--text-muted); font-size: 11px; }
   .tag-suggestions {
     position: absolute; top: 100%; left: 0; right: 0;
     background: #080f1e; border: 1px solid rgba(0,245,255,0.25); border-top: none;
@@ -1164,6 +1124,37 @@
     border-top: 1px solid var(--border);
   }
   .vsec-inner { padding: 16px; }
+
+
+  /* ── SENARAI TAB ── */
+  .senarai-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .senarai-tab {
+    padding: 6px 16px;
+    border-radius: 6px 6px 0 0;
+    border: 1px solid transparent;
+    border-bottom: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .senarai-tab:hover { color: var(--neon-cyan); }
+  .senarai-tab.active {
+    background: rgba(0,245,255,0.08);
+    border-color: rgba(0,245,255,0.25);
+    color: var(--neon-cyan);
+    border-bottom-color: var(--bg-main);
+  }
 
   /* ── NEGERI TABLE ── */
   .negeri-table { width: 100%; border-collapse: collapse; }
@@ -2443,7 +2434,7 @@
           <label class="filter-label">🔍 Nama Premis / Syarikat</label>
           <div class="tag-input-wrap" id="wrap-namapremis" onclick="focusTagInput('namapremis')">
             <div class="tag-list" id="tags-namapremis"></div>
-            <input class="tag-input-field" id="f-namapremis" type="text" enterkeyhint="search" inputmode="search" placeholder="Taip & tekan Enter..." autocomplete="off"
+            <input class="tag-input-field" id="f-namapremis" type="text" placeholder="Taip & tekan Enter..." autocomplete="off"
               oninput="showTagSuggestions('namapremis', this.value)"
               onkeydown="tagKeydown(event, 'namapremis')"
               onblur="hideTagSuggestions('namapremis', 200)">
@@ -2454,7 +2445,7 @@
           <label class="filter-label">🔍 Alamat Premis</label>
           <div class="tag-input-wrap" id="wrap-alamat" onclick="focusTagInput('alamat')">
             <div class="tag-list" id="tags-alamat"></div>
-            <input class="tag-input-field" id="f-alamat" type="text" enterkeyhint="search" inputmode="search" placeholder="Taip & tekan Enter..." autocomplete="off"
+            <input class="tag-input-field" id="f-alamat" type="text" placeholder="Taip & tekan Enter..." autocomplete="off"
               oninput="showTagSuggestions('alamat', this.value)"
               onkeydown="tagKeydown(event, 'alamat')"
               onblur="hideTagSuggestions('alamat', 200)">
@@ -2498,7 +2489,7 @@
           <label class="filter-label">🔍 Cari Kategori Khas</label>
           <div class="tag-input-wrap" id="wrap-katkhas" onclick="focusTagInput('katkhas')">
             <div class="tag-list" id="tags-katkhas"></div>
-            <input class="tag-input-field" id="f-katkhas" type="text" enterkeyhint="search" inputmode="search" placeholder="Taip & tekan Enter..." autocomplete="off"
+            <input class="tag-input-field" id="f-katkhas" type="text" placeholder="Taip & tekan Enter..." autocomplete="off"
               oninput="showTagSuggestions('katkhas', this.value)"
               onkeydown="tagKeydown(event, 'katkhas')"
               onblur="hideTagSuggestions('katkhas', 200)">
@@ -2509,7 +2500,7 @@
           <label class="filter-label">🔍 Cari Nama Racun</label>
           <div class="tag-input-wrap" id="wrap-namaracun" onclick="focusTagInput('namaracun')">
             <div class="tag-list" id="tags-namaracun"></div>
-            <input class="tag-input-field" id="f-namaracun" type="text" enterkeyhint="search" inputmode="search" placeholder="Taip & tekan Enter..." autocomplete="off"
+            <input class="tag-input-field" id="f-namaracun" type="text" placeholder="Taip & tekan Enter..." autocomplete="off"
               oninput="showTagSuggestions('namaracun', this.value)"
               onkeydown="tagKeydown(event, 'namaracun')"
               onblur="hideTagSuggestions('namaracun', 200)">
@@ -2520,7 +2511,7 @@
           <label class="filter-label">🔍 Cari Nama Produk</label>
           <div class="tag-input-wrap" id="wrap-namaproduk" onclick="focusTagInput('namaproduk')">
             <div class="tag-list" id="tags-namaproduk"></div>
-            <input class="tag-input-field" id="f-namaproduk" type="text" enterkeyhint="search" inputmode="search" placeholder="Taip & tekan Enter..." autocomplete="off"
+            <input class="tag-input-field" id="f-namaproduk" type="text" placeholder="Taip & tekan Enter..." autocomplete="off"
               oninput="showTagSuggestions('namaproduk', this.value)"
               onkeydown="tagKeydown(event, 'namaproduk')"
               onblur="hideTagSuggestions('namaproduk', 200)">
@@ -2754,7 +2745,7 @@
         <div class="data-table-panel" id="data-table-panel">
           <div class="table-header-row">
             <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-              <div class="panel-title" style="margin-bottom:0">SENARAI DATA TERPERINCI</div>
+              <div class="panel-title" style="margin-bottom:0" id="table-panel-title">SENARAI DATA TERPERINCI</div>
               <div id="table-count" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-muted)"></div>
             </div>
             <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -2767,6 +2758,12 @@
               </button>
               <button class="btn-collapse" onclick="toggleSection('table')" title="Sembunyikan">✕</button>
             </div>
+          </div>
+
+          <!-- Tab switching -->
+          <div class="senarai-tabs">
+            <button class="senarai-tab active" id="stab-terperinci" onclick="switchSenaraiTab('terperinci')">📋 DATA TERPERINCI</button>
+            <button class="senarai-tab" id="stab-serbuan" onclick="switchSenaraiTab('serbuan')">🔍 SENARAI SERBUAN</button>
           </div>
 
           <div id="data-table-wrap">
@@ -2831,7 +2828,7 @@
     <div class="footer-inner">
       <div class="footer-text">
         <div class="footer-title">CPO 2026</div>
-        <div class="footer-sub">Version v6 &nbsp;·&nbsp; Untuk Kegunaan Cawangan Perisikan dan Operasi (CPO) Sahaja &nbsp;·&nbsp; Tiada Hak Cipta &nbsp;·&nbsp; Bukan untuk Tatapan Umum</div>
+        <div class="footer-sub">Versi 7.0 &nbsp;·&nbsp; Untuk Kegunaan Cawangan Perisikan dan Operasi (CPO) Sahaja &nbsp;·&nbsp; Tiada Hak Cipta &nbsp;·&nbsp; Bukan untuk Tatapan Umum</div>
       </div>
     </div>
   </footer>
@@ -2879,6 +2876,16 @@ function detectColumns(headers) {
     'Tindakan Selepas Serbuan Berjaya':'Tindakan Selepas Serbuan Berjaya',
     'Serbuan melibatkan penjualan online (Sub-KPI PK1-n5)':'Serbuan melibatkan penjualan online (Sub-KPI PK1-n5)',
     'Poskod':'Poskod',
+    'No Rujukan Siasatan':'No Rujukan Siasatan',
+    'No Rujukan Aduan / Maklumat':'No Rujukan Aduan / Maklumat',
+    'Nama Perniagaan / Syarikat':'Nama Perniagaan / Syarikat',
+    'Nama & Alamat Premis':'Nama & Alamat Premis',
+    'Pegawai Serbuan':'Pegawai Serbuan',
+    'Pelanggaran':'Pelanggaran',
+    'Agensi Lain Yang Terlibat':'Agensi Lain Yang Terlibat',
+    'Nyatakan Agensi':'Nyatakan Agensi',
+    'Jenis Penglibatan Agensi Lain':'Jenis Penglibatan Agensi Lain',
+    'Nama Ops':'Nama Ops',
   };
   headers.forEach(h => {
     const trimmed = h.trim();
@@ -4547,6 +4554,190 @@ function tableSort(col) {
 // ─────────────────────────────────────────────
 // DOWNLOAD EXCEL
 // ─────────────────────────────────────────────
+
+// ─────────────────────────────────────────────
+// SENARAI TAB SWITCHING
+// ─────────────────────────────────────────────
+let currentSenaraiTab = 'terperinci';
+
+function switchSenaraiTab(tab) {
+  currentSenaraiTab = tab;
+  document.getElementById('stab-terperinci').classList.toggle('active', tab === 'terperinci');
+  document.getElementById('stab-serbuan').classList.toggle('active', tab === 'serbuan');
+
+  const titleEl = document.getElementById('table-panel-title');
+  const dlBtn   = document.getElementById('btn-download');
+
+  if (tab === 'terperinci') {
+    if (titleEl) titleEl.textContent = 'SENARAI DATA TERPERINCI';
+    if (dlBtn)   dlBtn.onclick = downloadExcel;
+    renderTable();
+  } else {
+    if (titleEl) titleEl.textContent = 'SENARAI SERBUAN';
+    if (dlBtn)   dlBtn.onclick = downloadSenaraiSerbuan;
+    renderSenaraiSerbuan();
+  }
+}
+
+// ─────────────────────────────────────────────
+// RENDER SENARAI SERBUAN (dalam table)
+// ─────────────────────────────────────────────
+function buildSenaraiSerbuan() {
+  // Aggregate filteredData by No Rujukan Serbuan
+  const byRuj = {};
+  let bil = 0;
+
+  filteredData.forEach(r => {
+    const ruj = String(r[COL['No Rujukan Serbuan']] ?? '').trim();
+    if (!ruj) return;
+
+    if (!byRuj[ruj]) {
+      bil++;
+      byRuj[ruj] = {
+        bil,
+        tahun:     String(r[COL['Tahun']] ?? '').trim(),
+        negeri:    String(r[COL['Negeri']] ?? '').trim(),
+        rujukan:   ruj,
+        tarikh:    String(r[COL['Tarikh Serbuan']] ?? '').trim(),
+        rujAduan:  String(r[COL['No Rujukan Aduan / Maklumat']] ?? '').trim(),
+        namaOps:   String(r[COL['Nama Ops']] ?? '').trim(),
+        katPremis: String(r[COL['Kategori Premis']] ?? '').trim(),
+        jenisPremis:String(r[COL['Jenis Premis']] ?? '').trim(),
+        namaSyarikat:String(r[COL['Nama Perniagaan / Syarikat']] ?? '').trim(),
+        alamat:    String(r[COL['Nama & Alamat Premis']] ?? '').trim(),
+        poskod:    String(r[COL['Poskod']] ?? '').trim().replace(/\.0$/, ''),
+        pegawai:   String(r[COL['Pegawai Serbuan']] ?? '').trim(),
+        status:    String(r[COL['Status Serbuan']] ?? '').trim(),
+        tindakan:  String(r[COL['Tindakan Selepas Serbuan Berjaya']] ?? '').trim(),
+        pelanggaran:String(r[COL['Pelanggaran']] ?? '').trim(),
+        agensi:    String(r[COL['Agensi Lain Yang Terlibat']] ?? '').trim(),
+        nyataAgensi:String(r[COL['Nyatakan Agensi']] ?? '').trim(),
+        jenisAgensi:String(r[COL['Jenis Penglibatan Agensi Lain']] ?? '').trim(),
+        online:    String(r[COL['Serbuan melibatkan penjualan online (Sub-KPI PK1-n5)']] ?? '').trim(),
+        rujSiasatan:String(r[COL['No Rujukan Siasatan']] ?? '').trim(),
+        kuantiti:  0,
+        perkara:   0,
+        nilai:     0,
+      };
+    }
+
+    const s = byRuj[ruj];
+    s.kuantiti += (Number(r[COL['Kuantiti']]) || 0);
+    s.nilai    += (Number(r[COL['Harga']]) || 0);
+    const prod  = String(r[COL['Nama Produk']] ?? '').trim();
+    if (prod) s.perkara++;
+  });
+
+  return Object.values(byRuj);
+}
+
+function renderSenaraiSerbuan() {
+  const rows = buildSenaraiSerbuan();
+  const wrap = document.getElementById('data-table-wrap');
+  const showEl = document.getElementById('showing-rows');
+  const totalEl = document.getElementById('total-rows-count');
+  if (showEl) showEl.textContent = rows.length.toLocaleString('ms-MY');
+  if (totalEl) totalEl.textContent = rows.length.toLocaleString('ms-MY');
+
+  if (!rows.length) {
+    wrap.innerHTML = '<div class="analysis-empty"><div style="font-size:28px;opacity:0.3">🔍</div><div>Tiada serbuan untuk dipaparkan.</div></div>';
+    document.getElementById('pagination-wrap').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('pagination-wrap').style.display = 'none'; // senarai serbuan: no pagination
+
+  const headers = [
+    'Bil','Tahun','Negeri','No Rujukan Serbuan','Tarikh Serbuan',
+    'No Rujukan Aduan / Maklumat','Nama Ops','Kategori Premis','Jenis Premis',
+    'Nama Perniagaan / Syarikat','Nama & Alamat Premis','Poskod','Pegawai Serbuan',
+    'Status Serbuan','Tindakan Selepas Serbuan Berjaya','Pelanggaran',
+    'Agensi Lain Yang Terlibat','Nyatakan Agensi','Jenis Penglibatan Agensi Lain',
+    'Serbuan melibatkan penjualan online (Sub-KPI PK1-n5)','No. Rujukan Siasatan',
+    'Jumlah Kuantiti Rampasan','Jumlah Perkara Yang Dirampas','Jumlah Nilai Rampasan'
+  ];
+
+  const keys = [
+    'bil','tahun','negeri','rujukan','tarikh','rujAduan','namaOps',
+    'katPremis','jenisPremis','namaSyarikat','alamat','poskod','pegawai',
+    'status','tindakan','pelanggaran','agensi','nyataAgensi','jenisAgensi',
+    'online','rujSiasatan','kuantiti','perkara','nilai'
+  ];
+
+  const thHtml = headers.map(h =>
+    `<th style="white-space:nowrap;padding:8px 12px;font-size:10px">${h}</th>`
+  ).join('');
+
+  const tbodyHtml = rows.map(r => {
+    const cells = keys.map((k, i) => {
+      let v = r[k];
+      if (k === 'nilai')    v = 'RM ' + Number(v).toLocaleString('ms-MY', {maximumFractionDigits:2});
+      if (k === 'kuantiti' || k === 'perkara') v = Number(v).toLocaleString('ms-MY');
+      return `<td style="white-space:nowrap;padding:7px 12px;font-size:11px">${v ?? ''}</td>`;
+    });
+    return `<tr>${cells.join('')}</tr>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <table class="detail-table" style="width:100%;border-collapse:collapse">
+      <thead><tr>${thHtml}</tr></thead>
+      <tbody>${tbodyHtml}</tbody>
+    </table>`;
+}
+
+// ─────────────────────────────────────────────
+// DOWNLOAD SENARAI SERBUAN
+// ─────────────────────────────────────────────
+function downloadSenaraiSerbuan() {
+  const rows = buildSenaraiSerbuan();
+  if (!rows.length) return;
+
+  const headers = [
+    'Bil','Tahun','Negeri','No Rujukan Serbuan','Tarikh Serbuan',
+    'No Rujukan Aduan / Maklumat / Risikan','Nama Ops','Kategori Premis','Jenis Premis',
+    'Nama Perniagaan / Syarikat','Nama & Alamat Premis','Poskod','Pegawai Serbuan',
+    'Status Serbuan','Tindakan Selepas Serbuan Berjaya','Pelanggaran',
+    'Agensi Lain Yang Terlibat','Nyatakan Agensi','Jenis Penglibatan Agensi Lain',
+    'Serbuan melibatkan penjualan online (Sub-KPI PK1-n5)','No. Rujukan Siasatan',
+    'Jumlah Kuantiti Rampasan','Jumlah Perkara Yang Dirampas','Jumlah Nilai Rampasan'
+  ];
+
+  const keys = [
+    'bil','tahun','negeri','rujukan','tarikh','rujAduan','namaOps',
+    'katPremis','jenisPremis','namaSyarikat','alamat','poskod','pegawai',
+    'status','tindakan','pelanggaran','agensi','nyataAgensi','jenisAgensi',
+    'online','rujSiasatan','kuantiti','perkara','nilai'
+  ];
+
+  const wsData = [
+    headers,
+    ...rows.map(r => keys.map(k => {
+      if (k === 'nilai') return Number(r[k]) || 0;
+      if (k === 'kuantiti' || k === 'perkara') return Number(r[k]) || 0;
+      return r[k] ?? '';
+    }))
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+  // Format lajur Nilai sebagai nombor
+  const valCol = keys.indexOf('nilai');
+  rows.forEach((_, i) => {
+    const cellRef = XLSX.utils.encode_cell({ r: i + 1, c: valCol });
+    if (ws[cellRef]) ws[cellRef].z = '#,##0.00';
+  });
+
+  // Auto column width
+  ws['!cols'] = headers.map(h => ({ wch: Math.max(h.length + 2, 14) }));
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Senarai Serbuan');
+
+  const now = new Date();
+  const ts  = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+  XLSX.writeFile(wb, `Senarai_Serbuan_Export_${ts}.xlsx`);
+}
+
 function downloadExcel() {
   if (!filteredData || filteredData.length === 0) return;
 
@@ -4882,7 +5073,7 @@ function renderTags(field) {
     </span>
   `).join('');
   const inp = document.getElementById('f-' + field);
-  if (inp) inp.placeholder = tagState[field].length ? 'Tambah lagi...' : 'Taip untuk cari (Enter = simpan)';
+  if (inp) inp.placeholder = tagState[field].length ? '' : 'Taip & tekan Enter...';
 }
 
 function addTag(field, value) {
@@ -5440,34 +5631,6 @@ function generateLaporanPdf() {
   .footer-left { flex:1; min-width:200px; }
   .footer-right { text-align:right; white-space:nowrap; }
   @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
-
-  @media (max-width: 600px) {
-    .tag-chip {
-      font-size: 12px;
-      padding: 5px 10px 5px 12px;
-      max-width: calc(100% - 8px);
-    }
-    .tag-remove {
-      min-width: 26px;
-      min-height: 26px;
-      font-size: 16px;
-    }
-    .tag-input-field {
-      font-size: 16px; /* Elak auto-zoom iOS */
-      padding: 4px;
-    }
-    .tag-input-wrap {
-      min-height: 48px;
-      padding: 8px 10px;
-    }
-    .tag-suggestions {
-      max-height: 200px;
-    }
-    .sug-item {
-      padding: 12px 14px !important;
-      font-size: 13px !important;
-    }
-  }
 </style>
 </head>
 <body>
