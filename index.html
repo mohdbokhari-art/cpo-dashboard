@@ -197,6 +197,21 @@
     box-shadow: 0 0 14px rgba(0,255,136,0.3);
   }
 
+  .btn-upload {
+    background: transparent;
+    border: 1px solid var(--neon-cyan);
+    color: var(--neon-cyan);
+  }
+  .btn-upload:hover {
+    background: rgba(0,245,255,0.1);
+    box-shadow: 0 0 14px rgba(0,245,255,0.3);
+  }
+  #upload-zone { cursor: pointer; }
+  #upload-zone.drag-over {
+    background: rgba(0,245,255,0.08);
+    box-shadow: inset 0 0 20px rgba(0,245,255,0.15);
+  }
+
   .logo-mark {
     width: 44px; height: 44px;
     border: 2px solid var(--neon-cyan);
@@ -2251,35 +2266,8 @@
     </div>
   </header>
 
-  <!-- UPLOAD -->
-  <div class="upload-section" id="upload-zone" onclick="document.getElementById('file-input').click()">
-    <input type="file" id="file-input" accept=".xlsx,.xls" onchange="handleFile(event)">
-    <div class="upload-icon">📂</div>
-    <div class="upload-text">
-      <h3>Muat Naik Fail Excel</h3>
-      <p>Seret & lepas atau klik untuk memilih fail .xlsx / .xls</p>
-    </div>
-    <button class="upload-btn" onclick="event.stopPropagation(); document.getElementById('file-input').click()">PILIH FAIL</button>
-  </div>
-  <div class="upload-status" id="upload-status"></div>
-  <div class="progress-wrap" id="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
-
-
   <!-- JSON CONVERTER & LOADER -->
   <div class="tools-bar" id="tools-bar">
-    <div class="tool-card" id="tool-convert">
-      <div class="tool-icon">⚙</div>
-      <div class="tool-body">
-        <div class="tool-title">TUKAR EXCEL → JSON</div>
-        <div class="tool-desc">Tukar .xlsx/.xls kepada fail .json untuk rendering lebih pantas</div>
-        <div class="tool-note" id="convert-note"></div>
-      </div>
-      <button class="tool-btn btn-convert" onclick="document.getElementById('excel-convert-input').click()">PILIH EXCEL</button>
-      <input type="file" id="excel-convert-input" accept=".xlsx,.xls" style="display:none" onchange="convertToJson(event)">
-    </div>
-
-    <div class="tool-divider"></div>
-
     <div class="tool-card" id="tool-json">
       <div class="tool-icon">⚡</div>
       <div class="tool-body">
@@ -2290,7 +2278,35 @@
       <button class="tool-btn btn-json" onclick="document.getElementById('json-upload-input').click()">PILIH JSON</button>
       <input type="file" id="json-upload-input" accept=".json" style="display:none" onchange="loadFromJson(event)">
     </div>
+
+    <div class="tool-divider"></div>
+
+    <div class="tool-card" id="upload-zone" onclick="document.getElementById('file-input').click()">
+      <div class="tool-icon">📂</div>
+      <div class="tool-body">
+        <div class="tool-title">Muat Naik Fail Excel</div>
+        <div class="tool-desc">Seret & lepas atau klik untuk memilih fail .xlsx / .xls</div>
+        <div class="tool-note" id="upload-note"></div>
+      </div>
+      <button class="tool-btn btn-upload" onclick="event.stopPropagation(); document.getElementById('file-input').click()">PILIH FAIL</button>
+      <input type="file" id="file-input" accept=".xlsx,.xls" onchange="handleFile(event)" style="display:none">
+    </div>
+
+    <div class="tool-divider"></div>
+
+    <div class="tool-card" id="tool-convert">
+      <div class="tool-icon">⚙</div>
+      <div class="tool-body">
+        <div class="tool-title">TUKAR EXCEL → JSON</div>
+        <div class="tool-desc">Tukar .xlsx/.xls kepada fail .json untuk rendering lebih pantas</div>
+        <div class="tool-note" id="convert-note"></div>
+      </div>
+      <button class="tool-btn btn-convert" onclick="document.getElementById('excel-convert-input').click()">PILIH EXCEL</button>
+      <input type="file" id="excel-convert-input" accept=".xlsx,.xls" style="display:none" onchange="convertToJson(event)">
+    </div>
   </div>
+  <div class="upload-status" id="upload-status"></div>
+  <div class="progress-wrap" id="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
 
   <!-- MAIN -->
   <div class="main-content" id="main-content">
@@ -2409,12 +2425,26 @@
           <select class="filter-select" id="f-negeri" multiple onchange="applyFilters()"></select>
         </div>
         <div class="filter-group">
-          <label class="filter-label">Kategori Premis</label>
-          <select class="filter-select" id="f-katpremis" multiple onchange="applyFilters()"></select>
+          <label class="filter-label">🔍 Kategori Premis</label>
+          <div class="tag-input-wrap" id="wrap-katpremis" onclick="focusTagInput('katpremis')">
+            <div class="tag-list" id="tags-katpremis"></div>
+            <input class="tag-input-field" id="f-katpremis" type="text" placeholder="Taip & tekan Enter..." autocomplete="off"
+              oninput="showTagSuggestions('katpremis', this.value)"
+              onkeydown="tagKeydown(event, 'katpremis')"
+              onblur="hideTagSuggestions('katpremis', 200)">
+          </div>
+          <div class="tag-suggestions" id="sug-katpremis"></div>
         </div>
         <div class="filter-group">
-          <label class="filter-label">Jenis Premis</label>
-          <select class="filter-select" id="f-jenispremis" multiple onchange="applyFilters()"></select>
+          <label class="filter-label">🔍 Jenis Premis</label>
+          <div class="tag-input-wrap" id="wrap-jenispremis" onclick="focusTagInput('jenispremis')">
+            <div class="tag-list" id="tags-jenispremis"></div>
+            <input class="tag-input-field" id="f-jenispremis" type="text" placeholder="Taip & tekan Enter..." autocomplete="off"
+              oninput="showTagSuggestions('jenispremis', this.value)"
+              onkeydown="tagKeydown(event, 'jenispremis')"
+              onblur="hideTagSuggestions('jenispremis', 200)">
+          </div>
+          <div class="tag-suggestions" id="sug-jenispremis"></div>
         </div>
         <div class="filter-group">
           <label class="filter-label">Status Serbuan</label>
@@ -2828,7 +2858,7 @@
     <div class="footer-inner">
       <div class="footer-text">
         <div class="footer-title">CPO 2026</div>
-        <div class="footer-sub">Versi 7.0 &nbsp;·&nbsp; Untuk Kegunaan Cawangan Perisikan dan Operasi (CPO) Sahaja &nbsp;·&nbsp; Tiada Hak Cipta &nbsp;·&nbsp; Bukan untuk Tatapan Umum</div>
+        <div class="footer-sub">&nbsp;·&nbsp;Versi 8.0&nbsp;·&nbsp;Untuk Kegunaan CPO dan Cawangan berkaitan Sahaja&nbsp;·&nbsp;Bukan untuk Tatapan Umum&nbsp;·&nbsp;</div>
       </div>
     </div>
   </footer>
@@ -3195,8 +3225,6 @@ function buildFilters() {
     });
   })();
   fillMultiSelect('f-negeri','Negeri');
-  fillMultiSelect('f-katpremis','Kategori Premis');
-  fillMultiSelect('f-jenispremis','Jenis Premis');
   fillMultiSelect('f-katitem','Kategori Item');
   fillSingleSelect('f-pengkelasan','Pengkelasan Produk');
   fillSingleSelect('f-statuspendaftaran','Status Pendaftaran');
@@ -3207,6 +3235,8 @@ function buildFilters() {
   // Invalidate tag token caches for new fields
   delete tagTokenCache['namapremis'];
   delete tagTokenCache['alamat'];
+  delete tagTokenCache['katpremis'];
+  delete tagTokenCache['jenispremis'];
 }
 
 function getSelected(id) {
@@ -3218,14 +3248,14 @@ function getSingle(id) { return document.getElementById(id).value; }
 function getText(id) { return document.getElementById(id).value.trim().toLowerCase(); }
 
 function resetFilters() {
-  ['f-tahun','f-negeri','f-katpremis','f-jenispremis','f-katitem','f-bulan'].forEach(id => {
+  ['f-tahun','f-negeri','f-katitem','f-bulan'].forEach(id => {
     const sel = document.getElementById(id);
     [...sel.options].forEach(o => o.selected = false);
   });
   ['f-pengkelasan','f-statuspendaftaran','f-statusnotifikasi','f-statusserbuan','f-online','f-tindakan'].forEach(id => {
     document.getElementById(id).value = '';
   });
-  ['katkhas','namaracun','namaproduk','namapremis','alamat'].forEach(id => clearAllTags(id));
+  ['katkhas','namaracun','namaproduk','namapremis','alamat','katpremis','jenispremis'].forEach(id => clearAllTags(id));
   applyFilters();
 }
 
@@ -3236,8 +3266,8 @@ function applyFilters() {
   const fTahun = getSelected('f-tahun');
   const fBulan = getSelected('f-bulan');
   const fNegeri = getSelected('f-negeri');
-  const fKatPremis = getSelected('f-katpremis');
-  const fJenisPremis = getSelected('f-jenispremis');
+  const fKatPremis = tagState.katpremis;
+  const fJenisPremis = tagState.jenispremis;
   const fTindakan = getSingle('f-tindakan');
   const fSerbuan = getSingle('f-statusserbuan');
   const fOnline = getSingle('f-online');
@@ -4887,9 +4917,9 @@ function scSave(list) {
 }
 
 function scCaptureState() {
-  const multi = ['f-tahun','f-bulan','f-negeri','f-katpremis','f-jenispremis','f-katitem'];
+  const multi = ['f-tahun','f-bulan','f-negeri','f-katitem'];
   const single = ['f-statusserbuan','f-online','f-pengkelasan','f-statuspendaftaran','f-statusnotifikasi','f-tindakan'];
-  const tags = ['katkhas','namaracun','namaproduk','namapremis','alamat'];
+  const tags = ['katkhas','namaracun','namaproduk','namapremis','alamat','katpremis','jenispremis'];
   const state = { multi:{}, single:{}, tags:{} };
   multi.forEach(id => {
     const vals = [...document.getElementById(id).selectedOptions].map(o=>o.value).filter(Boolean);
@@ -4912,13 +4942,13 @@ function scIsEmpty(state) {
 
 function scApplyState(state) {
   // Reset all first
-  ['f-tahun','f-bulan','f-negeri','f-katpremis','f-jenispremis','f-katitem'].forEach(id => {
+  ['f-tahun','f-bulan','f-negeri','f-katitem'].forEach(id => {
     [...document.getElementById(id).options].forEach(o => o.selected = false);
   });
   ['f-statusserbuan','f-online','f-pengkelasan','f-statuspendaftaran','f-statusnotifikasi'].forEach(id => {
     document.getElementById(id).value = '';
   });
-  ['katkhas','namaracun','namaproduk','namapremis','alamat'].forEach(f => clearAllTags(f));
+  ['katkhas','namaracun','namaproduk','namapremis','alamat','katpremis','jenispremis'].forEach(f => clearAllTags(f));
 
   // Apply saved state
   Object.entries(state.multi || {}).forEach(([id, vals]) => {
@@ -4943,12 +4973,13 @@ function scSummaryHTML(state) {
   const lines = [];
   const LABELS = {
     'f-tahun':'Tahun','f-bulan':'Bulan','f-negeri':'Negeri',
-    'f-katpremis':'Kat. Premis','f-jenispremis':'Jenis Premis','f-katitem':'Kat. Item',
+    'f-katitem':'Kat. Item',
     'f-statusserbuan':'Status Serbuan','f-online':'Jualan Online',
     'f-pengkelasan':'Pengkelasan','f-statuspendaftaran':'Status Pendaftaran',
     'f-statusnotifikasi':'Status Notifikasi',
     'katkhas':'Kat. Khas','namaracun':'Nama Racun','namaproduk':'Nama Produk',
-    'namapremis':'Nama Premis','alamat':'Alamat'
+    'namapremis':'Nama Premis','alamat':'Alamat',
+    'katpremis':'Kat. Premis','jenispremis':'Jenis Premis'
   };
   Object.entries(state.multi || {}).forEach(([id,vals]) => {
     lines.push(`<span>${LABELS[id]||id}:</span> ${vals.join(', ')}`);
@@ -5025,16 +5056,20 @@ function renderShortcuts() {
 // Init shortcuts on page load
 document.addEventListener('DOMContentLoaded', renderShortcuts);
 
-const tagState = { katkhas: [], namaracun: [], namaproduk: [], namapremis: [], alamat: [] };
+const tagState = { katkhas: [], namaracun: [], namaproduk: [], namapremis: [], alamat: [], katpremis: [], jenispremis: [] };
 let suggestTimeout = null;
 
 const tagColMap = {
-  katkhas:    '__katkhas_lc',
-  namaracun:  '__namaracun_lc',
-  namaproduk: '__namaproduk_lc',
-  namapremis: '__namapremis_lc',
-  alamat:     '__alamat_lc',
+  katkhas:      '__katkhas_lc',
+  namaracun:    '__namaracun_lc',
+  namaproduk:   '__namaproduk_lc',
+  namapremis:   '__namapremis_lc',
+  alamat:       '__alamat_lc',
+  katpremis:    '__katpremis',
+  jenispremis:  '__jenispremis',
 };
+// Note: katpremis/jenispremis are categorical codes, so applyFilters() matches
+// them EXACTLY against tagState (unlike the free-text substring fields above).
 const tagTokenCache = {};
 
 function buildTokenCache(field) {
@@ -5141,7 +5176,7 @@ function showTagSuggestions(field, query) {
   suggestTimeout = setTimeout(() => {
     const tokens = buildTokenCache(field);
     const existing = tagState[field].map(t => t.toLowerCase());
-    const matches = tokens.filter(t => t.includes(q) && !existing.includes(t.toLowerCase())).slice(0, 30);
+    const matches = tokens.filter(t => t.toLowerCase().includes(q) && !existing.includes(t.toLowerCase())).slice(0, 30);
     if (!matches.length) {
       box.innerHTML = `<div class="sug-empty">Tiada cadangan — tekan Enter untuk tambah "${query}"</div>`;
     } else {
@@ -5454,7 +5489,7 @@ function autoGenerateLaporanTajuk() {
   const fKatKhas = (window.tagState && window.tagState.katkhas) ? [...window.tagState.katkhas] : [];
   const fNegeri = [...document.getElementById('f-negeri').selectedOptions].map(o=>o.value).filter(Boolean);
   const fPengkelasan = document.getElementById('f-pengkelasan').value;
-  const fKatPremis = [...(document.getElementById('f-katpremis')?.selectedOptions||[])].map(o=>o.value).filter(Boolean);
+  const fKatPremis = (window.tagState && window.tagState.katpremis) ? [...window.tagState.katpremis] : [];
 
   // Build product/subject string
   const subjekArr = [];
