@@ -501,10 +501,10 @@
   }
   .tag-input-field::placeholder { color: var(--text-muted); font-size: 11px; }
   .tag-suggestions {
-    position: absolute; top: 100%; left: 0; right: 0;
-    background: #080f1e; border: 1px solid rgba(0,245,255,0.25); border-top: none;
-    border-radius: 0 0 6px 6px; max-height: 160px; overflow-y: auto;
-    z-index: 200; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    position: fixed; left: 0; right: 0;
+    background: #080f1e; border: 1px solid rgba(0,245,255,0.25);
+    border-radius: 6px; max-height: 220px; overflow-y: auto;
+    z-index: 99999; display: none; box-shadow: 0 8px 32px rgba(0,0,0,0.7);
   }
   .tag-suggestions.open { display: block; }
   .sug-item {
@@ -527,7 +527,6 @@
     flex-wrap: wrap;
     gap: 10px;
     position: relative;
-    overflow: hidden;
   }
   .filter-master-bar::before {
     content:'';
@@ -744,6 +743,111 @@
     cursor: pointer; transition: all 0.2s;
   }
   .sc-btn-save:hover { background: rgba(0,245,255,0.18); box-shadow: 0 0 12px rgba(0,245,255,0.3); }
+
+  /* ── Alias Agensi Modal ── */
+  .alias-modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.80);
+    backdrop-filter: blur(5px);
+    z-index: 99998;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .alias-modal-overlay.open { opacity: 1; pointer-events: all; }
+  .alias-modal {
+    background: var(--bg-card);
+    border: 1px solid rgba(0,245,255,0.3);
+    border-radius: 14px;
+    padding: 24px 28px;
+    width: min(680px, 95vw);
+    max-height: 85vh;
+    display: flex; flex-direction: column;
+    box-shadow: 0 0 60px rgba(0,245,255,0.15);
+  }
+  .alias-modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+  }
+  .alias-modal-header h3 {
+    font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700;
+    letter-spacing: 2px; color: var(--neon-cyan); text-transform: uppercase; margin: 0;
+  }
+  .alias-modal-close {
+    background: none; border: none; color: var(--text-muted);
+    font-size: 18px; cursor: pointer; padding: 2px 6px; border-radius: 4px;
+    transition: color 0.2s;
+  }
+  .alias-modal-close:hover { color: var(--text-primary); }
+  .alias-add-row {
+    display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
+  }
+  .alias-add-row input {
+    flex: 1; min-width: 120px;
+    background: rgba(0,0,0,0.4); border: 1px solid rgba(0,245,255,0.25);
+    border-radius: 6px; padding: 7px 10px;
+    color: var(--text-primary); font-family: 'Share Tech Mono',monospace; font-size: 11px;
+    outline: none; transition: border-color 0.2s;
+  }
+  .alias-add-row input:focus { border-color: var(--neon-cyan); }
+  .alias-add-row input::placeholder { color: var(--text-muted); }
+  .alias-add-btn {
+    padding: 7px 16px; border-radius: 6px;
+    border: 1px solid rgba(0,245,255,0.5); background: rgba(0,245,255,0.1);
+    color: var(--neon-cyan); font-family: 'Share Tech Mono',monospace; font-size: 11px;
+    font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.2s;
+  }
+  .alias-add-btn:hover { background: rgba(0,245,255,0.2); }
+  .alias-search-row {
+    margin-bottom: 10px;
+  }
+  .alias-search-row input {
+    width: 100%; background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(0,132,255,0.2); border-radius: 6px;
+    padding: 6px 10px; color: var(--text-primary);
+    font-family: 'Share Tech Mono',monospace; font-size: 11px; outline: none;
+  }
+  .alias-search-row input:focus { border-color: rgba(0,132,255,0.5); }
+  .alias-list-wrap {
+    flex: 1; overflow-y: auto; border: 1px solid var(--border);
+    border-radius: 8px; background: rgba(0,0,0,0.2);
+  }
+  .alias-list-header {
+    display: grid; grid-template-columns: 1fr 24px 1fr 36px;
+    gap: 8px; padding: 7px 12px;
+    background: rgba(0,132,255,0.08); border-bottom: 1px solid var(--border);
+    font-family: 'Share Tech Mono',monospace; font-size: 10px;
+    color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase;
+    position: sticky; top: 0; z-index: 1;
+  }
+  .alias-row {
+    display: grid; grid-template-columns: 1fr 24px 1fr 36px;
+    gap: 8px; padding: 6px 12px; align-items: center;
+    border-bottom: 1px solid rgba(0,132,255,0.05);
+    transition: background 0.1s;
+  }
+  .alias-row:hover { background: rgba(0,245,255,0.04); }
+  .alias-row:last-child { border-bottom: none; }
+  .alias-row-orig { font-family: 'Share Tech Mono',monospace; font-size: 11px; color: var(--text-primary); word-break: break-all; }
+  .alias-row-arrow { color: var(--text-muted); font-size: 12px; text-align: center; }
+  .alias-row-std { font-family: 'Share Tech Mono',monospace; font-size: 11px; color: var(--neon-cyan); font-weight: 600; }
+  .alias-row-src { font-family: 'Share Tech Mono',monospace; font-size: 9px; color: var(--text-muted); }
+  .alias-del-btn {
+    background: none; border: 1px solid rgba(255,68,68,0.2);
+    border-radius: 4px; color: rgba(255,68,68,0.5);
+    font-size: 12px; cursor: pointer; padding: 2px 6px;
+    transition: all 0.15s; line-height: 1;
+  }
+  .alias-del-btn:hover { border-color: #ff4444; color: #ff4444; background: rgba(255,68,68,0.08); }
+  .alias-del-btn:disabled { opacity: 0.3; cursor: default; }
+  .alias-modal-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 12px; gap: 10px; flex-wrap: wrap;
+  }
+  .alias-count { font-family: 'Share Tech Mono',monospace; font-size: 10px; color: var(--text-muted); }
+  .alias-notice { font-family: 'Share Tech Mono',monospace; font-size: 10px; color: #ffe600; display:none; }
+  .alias-notice.show { display: block; }
+
   .filter-sub-panel {
     margin-bottom: 8px;
     overflow: hidden;
@@ -2023,6 +2127,48 @@
         <span class="sc-empty" id="sc-empty">Tiada shortcut — simpan tapisan aktif sebagai shortcut</span>
       </div>
       <button class="shortcut-add-btn" onclick="openShortcutModal()" id="sc-add-btn" title="Simpan tapisan semasa sebagai shortcut">＋ Simpan Tapisan</button>
+      <button class="shortcut-add-btn" onclick="openAliasModal()" title="Urus alias nama agensi" style="margin-left:4px;border-color:rgba(0,255,136,0.4);color:#00ff88">⚙ Alias Agensi</button>
+    </div>
+
+    <!-- ALIAS AGENSI MODAL -->
+    <div class="alias-modal-overlay" id="alias-modal-overlay" onclick="closeAliasModal(event)">
+      <div class="alias-modal" onclick="event.stopPropagation()">
+        <div class="alias-modal-header">
+          <h3>⚙ Pengurusan Alias Agensi</h3>
+          <button class="alias-modal-close" onclick="closeAliasModal()">✕</button>
+        </div>
+        <!-- Tambah alias baru -->
+        <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-bottom:8px">TAMBAH ALIAS BARU</div>
+        <div class="alias-add-row">
+          <input type="text" id="alias-input-orig" placeholder="Nama asal dalam Excel (cth: Caw. Pergigian KL)" maxlength="120"
+            onkeydown="if(event.key==='Enter')document.getElementById('alias-input-std').focus()">
+          <span style="color:var(--text-muted);font-size:16px;align-self:center">→</span>
+          <input type="text" id="alias-input-std" placeholder="Nama standard (cth: PERGIGIAN)" maxlength="60"
+            onkeydown="if(event.key==='Enter')addAliasEntry()">
+          <button class="alias-add-btn" onclick="addAliasEntry()">＋ Tambah</button>
+        </div>
+        <!-- Carian -->
+        <div class="alias-search-row">
+          <input type="text" id="alias-search-input" placeholder="🔍  Cari alias..." oninput="renderAliasList()">
+        </div>
+        <!-- Senarai -->
+        <div class="alias-list-wrap">
+          <div class="alias-list-header">
+            <div>Nama Asal (Excel)</div><div></div><div>Nama Standard</div><div></div>
+          </div>
+          <div id="alias-list-body"></div>
+        </div>
+        <div class="alias-modal-footer">
+          <div>
+            <span class="alias-count" id="alias-count"></span>
+            <span class="alias-notice" id="alias-notice">⚠ Ada perubahan — muat semula data untuk pakai alias baru</span>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="sc-btn-cancel" onclick="closeAliasModal()">Tutup</button>
+            <button class="sc-btn-save" onclick="applyAndCloseAlias()">✔ Guna &amp; Tutup</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- SHORTCUT MODAL -->
@@ -2733,19 +2879,72 @@ function getVal(row, key) {
 // kemudian seragamkan guna AGENSI_ALIAS (edit di sini untuk tambah padanan).
 // ─────────────────────────────────────────────
 const AGENSI_ALIAS = {
-  'JABATAN PERHILITAN': 'PERHILITAN',
+  // ── MDA / Peranti Perubatan ──
   'MDA': 'MDA',
   'PENGUATKUASA PERANTI PERUBATAN': 'MDA',
   'PIHAK BERKUASA PERANTI PERUBATAN (MDA)': 'MDA',
+  'PIHAK BERKUASA PERANTI PERUBATAN': 'MDA',
+  // ── NPRA / GMP ──
   'NPRA (GMP)': 'NPRA',
+  'GMP': 'NPRA',
+  // ── CPTK / Perubatan Tradisional & Komplementari ──
+  'CAWANGAN PERUBATAN TRADISIONAL & KOMPLEMENTARI': 'CPTK',
+  'CAWANGAN PERUBATAN TRADISIONAL & KOMPLEMENTERI': 'CPTK',
+  'CAWANGAN PERUBATAN TRADISIONAL & KOMPLEMENTARI (CPTK)': 'CPTK',
+  'CAWANGAN PERUBATAN TRADISIONAL DAN KOMPLEMENTARI (PT&K)': 'CPTK',
+  'CAWANGAN PERUBATAN TRADISIONAL DAN KOMPLEMENTARI': 'CPTK',
+  'BAHAGIAN TCM': 'CPTK',
+  'TCM': 'CPTK',
+  'SEKSYEN TCM': 'CPTK',
+  'SEKSYEN TCM , PERUBATAN JKN PERAK': 'CPTK',
+  'BAHAGIAN PERUBATAN TRADISIONAL DAN KOMPLEMENTARI PULAU PINANG (BPTK)': 'CPTK',
+  'BAHAGIAN PERUBATAN TRADISIONAL DAN KOMPLEMENTARI': 'CPTK',
+  'BPTK': 'CPTK',
+  // ── Pergigian ──
+  'PERGIGIAN': 'PERGIGIAN',
+  'CAWANGAN AMALAN PERGIGIAN P.PINANG': 'PERGIGIAN',
+  'CAWANGAN AMALAN PERGIGIAN PULAU PINANG': 'PERGIGIAN',
+  'UNIT PENGUATKUASAAN PERGIGIAN': 'PERGIGIAN',
+  'UNIT PENGUATKUASAAN PERGIGIAN': 'PERGIGIAN',
+  'PERGIGIAN JKN PERAK DAN FRU KL': 'PERGIGIAN',
+  // ── Farmasi Forensik ──
+  'CAWANGAN FARMASI FORENSIK BPFKKM': 'FARMASI FORENSIK',
+  'CAWANGAN FARMASI FORENSIK': 'FARMASI FORENSIK',
+  // ── PBT ──
   'MBJB': 'PBT',
   'MBSA': 'PBT',
+  // ── JPV / Veterinar ──
   'JABATAN PERKHIDMATAN VETERINAR': 'JPV',
-  'JABATAN BOMBA': 'BOMBA',
+  'JABATAN PERHILITAN': 'PERHILITAN',
+  'PERHILITAN': 'PERHILITAN',
+  'PERKESO': 'PERKESO',
+  // ── Imigresen ──
   'JABATAN IMIGRESEN': 'IMIGRESEN',
+  // ── Bomba ──
+  'JABATAN BOMBA': 'BOMBA',
+  'BOMBA': 'BOMBA',
+  // ── JPN ──
+  'JPN': 'JPN',
+  // ── JAIP ──
+  'JAIP': 'JAIP',
+  // ── RELA ──
+  'RELA': 'RELA',
+  // ── UIPN ──
+  'UIPN': 'UIPN',
+  'SURUHANJAYA INTEGRITI AGENSI PENGUATKUASAAN': 'UIPN',
+  // ── Kesihatan / JKN ──
+  'KESIHATAN AWAM': 'KESIHATAN AWAM',
+  'UNIT INSPEKTORAT KESIHATAN PERSEKITARAN PKD KEMAMAN': 'KESIHATAN AWAM',
+  // ── Lain-lain ──
+  'EAIC': 'EAIC',
+  'CYFORS': 'CYFORS',
+  'KA DAN RTG': 'KA DAN RTG',
+  'KEMENTERIAN PERTANIAN': 'KEMENTERIAN PERTANIAN',
+  'PENJARA': 'PENJARA',
   'POS MALAYSIA': 'POS MALAYSIA',
+  'SSM': 'SSM',
 };
-const AGENSI_SKIP = /^(LAIN[- ]?LAIN( AGENSI| AGNESI)?|TIADA|TIDAK BERKENAAN|N\/A|NA)$/;
+const AGENSI_SKIP = /^(LAIN[- ]?LAIN( AGENSI| AGNESI)?|TIADA|TIDAK BERKENAAN|N\/A|NA|#N\/A|0)$/;
 const AGENSI_NONE = '(TIADA AGENSI)';
 
 function parseAgensi(a, b) {
@@ -5048,6 +5247,7 @@ function loadFromJson(evt) {
       showProgress(50);
       setLoadingText('MEMPROSES DATA...');
       detectColumns(Object.keys(rows[0]));
+      loadUserAlias();   // muatkan alias pengguna sebelum preprocess
       rawData = preprocessData(rows);
 
       showProgress(85);
@@ -5200,6 +5400,151 @@ function closeShortcutModal(e) {
   document.getElementById('sc-modal-overlay').classList.remove('open');
   _scPendingState = null;
 }
+
+// ══════════════════════════════════════════════════════════════
+// ALIAS AGENSI EDITOR
+// ══════════════════════════════════════════════════════════════
+const ALIAS_STORAGE_KEY = 'cpo_agensi_alias_v1';
+let _aliasDirty = false;
+
+// Muatkan alias tambahan dari localStorage dan gabungkan dengan AGENSI_ALIAS
+function loadUserAlias() {
+  try {
+    const saved = localStorage.getItem(ALIAS_STORAGE_KEY);
+    if (!saved) return;
+    const userAlias = JSON.parse(saved);
+    Object.entries(userAlias).forEach(([orig, std]) => {
+      AGENSI_ALIAS[orig.toUpperCase()] = std.toUpperCase();
+    });
+  } catch(e) {}
+}
+
+// Simpan HANYA alias tambahan pengguna (bukan hardcode) ke localStorage
+function saveUserAlias() {
+  try {
+    const saved = localStorage.getItem(ALIAS_STORAGE_KEY);
+    const existing = saved ? JSON.parse(saved) : {};
+    localStorage.setItem(ALIAS_STORAGE_KEY, JSON.stringify(existing));
+  } catch(e) {}
+}
+
+// Buka modal
+function openAliasModal() {
+  _aliasDirty = false;
+  renderAliasList();
+  document.getElementById('alias-modal-overlay').classList.add('open');
+  document.getElementById('alias-notice').classList.remove('show');
+}
+
+// Tutup modal
+function closeAliasModal(e) {
+  if (e && e.target !== document.getElementById('alias-modal-overlay')) return;
+  document.getElementById('alias-modal-overlay').classList.remove('open');
+}
+
+// Guna & Tutup — reprocess data dengan alias baru
+function applyAndCloseAlias() {
+  document.getElementById('alias-modal-overlay').classList.remove('open');
+  if (_aliasDirty && rawData.length) {
+    // clear token cache agensi
+    delete tagTokenCache['agensi'];
+    // reprocess __agensi_f untuk semua row
+    rawData.forEach(r => {
+      r.__agensi = parseAgensi(
+        String(r[COL['Agensi Lain Yang Terlibat']]||''),
+        String(r[COL['Nyatakan Agensi']]||'')
+      );
+      r.__agensi_f = r.__agensi.length ? r.__agensi : [AGENSI_NONE];
+    });
+    applyFilters();
+    _aliasDirty = false;
+  }
+}
+
+// Tambah alias baru
+function addAliasEntry() {
+  const origEl = document.getElementById('alias-input-orig');
+  const stdEl  = document.getElementById('alias-input-std');
+  const orig   = origEl.value.trim().toUpperCase();
+  const std    = stdEl.value.trim().toUpperCase();
+  if (!orig || !std) {
+    if (!orig) origEl.focus(); else stdEl.focus();
+    return;
+  }
+  // Simpan ke AGENSI_ALIAS (runtime)
+  AGENSI_ALIAS[orig] = std;
+  // Simpan ke localStorage
+  try {
+    const saved = localStorage.getItem(ALIAS_STORAGE_KEY);
+    const existing = saved ? JSON.parse(saved) : {};
+    existing[orig] = std;
+    localStorage.setItem(ALIAS_STORAGE_KEY, JSON.stringify(existing));
+  } catch(e) {}
+  origEl.value = '';
+  stdEl.value  = '';
+  origEl.focus();
+  _aliasDirty = true;
+  document.getElementById('alias-notice').classList.add('show');
+  renderAliasList();
+}
+
+// Padam alias (hanya alias user, bukan hardcode)
+function deleteAliasEntry(orig) {
+  delete AGENSI_ALIAS[orig];
+  try {
+    const saved = localStorage.getItem(ALIAS_STORAGE_KEY);
+    const existing = saved ? JSON.parse(saved) : {};
+    delete existing[orig];
+    localStorage.setItem(ALIAS_STORAGE_KEY, JSON.stringify(existing));
+  } catch(e) {}
+  _aliasDirty = true;
+  document.getElementById('alias-notice').classList.add('show');
+  renderAliasList();
+}
+
+// Render senarai alias
+function renderAliasList() {
+  const body   = document.getElementById('alias-list-body');
+  const countEl = document.getElementById('alias-count');
+  if (!body) return;
+
+  // Dapatkan alias user dari localStorage
+  let userAlias = {};
+  try {
+    const saved = localStorage.getItem(ALIAS_STORAGE_KEY);
+    if (saved) userAlias = JSON.parse(saved);
+  } catch(e) {}
+
+  const q = (document.getElementById('alias-search-input')||{}).value||'';
+  const qLc = q.toLowerCase();
+
+  // Gabung semua alias — tandakan mana hardcode, mana user
+  const allEntries = Object.entries(AGENSI_ALIAS).map(([orig, std]) => ({
+    orig, std,
+    isUser: Object.prototype.hasOwnProperty.call(userAlias, orig)
+  })).filter(({orig, std}) =>
+    !qLc || orig.toLowerCase().includes(qLc) || std.toLowerCase().includes(qLc)
+  ).sort((a,b) => a.orig.localeCompare(b.orig));
+
+  if (!allEntries.length) {
+    body.innerHTML = `<div style="padding:20px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-muted)">Tiada alias${qLc ? ' yang sepadan' : ''}</div>`;
+  } else {
+    body.innerHTML = allEntries.map(({orig, std, isUser}) => `
+      <div class="alias-row">
+        <div class="alias-row-orig">${orig}</div>
+        <div class="alias-row-arrow">→</div>
+        <div class="alias-row-std">${std}${isUser ? ' <span style="font-size:9px;color:#ffe600;border:1px solid #ffe60044;border-radius:3px;padding:0 4px">USER</span>' : ''}</div>
+        <button class="alias-del-btn" onclick="deleteAliasEntry('${orig.replace(/'/g,"\\'")}');event.stopPropagation()"
+          ${isUser ? '' : 'disabled title="Alias sistem — tidak boleh dipadam"'}>✕</button>
+      </div>`).join('');
+  }
+
+  const total = Object.keys(AGENSI_ALIAS).length;
+  const user  = Object.keys(userAlias).length;
+  if (countEl) countEl.textContent = `${total} alias (${user} tambahan pengguna)`;
+}
+
+// loadUserAlias() dipanggil terus sebelum preprocessData() dalam file load handler
 
 function saveShortcut() {
   const name = document.getElementById('sc-name-input').value.trim();
@@ -5376,6 +5721,17 @@ function showTagSuggestions(field, query) {
         const hi = m.replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi'), s => `<mark>${s}</mark>`);
         return `<div class="sug-item" data-val="${m}" onmousedown="addTag('${field}','${m.replace(/'/g,"\\'")}');document.getElementById('f-${field}').focus()">${hi}</div>`;
       }).join('');
+    }
+    // posisi dropdown tepat di bawah input field (guna fixed + getBoundingClientRect)
+    const inp = document.getElementById('f-' + field);
+    if (inp) {
+      const rect = inp.getBoundingClientRect();
+      const tagContainer = inp.closest('.tag-input-wrap') || inp.parentElement;
+      const contRect = tagContainer ? tagContainer.getBoundingClientRect() : rect;
+      box.style.left   = contRect.left + 'px';
+      box.style.width  = contRect.width + 'px';
+      box.style.top    = (contRect.bottom + 2) + 'px';
+      box.style.right  = 'auto';
     }
     box.classList.add('open');
   }, 150);
