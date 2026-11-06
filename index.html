@@ -2355,6 +2355,139 @@
       </div>
     </div>
 
+    <!-- VSEC 3: PENGLIBATAN AGENSI -->
+    <div class="vsec-wrap">
+      <div class="vsec-header" onclick="toggleVsec('agensi')">
+        <div class="vsec-title">🤝 PENGLIBATAN AGENSI LUAR <small>bilangan serbuan · kadar penglibatan · komposisi</small></div>
+        <button class="vsec-toggle" id="vsec-btn-agensi" onclick="event.stopPropagation();toggleVsec('agensi')">
+          <span class="vsec-arrow" id="vsec-arrow-agensi">▼</span> PAPARKAN
+        </button>
+      </div>
+      <div class="vsec-body" id="vsec-body-agensi">
+        <div class="vsec-inner">
+
+          <!-- KPI ROW -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+            <div style="background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);border-radius:8px;padding:14px 16px;text-align:center">
+              <div id="ag-kpi-dengan" style="font-family:'Share Tech Mono',monospace;font-size:28px;font-weight:700;color:#00ff88;line-height:1">—</div>
+              <div style="font-size:10px;color:#5580a0;margin-top:4px;letter-spacing:1px;text-transform:uppercase">Serbuan Libat Agensi Luar</div>
+            </div>
+            <div style="background:rgba(85,128,160,0.06);border:1px solid rgba(85,128,160,0.2);border-radius:8px;padding:14px 16px;text-align:center">
+              <div id="ag-kpi-tanpa" style="font-family:'Share Tech Mono',monospace;font-size:28px;font-weight:700;color:#5580a0;line-height:1">—</div>
+              <div style="font-size:10px;color:#5580a0;margin-top:4px;letter-spacing:1px;text-transform:uppercase">Serbuan BPF Sahaja</div>
+            </div>
+            <div style="background:rgba(0,132,255,0.06);border:1px solid rgba(0,132,255,0.2);border-radius:8px;padding:14px 16px;text-align:center">
+              <div id="ag-kpi-pct" style="font-family:'Share Tech Mono',monospace;font-size:28px;font-weight:700;color:#0084ff;line-height:1">—</div>
+              <div style="font-size:10px;color:#5580a0;margin-top:4px;letter-spacing:1px;text-transform:uppercase">Kadar Penglibatan Agensi Luar</div>
+            </div>
+          </div>
+
+          <!-- ROW 1: Bar agensi + Doughnut -->
+          <div class="charts-row" style="margin-bottom:12px">
+            <div class="chart-panel" style="flex:2">
+              <div class="panel-title">BILANGAN SERBUAN MENGIKUT AGENSI <span>unik per No Rujukan Serbuan</span></div>
+              <div class="chart-container" style="height:260px">
+                <canvas id="chart-agensi"></canvas>
+              </div>
+            </div>
+            <div class="chart-panel" style="flex:1">
+              <div class="panel-title">PENGLIBATAN AGENSI <span>dengan / tanpa agensi luar</span></div>
+              <div class="chart-container" style="height:260px">
+                <canvas id="chart-agensi-pie"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- ROW 2: Taburan bilangan agensi per serbuan -->
+          <div class="charts-row" style="margin-bottom:0">
+            <div class="chart-panel" style="flex:1">
+              <div class="panel-title">KOMPOSISI SERBUAN <span>bilangan agensi yang terlibat per serbuan</span></div>
+              <div class="chart-container" style="height:200px">
+                <canvas id="chart-agensi-taburan"></canvas>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- VSEC 4: KPI & SASARAN OBB -->
+    <div class="vsec-wrap">
+      <div class="vsec-header" onclick="toggleVsec('kpiobb')">
+        <div class="vsec-title">🎯 KPI &amp; SASARAN OBB <small>PK1-n5 · Output 7 · pencapaian per negeri</small></div>
+        <button class="vsec-toggle" id="vsec-btn-kpiobb" onclick="event.stopPropagation();toggleVsec('kpiobb')">
+          <span class="vsec-arrow" id="vsec-arrow-kpiobb">▼</span> PAPARKAN
+        </button>
+      </div>
+      <div class="vsec-body" id="vsec-body-kpiobb">
+        <div class="vsec-inner">
+
+          <!-- ROW 1: PK1-n5 gauge + breakdown -->
+          <div class="charts-row" style="margin-bottom:16px">
+
+            <!-- Gauge PK1-n5 -->
+            <div class="chart-panel" style="flex:1;min-width:220px;max-width:320px">
+              <div class="panel-title">KPI PK1-n5 <span>keberkesanan serbuan dalam talian</span></div>
+              <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 8px 12px;gap:10px">
+
+                <!-- Nombor di atas gauge -->
+                <div style="text-align:center">
+                  <div id="pk1n5-pct-label" style="font-family:'Share Tech Mono',monospace;font-size:36px;font-weight:700;color:#00f5ff;line-height:1">—%</div>
+                  <div id="pk1n5-status-label" style="font-size:10px;letter-spacing:1px;margin-top:5px;color:#5580a0">—</div>
+                </div>
+
+                <!-- Gauge canvas -->
+                <div style="position:relative;width:160px;height:88px;overflow:hidden">
+                  <canvas id="chart-pk1n5-gauge" width="160" height="160" style="position:absolute;top:0;left:0"></canvas>
+                </div>
+
+                <!-- N dan D -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;font-family:'Share Tech Mono',monospace;font-size:11px">
+                  <div style="background:rgba(0,132,255,0.08);border:1px solid rgba(0,132,255,0.2);border-radius:6px;padding:8px;text-align:center">
+                    <div id="pk1n5-n" style="font-size:20px;font-weight:700;color:#0084ff">—</div>
+                    <div style="color:#5580a0;font-size:9px;margin-top:2px">BERJAYA (N)</div>
+                  </div>
+                  <div style="background:rgba(85,128,160,0.08);border:1px solid rgba(85,128,160,0.2);border-radius:6px;padding:8px;text-align:center">
+                    <div id="pk1n5-d" style="font-size:20px;font-weight:700;color:#5580a0">—</div>
+                    <div style="color:#5580a0;font-size:9px;margin-top:2px">SEMUA ONLINE (D)</div>
+                  </div>
+                </div>
+                <div style="font-size:10px;color:#5580a0;text-align:center;letter-spacing:0.5px">Sasaran: <span style="color:#ffe600">≥ 80%</span> &nbsp;|&nbsp; Formula: N/D × 100%</div>
+              </div>
+            </div>
+
+            <!-- OBB tahun selector + progres bar -->
+            <div class="chart-panel" style="flex:3">
+              <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+                <div class="panel-title" style="margin-bottom:0">OBB OUTPUT 7 <span>sasaran serbuan per negeri</span></div>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                  <label style="font-size:10px;color:#5580a0;font-family:'Share Tech Mono',monospace">
+                    <input type="checkbox" id="obb-takcapai-only" onchange="renderOBB()" style="margin-right:4px">
+                    Tidak capai sahaja
+                  </label>
+                  <select id="obb-tahun-select" class="filter-select" style="height:auto;padding:6px 10px;font-size:11px;width:auto;min-width:120px;border-color:rgba(0,245,255,0.25)" onchange="renderOBB()">
+                    <option value="2026">Tahun 2026</option>
+                    <option value="2025">Tahun 2025 &amp; Sebelum</option>
+                  </select>
+                </div>
+              </div>
+              <!-- BPF KKM Nasional -->
+              <div id="obb-nasional" style="margin-bottom:8px"></div>
+              <!-- senarai negeri -->
+              <div id="obb-container" style="display:flex;flex-direction:column;gap:7px;max-height:320px;overflow-y:auto;padding-right:4px"></div>
+              <div style="display:flex;gap:16px;margin-top:10px;font-size:10px;font-family:'Share Tech Mono',monospace">
+                <span style="color:#00ff88">■ ≥100% Tercapai</span>
+                <span style="color:#ffe600">■ 80–99% Hampir</span>
+                <span style="color:#ff4444">■ &lt;80% Perlu Perhatian</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /main-content -->
 
     <!-- ══════════════════════════════════════════ -->
@@ -2989,6 +3122,8 @@ function applyFilters() {
   updateKPIs();
   updateNegeriTable();
   requestAnimationFrame(updateCharts);
+  requestAnimationFrame(updateAgensiCharts);
+  requestAnimationFrame(updateKpiObb);
   scheduleHeatmapUpdate();
   if (currentMapView === 'poskod') updatePoskodMap();
   triggerAnalysis();
@@ -3069,7 +3204,57 @@ const chartDefaults = {
 // ─────────────────────────────────────────────
 // VISUAL SECTION TOGGLE — default: hidden
 // ─────────────────────────────────────────────
-const vsecState = { trend: false, peta: false };
+const vsecState = { trend: false, peta: false, agensi: false, kpiobb: false };
+
+// ── OBB OUTPUT 7 SASARAN (hardcode)
+// Kunci ikut nama negeri dalam data Excel
+const OBB_SASARAN = {
+  '2026': {
+    'NEGERI JOHOR':174,'NEGERI KEDAH':74,'NEGERI KELANTAN':74,'NEGERI MELAKA':37,
+    'NEGERI PAHANG':74,'NEGERI PERAK':105,'NEGERI PERLIS':32,'NEGERI PULAU PINANG':100,
+    'NEGERI SABAH':95,'NEGERI SARAWAK':95,'NEGERI SELANGOR':174,'NEGERI SEMBILAN':60,
+    'NEGERI TERENGGANU':63,'WP KUALA LUMPUR & PUTRAJAYA':131,'WP LABUAN':15
+  },
+  '2025': {
+    'NEGERI JOHOR':165,'NEGERI KEDAH':70,'NEGERI KELANTAN':70,'NEGERI MELAKA':35,
+    'NEGERI PAHANG':70,'NEGERI PERAK':100,'NEGERI PERLIS':30,'NEGERI PULAU PINANG':95,
+    'NEGERI SABAH':90,'NEGERI SARAWAK':90,'NEGERI SELANGOR':165,'NEGERI SEMBILAN':60,
+    'NEGERI TERENGGANU':60,'WP KUALA LUMPUR & PUTRAJAYA':125,'WP LABUAN':20
+  }
+};
+
+// peta normalisasi nama negeri dalam data → kunci OBB_SASARAN
+const NEGERI_OBB_MAP = {
+  // format dalam data Excel (uppercase)
+  'NEGERI JOHOR':'NEGERI JOHOR',
+  'NEGERI KEDAH':'NEGERI KEDAH',
+  'NEGERI KELANTAN':'NEGERI KELANTAN',
+  'NEGERI MELAKA':'NEGERI MELAKA',
+  'NEGERI PAHANG':'NEGERI PAHANG',
+  'NEGERI PERAK':'NEGERI PERAK',
+  'NEGERI PERLIS':'NEGERI PERLIS',
+  'NEGERI PULAU PINANG':'NEGERI PULAU PINANG',
+  'NEGERI SABAH':'NEGERI SABAH',
+  'NEGERI SARAWAK':'NEGERI SARAWAK',
+  'NEGERI SELANGOR':'NEGERI SELANGOR',
+  'NEGERI SEMBILAN':'NEGERI SEMBILAN',
+  'NEGERI TERENGGANU':'NEGERI TERENGGANU',
+  'WP KUALA LUMPUR & PUTRAJAYA':'WP KUALA LUMPUR & PUTRAJAYA',
+  'WP LABUAN':'WP LABUAN',
+  // variasi lain yang mungkin ada dalam data
+  'JOHOR':'NEGERI JOHOR','KEDAH':'NEGERI KEDAH','KELANTAN':'NEGERI KELANTAN',
+  'MELAKA':'NEGERI MELAKA','PAHANG':'NEGERI PAHANG','PERAK':'NEGERI PERAK',
+  'PERLIS':'NEGERI PERLIS','PULAU PINANG':'NEGERI PULAU PINANG',
+  'P.PINANG':'NEGERI PULAU PINANG','PENANG':'NEGERI PULAU PINANG',
+  'SABAH':'NEGERI SABAH','SARAWAK':'NEGERI SARAWAK','SELANGOR':'NEGERI SELANGOR',
+  'N.SEMBILAN':'NEGERI SEMBILAN','TERENGGANU':'NEGERI TERENGGANU',
+  'KUALA LUMPUR':'WP KUALA LUMPUR & PUTRAJAYA',
+  'WP KUALA LUMPUR':'WP KUALA LUMPUR & PUTRAJAYA',
+  'PUTRAJAYA':'WP KUALA LUMPUR & PUTRAJAYA',
+  'WP PUTRAJAYA':'WP KUALA LUMPUR & PUTRAJAYA',
+  'WPKL':'WP KUALA LUMPUR & PUTRAJAYA',
+  'LABUAN':'WP LABUAN','W.P. LABUAN':'WP LABUAN'
+};
 
 function toggleVsec(id) {
   vsecState[id] = !vsecState[id];
@@ -3188,6 +3373,176 @@ function updateCharts() {
 }
 
 // ─────────────────────────────────────────────
+// AGENSI CHARTS
+// ─────────────────────────────────────────────
+function updateAgensiCharts() {
+  const fd = filteredData;
+  if (!fd || !fd.length) return;
+
+  // ── Bina map: rujukan → Set agensi unik
+  const serbuanAgensiMap = {};
+  const agensiCount = {};
+  const agensiSeen  = new Set();
+
+  fd.forEach(r => {
+    const ruj = String(r[COL['No Rujukan Serbuan']]||'').trim();
+    if (!ruj) return;
+    if (!serbuanAgensiMap[ruj]) serbuanAgensiMap[ruj] = new Set();
+
+    (r.__agensi_f || [AGENSI_NONE]).forEach(ag => {
+      if (ag === AGENSI_NONE) return;
+      serbuanAgensiMap[ruj].add(ag);
+      // kira per-agensi (deduplicate)
+      const key = ruj + '|' + ag;
+      if (!agensiSeen.has(key)) {
+        agensiSeen.add(key);
+        agensiCount[ag] = (agensiCount[ag]||0) + 1;
+      }
+    });
+  });
+
+  // ── Statistik asas
+  const semuaRuj    = Object.keys(serbuanAgensiMap);
+  const totalSerbuan = semuaRuj.length;
+  const serbuanDengan = semuaRuj.filter(r => serbuanAgensiMap[r].size > 0);
+  const denganAg  = serbuanDengan.length;
+  const tanpaAg   = totalSerbuan - denganAg;
+  const pct       = totalSerbuan > 0 ? (denganAg / totalSerbuan * 100).toFixed(1) : 0;
+
+  // ── KPI cards
+  const elDengan = document.getElementById('ag-kpi-dengan');
+  const elTanpa  = document.getElementById('ag-kpi-tanpa');
+  const elPct    = document.getElementById('ag-kpi-pct');
+  if (elDengan) elDengan.textContent = denganAg.toLocaleString('ms-MY');
+  if (elTanpa)  elTanpa.textContent  = tanpaAg.toLocaleString('ms-MY');
+  if (elPct)    elPct.textContent    = pct + '%';
+
+  // ── Taburan: 0, 1, 2, 3, 4+ agensi per serbuan
+  const taburanKeys   = ['Tiada Agensi', '1 Agensi', '2 Agensi', '3 Agensi', '4+ Agensi'];
+  const taburanVals   = [0, 0, 0, 0, 0];
+  semuaRuj.forEach(r => {
+    const n = serbuanAgensiMap[r].size;
+    if      (n === 0) taburanVals[0]++;
+    else if (n === 1) taburanVals[1]++;
+    else if (n === 2) taburanVals[2]++;
+    else if (n === 3) taburanVals[3]++;
+    else              taburanVals[4]++;
+  });
+  const taburanColors = ['rgba(85,128,160,0.35)','rgba(0,132,255,0.35)','rgba(0,245,255,0.35)','rgba(176,0,255,0.35)','rgba(255,107,0,0.35)'];
+  const taburanBorder = ['#5580a0','#0084ff','#00f5ff','#b000ff','#ff6b00'];
+
+  // ── Bar chart horizontal: senarai agensi top 12
+  const neonBg  = ['rgba(0,132,255,0.35)','rgba(0,245,255,0.35)','rgba(176,0,255,0.35)','rgba(0,255,136,0.35)','rgba(255,107,0,0.35)','rgba(255,230,0,0.35)','rgba(255,0,144,0.35)','rgba(85,128,160,0.35)'];
+  const neonBdr = ['#0084ff','#00f5ff','#b000ff','#00ff88','#ff6b00','#ffe600','#ff0090','#5580a0'];
+  const sorted  = Object.entries(agensiCount).sort((a,b) => b[1]-a[1]).slice(0,12);
+  const agLabels = sorted.map(e => e[0]);
+  const agVals   = sorted.map(e => e[1]);
+
+  const ctx1 = document.getElementById('chart-agensi');
+  if (ctx1) {
+    if (!charts.agensi) {
+      charts.agensi = new Chart(ctx1.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: agLabels,
+          datasets: [{ label: 'Bilangan Serbuan', data: agVals,
+            backgroundColor: agVals.map((_,i) => neonBg[i%8]),
+            borderColor: agVals.map((_,i) => neonBdr[i%8]),
+            borderWidth: 1, borderRadius: 4 }]
+        },
+        options: {
+          indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { backgroundColor:'rgba(6,14,26,0.95)', titleColor:'#00f5ff', bodyColor:'#e0f4ff', borderColor:'#0084ff', borderWidth:1 }
+          },
+          scales: {
+            x: { ticks:{ color:'#5580a0', font:{size:10,family:"'Share Tech Mono'"} }, grid:{color:'rgba(0,132,255,0.06)'} },
+            y: { ticks:{ color:'#e0f4ff', font:{size:10,family:"'Share Tech Mono'"} }, grid:{color:'rgba(0,132,255,0.06)'} }
+          }
+        }
+      });
+    } else {
+      charts.agensi.data.labels = agLabels;
+      charts.agensi.data.datasets[0].data = agVals;
+      charts.agensi.data.datasets[0].backgroundColor = agVals.map((_,i) => neonBg[i%8]);
+      charts.agensi.data.datasets[0].borderColor = agVals.map((_,i) => neonBdr[i%8]);
+      charts.agensi.update('none');
+    }
+  }
+
+  // ── Doughnut: dengan vs tanpa agensi luar
+  const ctx2 = document.getElementById('chart-agensi-pie');
+  if (ctx2) {
+    if (!charts.agensiPie) {
+      charts.agensiPie = new Chart(ctx2.getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Dengan Agensi Luar', 'BPF Sahaja'],
+          datasets: [{ data: [denganAg, tanpaAg],
+            backgroundColor: ['rgba(0,255,136,0.3)','rgba(85,128,160,0.2)'],
+            borderColor: ['#00ff88','#5580a0'], borderWidth:2, hoverBorderWidth:3 }]
+        },
+        options: {
+          responsive:true, maintainAspectRatio:false, cutout:'65%',
+          plugins: {
+            legend: { position:'bottom', labels:{ color:'#5580a0', font:{family:"'Share Tech Mono'",size:9}, padding:10, boxWidth:10 } },
+            tooltip: {
+              backgroundColor:'rgba(6,14,26,0.95)', titleColor:'#00f5ff', bodyColor:'#e0f4ff', borderColor:'#0084ff', borderWidth:1,
+              callbacks: { label: ctx => {
+                const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+                const p = total>0 ? (ctx.parsed/total*100).toFixed(1) : 0;
+                return ` ${ctx.parsed.toLocaleString('ms-MY')} serbuan (${p}%)`;
+              }}
+            }
+          }
+        }
+      });
+    } else {
+      charts.agensiPie.data.datasets[0].data = [denganAg, tanpaAg];
+      charts.agensiPie.update('none');
+    }
+  }
+
+  // ── Bar chart: taburan bilangan agensi per serbuan
+  const ctx3 = document.getElementById('chart-agensi-taburan');
+  if (ctx3) {
+    if (!charts.agensiTaburan) {
+      charts.agensiTaburan = new Chart(ctx3.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: taburanKeys,
+          datasets: [{ label: 'Bilangan Serbuan', data: taburanVals,
+            backgroundColor: taburanColors, borderColor: taburanBorder,
+            borderWidth:1, borderRadius:4 }]
+        },
+        options: {
+          indexAxis: 'y', responsive:true, maintainAspectRatio:false,
+          plugins: {
+            legend: { display:false },
+            tooltip: {
+              backgroundColor:'rgba(6,14,26,0.95)', titleColor:'#00f5ff', bodyColor:'#e0f4ff', borderColor:'#0084ff', borderWidth:1,
+              callbacks: { label: ctx => {
+                const total = taburanVals.reduce((a,b)=>a+b,0);
+                const p = total>0 ? (ctx.parsed.x/total*100).toFixed(1) : 0;
+                return ` ${ctx.parsed.x.toLocaleString('ms-MY')} serbuan (${p}%)`;
+              }}
+            }
+          },
+          scales: {
+            x: { ticks:{color:'#5580a0',font:{size:10,family:"'Share Tech Mono'"}}, grid:{color:'rgba(0,132,255,0.06)'} },
+            y: { ticks:{color:'#e0f4ff',font:{size:10,family:"'Share Tech Mono'"}}, grid:{color:'rgba(0,132,255,0.06)'} }
+          }
+        }
+      });
+    } else {
+      charts.agensiTaburan.data.datasets[0].data = taburanVals;
+      charts.agensiTaburan.update('none');
+    }
+  }
+}
+
+// ─────────────────────────────────────────────
 // NEGERI TABLE
 // ─────────────────────────────────────────────
 function updateNegeriTable() {
@@ -3235,6 +3590,166 @@ function updateNegeriTable() {
       <td><div class="bar-cell"><div class="bar-fill" style="width:${Math.round(val/max*120)}px;background:${barColor};box-shadow:none"></div></div></td>
     </tr>
   `).join('');
+}
+
+// ─────────────────────────────────────────────
+// KPI PK1-n5 & OBB OUTPUT 7
+// ─────────────────────────────────────────────
+function updateKpiObb() {
+  const fd = filteredData;
+  if (!fd || !fd.length) return;
+
+  // ── KPI PK1-n5: serbuan online YA, status berjaya vs semua
+  const onlineSeen    = new Set();
+  const onlineBerjaya = new Set();
+  fd.forEach(r => {
+    const ruj    = String(r[COL['No Rujukan Serbuan']]||'').trim();
+    const online = (r.__online||'').toUpperCase();
+    const status = String(r[COL['Status Serbuan']]||'').trim();
+    if (!ruj || online !== 'YA') return;
+    onlineSeen.add(ruj);
+    if (status === 'Berjaya') onlineBerjaya.add(ruj);
+  });
+
+  const N = onlineBerjaya.size;
+  const D = onlineSeen.size;
+  const pct = D > 0 ? (N / D * 100) : 0;
+  const pctStr = D > 0 ? pct.toFixed(1) + '%' : '—%';
+  const pass = pct >= 80;
+
+  const elPct = document.getElementById('pk1n5-pct-label');
+  const elSts = document.getElementById('pk1n5-status-label');
+  const elN   = document.getElementById('pk1n5-n');
+  const elD   = document.getElementById('pk1n5-d');
+  if (elPct) { elPct.textContent = pctStr; elPct.style.color = D===0?'#5580a0':pass?'#00ff88':'#ff4444'; }
+  if (elSts) { elSts.textContent = D===0?'—':pass?'✅ SASARAN TERCAPAI':'⚠️ BAWAH SASARAN'; elSts.style.color = pass?'#00ff88':'#ff4444'; }
+  if (elN)   elN.textContent = N.toLocaleString('ms-MY');
+  if (elD)   elD.textContent = D.toLocaleString('ms-MY');
+
+  // Gauge doughnut (separuh bulatan)
+  const gaugeVal   = D > 0 ? Math.min(pct, 100) : 0;
+  const gaugeColor = D===0?'#5580a0':pass?'#00ff88':'#ff4444';
+  const ctxG = document.getElementById('chart-pk1n5-gauge');
+  if (ctxG) {
+    if (!charts.pk1n5) {
+      charts.pk1n5 = new Chart(ctxG.getContext('2d'), {
+        type: 'doughnut',
+        data: { datasets: [{ data:[gaugeVal,100-gaugeVal],
+          backgroundColor:[gaugeColor+'55','rgba(85,128,160,0.1)'],
+          borderColor:[gaugeColor,'transparent'], borderWidth:[3,0] }] },
+        options: { responsive:false, cutout:'78%', rotation:-90, circumference:180,
+          plugins:{ legend:{display:false}, tooltip:{enabled:false} }, animation:{duration:600} }
+      });
+    } else {
+      charts.pk1n5.data.datasets[0].data = [gaugeVal, 100-gaugeVal];
+      charts.pk1n5.data.datasets[0].backgroundColor = [gaugeColor+'55','rgba(85,128,160,0.1)'];
+      charts.pk1n5.data.datasets[0].borderColor = [gaugeColor,'transparent'];
+      charts.pk1n5.update('none');
+    }
+  }
+
+  renderOBB();
+}
+
+function renderOBB() {
+  const fd = filteredData;
+  const container = document.getElementById('obb-container');
+  const nasionalDiv = document.getElementById('obb-nasional');
+  if (!container) return;
+
+  const tahunSel     = (document.getElementById('obb-tahun-select')||{}).value || '2026';
+  const takcapaiOnly = (document.getElementById('obb-takcapai-only')||{}).checked || false;
+  const sasaran      = OBB_SASARAN[tahunSel] || OBB_SASARAN['2026'];
+
+  // sasaran nasional tetap (BPF KKM)
+  const sasaranNasional = tahunSel === '2026' ? 1300 : 1245;
+
+  // kira pencapaian per negeri — semua serbuan (unik rujukan)
+  const pencapaian   = {};
+  const serbuanSeen  = new Set();
+  // kira serbuan BERJAYA sahaja untuk BPF KKM nasional
+  const berjayaSeen  = new Set();
+  let   totalBerjaya = 0;
+
+  (fd||[]).forEach(r => {
+    const ruj    = String(r[COL['No Rujukan Serbuan']]||'').trim();
+    const negeri = (r.__negeri||'').toUpperCase().trim();
+    if (!ruj || !negeri) return;
+
+    // pencapaian negeri — kira unik serbuan tanpa mengira status
+    if (!serbuanSeen.has(ruj)) {
+      serbuanSeen.add(ruj);
+      const kunci = NEGERI_OBB_MAP[negeri] || negeri;
+      pencapaian[kunci] = (pencapaian[kunci]||0) + 1;
+    }
+
+    // BPF KKM nasional — kira BERJAYA sahaja, unik rujukan
+    const status = String(r[COL['Status Serbuan']]||'').trim();
+    const bKey   = ruj + '|BERJAYA';
+    if (status === 'Berjaya' && !berjayaSeen.has(bKey)) {
+      berjayaSeen.add(bKey);
+      totalBerjaya++;
+    }
+  });
+
+  // ── BPF KKM Nasional (papar di atas senarai negeri) ──
+  if (nasionalDiv) {
+    const nPct    = sasaranNasional > 0 ? (totalBerjaya / sasaranNasional) * 100 : 0;
+    const nColor  = nPct >= 100 ? '#00ff88' : nPct >= 80 ? '#ffe600' : '#ff4444';
+    const nIcon   = nPct >= 100 ? '✅' : nPct >= 80 ? '⚠️' : '🔴';
+    nasionalDiv.innerHTML = `<div style="background:rgba(0,132,255,0.10);border:1px solid rgba(0,132,255,0.35);border-radius:6px;padding:8px 12px">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#5580a0;margin-bottom:4px;letter-spacing:0.5px">🏛️ BPF KKM — SASARAN NASIONAL (serbuan berjaya)</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;gap:8px">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:#00f5ff;font-weight:600">${nIcon} Jumlah Berjaya (Semua Negeri)</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:${nColor};white-space:nowrap;font-weight:600">
+          ${totalBerjaya.toLocaleString('ms-MY')} / ${sasaranNasional.toLocaleString('ms-MY')}
+          <span style="color:#5580a0;font-size:10px;margin-left:4px">(${nPct.toFixed(1)}%)</span>
+        </div>
+      </div>
+      <div style="background:rgba(85,128,160,0.12);border-radius:3px;height:7px;overflow:hidden">
+        <div style="width:${Math.min(nPct,100).toFixed(1)}%;height:100%;background:${nColor};border-radius:3px;transition:width 0.4s ease"></div>
+      </div>
+    </div>`;
+  }
+
+  // ── Senarai per negeri ──
+  let rows = Object.entries(sasaran).map(([negeri, sasarVal]) => {
+    const capai = pencapaian[negeri] || 0;
+    const pct   = sasarVal > 0 ? (capai / sasarVal) * 100 : 0;
+    return { negeri, sasarVal, capai, pct };
+  }).sort((a,b) => a.pct - b.pct); // terendah dahulu (lebih kritikal)
+
+  // filter: tunjuk HANYA tidak capai jika checkbox ditanda
+  if (takcapaiOnly) {
+    rows = rows.filter(r => r.pct < 100);
+  }
+
+  if (rows.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:20px;font-family:'Share Tech Mono',monospace;font-size:12px;color:#00ff88;opacity:0.7">
+      ✅ Semua negeri telah mencapai sasaran OBB
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = rows.map(({ negeri, sasarVal, capai, pct }) => {
+    const color  = pct >= 100 ? '#00ff88' : pct >= 80 ? '#ffe600' : '#ff4444';
+    const bgCol  = pct >= 100 ? 'rgba(0,255,136,0.08)' : pct >= 80 ? 'rgba(255,230,0,0.06)' : 'rgba(255,68,68,0.06)';
+    const icon   = pct >= 100 ? '✅' : pct >= 80 ? '⚠️' : '🔴';
+    const barPct = Math.min(pct, 100).toFixed(1);
+    const label  = negeri === 'NEGERI SEMBILAN' ? 'Negeri Sembilan' : negeri.replace('NEGERI ','').replace('WP KUALA LUMPUR & PUTRAJAYA','WPKL & Putrajaya').replace('WP LABUAN','WP Labuan');
+    return `<div style="background:${bgCol};border:1px solid ${color}22;border-radius:6px;padding:8px 12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;gap:8px">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#e0f4ff;min-width:140px">${icon} ${label}</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:${color};white-space:nowrap">
+          ${capai.toLocaleString('ms-MY')} / ${sasarVal.toLocaleString('ms-MY')}
+          <span style="color:#5580a0;font-size:10px;margin-left:4px">(${pct.toFixed(1)}%)</span>
+        </div>
+      </div>
+      <div style="background:rgba(85,128,160,0.12);border-radius:3px;height:6px;overflow:hidden">
+        <div style="width:${barPct}%;height:100%;background:${color};border-radius:3px;transition:width 0.4s ease"></div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 // ─────────────────────────────────────────────
@@ -3938,7 +4453,16 @@ function buildAnalysisHTML() {
 
   // ── Status serbuan
   const statusCount = {};
-  fd.forEach(r => { const s = String(r[COL['Status Serbuan']]||'').trim(); if (s) statusCount[s]=(statusCount[s]||0)+1; });
+  const statusSeen = new Set();
+  fd.forEach(r => {
+    const s = String(r[COL['Status Serbuan']]||'').trim();
+    const ruj = String(r[COL['No Rujukan Serbuan']]||'').trim();
+    if (!s || !ruj) return;
+    const key = ruj + '|' + s;
+    if (statusSeen.has(key)) return;
+    statusSeen.add(key);
+    statusCount[s] = (statusCount[s]||0) + 1;
+  });
   const berjaya = statusCount['Berjaya']||0;
   const tidakBerjaya = statusCount['Tidak Berjaya']||0;
   const successRate = totalSerbuan > 0 ? (berjaya/(berjaya+tidakBerjaya)*100).toFixed(1) : 0;
