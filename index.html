@@ -197,20 +197,6 @@
     box-shadow: 0 0 14px rgba(0,255,136,0.3);
   }
 
-  .btn-upload {
-    background: transparent;
-    border: 1px solid var(--neon-cyan);
-    color: var(--neon-cyan);
-  }
-  .btn-upload:hover {
-    background: rgba(0,245,255,0.1);
-    box-shadow: 0 0 14px rgba(0,245,255,0.3);
-  }
-  #upload-zone { cursor: pointer; }
-  #upload-zone.drag-over {
-    background: rgba(0,245,255,0.08);
-    box-shadow: inset 0 0 20px rgba(0,245,255,0.15);
-  }
 
   .logo-mark {
     width: 44px; height: 44px;
@@ -1943,298 +1929,6 @@
     display: none;
   }
 
-  /* ══ AI CHATBOX ══ */
-  .chatbox-panel {
-    background: var(--bg-card);
-    border: 1px solid rgba(176,0,255,0.2);
-    border-radius: 12px;
-    margin-bottom: 20px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s;
-  }
-  .chatbox-panel::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--neon-purple), var(--neon-cyan), var(--neon-blue), transparent);
-  }
-  .chatbox-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 20px;
-    border-bottom: 1px solid rgba(176,0,255,0.12);
-    cursor: pointer;
-    user-select: none;
-    transition: background 0.2s;
-  }
-  .chatbox-header:hover { background: rgba(176,0,255,0.03); }
-  .chatbox-header-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .chatbox-ai-badge {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
-    background: rgba(176,0,255,0.12);
-    border: 1px solid rgba(176,0,255,0.3);
-    border-radius: 20px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    color: var(--neon-purple);
-    letter-spacing: 1px;
-  }
-  .ai-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--neon-purple);
-    box-shadow: 0 0 6px var(--neon-purple);
-    animation: blink 2s ease-in-out infinite;
-  }
-  .chatbox-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    color: var(--neon-cyan);
-    text-transform: uppercase;
-  }
-  .chatbox-subtitle {
-    font-size: 10px;
-    font-family: 'Share Tech Mono', monospace;
-    color: var(--text-muted);
-    margin-top: 1px;
-  }
-  .chatbox-toggle-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 12px;
-    background: transparent;
-    border: 1px solid rgba(0,245,255,0.2);
-    color: var(--text-muted);
-    border-radius: 5px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .chatbox-toggle-btn:hover {
-    border-color: rgba(0,245,255,0.4);
-    color: var(--neon-cyan);
-  }
-  .chatbox-body {
-    overflow: hidden;
-    transition: max-height 0.4s ease, opacity 0.3s ease;
-    max-height: 600px;
-    opacity: 1;
-  }
-  .chatbox-body.collapsed {
-    max-height: 0;
-    opacity: 0;
-  }
-  /* Messages area */
-  .chat-messages {
-    padding: 16px 20px;
-    height: 300px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .chat-msg {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    animation: fadeInMsg 0.25s ease;
-  }
-  @keyframes fadeInMsg {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .chat-msg.user { flex-direction: row-reverse; }
-  .msg-avatar {
-    width: 30px; height: 30px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .msg-avatar.ai-avatar {
-    background: rgba(176,0,255,0.15);
-    border: 1px solid rgba(176,0,255,0.3);
-    color: var(--neon-purple);
-    font-size: 13px;
-  }
-  .msg-avatar.user-avatar {
-    background: rgba(0,132,255,0.15);
-    border: 1px solid rgba(0,132,255,0.3);
-    color: var(--neon-blue);
-    font-size: 13px;
-  }
-  .msg-bubble {
-    max-width: 78%;
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-size: 12.5px;
-    line-height: 1.65;
-    position: relative;
-  }
-  .chat-msg.ai .msg-bubble {
-    background: rgba(176,0,255,0.07);
-    border: 1px solid rgba(176,0,255,0.15);
-    color: var(--text-primary);
-    border-top-left-radius: 2px;
-  }
-  .chat-msg.user .msg-bubble {
-    background: rgba(0,132,255,0.1);
-    border: 1px solid rgba(0,132,255,0.2);
-    color: var(--text-primary);
-    border-top-right-radius: 2px;
-    text-align: left;
-  }
-  .msg-time {
-    font-size: 9px;
-    color: var(--text-muted);
-    font-family: 'Share Tech Mono', monospace;
-    margin-top: 4px;
-  }
-  .chat-msg.user .msg-time { text-align: right; }
-  /* Typing indicator */
-  .typing-indicator {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-    padding: 4px 0;
-  }
-  .typing-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--neon-purple);
-    opacity: 0.5;
-    animation: typingBounce 1.2s ease-in-out infinite;
-  }
-  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes typingBounce {
-    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-    30% { transform: translateY(-5px); opacity: 1; }
-  }
-  /* Input area */
-  .chat-input-area {
-    display: flex;
-    gap: 10px;
-    padding: 14px 20px;
-    border-top: 1px solid rgba(176,0,255,0.1);
-    background: rgba(0,0,0,0.2);
-    align-items: flex-end;
-  }
-  .chat-input-wrap { flex: 1; position: relative; }
-  #chat-input {
-    width: 100%;
-    background: rgba(0,0,0,0.35);
-    border: 1px solid rgba(0,245,255,0.18);
-    border-radius: 8px;
-    color: var(--text-primary);
-    font-family: 'Exo 2', sans-serif;
-    font-size: 13px;
-    padding: 10px 14px;
-    resize: none;
-    outline: none;
-    line-height: 1.5;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    min-height: 42px;
-    max-height: 120px;
-    overflow-y: auto;
-  }
-  #chat-input:focus {
-    border-color: rgba(176,0,255,0.5);
-    box-shadow: 0 0 12px rgba(176,0,255,0.15);
-  }
-  #chat-input::placeholder { color: var(--text-muted); font-size: 12px; }
-  .chat-send-btn {
-    padding: 10px 20px;
-    background: rgba(176,0,255,0.15);
-    border: 1px solid rgba(176,0,255,0.4);
-    color: var(--neon-purple);
-    border-radius: 8px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-    height: 42px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .chat-send-btn:hover:not(:disabled) {
-    background: rgba(176,0,255,0.25);
-    box-shadow: 0 0 16px rgba(176,0,255,0.3);
-  }
-  .chat-send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-  /* Quick prompts */
-  .chat-quick-prompts {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    padding: 10px 20px 0;
-  }
-  .quick-prompt-btn {
-    padding: 4px 11px;
-    background: rgba(0,132,255,0.07);
-    border: 1px solid rgba(0,132,255,0.2);
-    color: rgba(0,200,255,0.7);
-    border-radius: 14px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    cursor: pointer;
-    transition: all 0.15s;
-    letter-spacing: 0.3px;
-  }
-  .quick-prompt-btn:hover {
-    background: rgba(0,132,255,0.15);
-    color: var(--neon-cyan);
-    border-color: rgba(0,245,255,0.3);
-  }
-  /* No data warning */
-  .chat-no-data {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 120px;
-    color: var(--text-muted);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 1px;
-    gap: 8px;
-  }
-  /* Markdown-lite styling inside bubbles */
-  .msg-bubble strong { color: var(--neon-cyan); font-weight: 600; }
-  .msg-bubble em { color: rgba(255,255,255,0.6); font-style: italic; }
-  .msg-bubble ul { margin: 6px 0 6px 16px; padding: 0; }
-  .msg-bubble li { margin-bottom: 3px; }
-  .msg-bubble code {
-    background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(0,245,255,0.15);
-    border-radius: 3px;
-    padding: 1px 5px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    color: var(--neon-green);
-  }
-
 </style>
 <link
   rel="stylesheet"
@@ -2281,19 +1975,6 @@
 
     <div class="tool-divider"></div>
 
-    <div class="tool-card" id="upload-zone" onclick="document.getElementById('file-input').click()">
-      <div class="tool-icon">📂</div>
-      <div class="tool-body">
-        <div class="tool-title">Muat Naik Fail Excel</div>
-        <div class="tool-desc">Seret & lepas atau klik untuk memilih fail .xlsx / .xls</div>
-        <div class="tool-note" id="upload-note"></div>
-      </div>
-      <button class="tool-btn btn-upload" onclick="event.stopPropagation(); document.getElementById('file-input').click()">PILIH FAIL</button>
-      <input type="file" id="file-input" accept=".xlsx,.xls" onchange="handleFile(event)" style="display:none">
-    </div>
-
-    <div class="tool-divider"></div>
-
     <div class="tool-card" id="tool-convert">
       <div class="tool-icon">⚙</div>
       <div class="tool-body">
@@ -2311,53 +1992,6 @@
   <!-- MAIN -->
   <div class="main-content" id="main-content">
 
-
-    <!-- ══ AI CHATBOX ══ -->
-    <div class="chatbox-panel" id="chatbox-panel">
-      <div class="chatbox-header" onclick="toggleChatbox()">
-        <div class="chatbox-header-left">
-          <div class="chatbox-ai-badge"><div class="ai-dot"></div> AI PERISIKAN</div>
-          <div>
-            <div class="chatbox-title">Pembantu Analitik Penguatkuasaan</div>
-            <div class="chatbox-subtitle">Tanya soalan berdasarkan data yang dimuatkan — dikuasakan oleh Claude AI</div>
-          </div>
-        </div>
-        <button class="chatbox-toggle-btn" id="chatbox-toggle-label">
-          <span id="chatbox-chevron">►</span> PAPARKAN
-        </button>
-      </div>
-
-      <div class="chatbox-body collapsed" id="chatbox-body">
-        <!-- Quick prompts -->
-        <div class="chat-quick-prompts" id="chat-quick-prompts">
-          <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;align-self:center">CADANGAN:</span>
-          <button class="quick-prompt-btn" onclick="sendQuick(this)">Ringkaskan data semasa</button>
-          <button class="quick-prompt-btn" onclick="sendQuick(this)">Negeri mana paling banyak serbuan?</button>
-          <button class="quick-prompt-btn" onclick="sendQuick(this)">Apakah trend dari tahun ke tahun?</button>
-          <button class="quick-prompt-btn" onclick="sendQuick(this)">Produk apa paling kerap dirampas?</button>
-          <button class="quick-prompt-btn" onclick="sendQuick(this)">Cadangkan fokus penguatkuasaan</button>
-          <button class="quick-prompt-btn" onclick="sendQuick(this)">Berapa kadar kejayaan serbuan?</button>
-        </div>
-
-        <!-- Messages -->
-        <div class="chat-messages" id="chat-messages">
-          <div class="chat-no-data" id="chat-no-data">
-            <span style="font-size:28px;opacity:0.3">🤖</span>
-            <span>Muat naik fail Excel atau JSON untuk memulakan perbualan.</span>
-          </div>
-        </div>
-
-        <!-- Input -->
-        <div class="chat-input-area">
-          <div class="chat-input-wrap">
-            <textarea id="chat-input" rows="1" placeholder="Taip soalan anda tentang data rampasan/serbuan..." onkeydown="chatKeydown(event)" oninput="autoResize(this)"></textarea>
-          </div>
-          <button class="chat-send-btn" id="chat-send-btn" onclick="sendChatMessage()" disabled>
-            ➤ HANTAR
-          </button>
-        </div>
-      </div>
-    </div>
 
     <!-- FILTER HEADER BAR -->
     <div class="filter-master-bar">
@@ -2457,6 +2091,17 @@
           <select class="filter-select" id="f-online" onchange="applyFilters()">
             <option value="">— Semua —</option>
           </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">🔍 Agensi Terlibat (gabungan 2 lajur)</label>
+          <div class="tag-input-wrap" id="wrap-agensi" onclick="focusTagInput('agensi')">
+            <div class="tag-list" id="tags-agensi"></div>
+            <input class="tag-input-field" id="f-agensi" type="text" placeholder="Taip & tekan Enter..." autocomplete="off"
+              oninput="showTagSuggestions('agensi', this.value)"
+              onkeydown="tagKeydown(event, 'agensi')"
+              onblur="hideTagSuggestions('agensi', 200)">
+          </div>
+          <div class="tag-suggestions" id="sug-agensi"></div>
         </div>
       </div>
       <div class="filter-text-row" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
@@ -2949,6 +2594,41 @@ function getVal(row, key) {
   return String(row[COL[key]] ?? '').trim();
 }
 
+// ─────────────────────────────────────────────
+// AGENSI TERLIBAT — gabung 'Agensi Lain Yang Terlibat' + 'Nyatakan Agensi'
+// Pecah ikut koma / pipe / bertitik-koma, UPPERCASE, buang "LAIN-LAIN AGENSI",
+// kemudian seragamkan guna AGENSI_ALIAS (edit di sini untuk tambah padanan).
+// ─────────────────────────────────────────────
+const AGENSI_ALIAS = {
+  'JABATAN PERHILITAN': 'PERHILITAN',
+  'MDA': 'MDA',
+  'PENGUATKUASA PERANTI PERUBATAN': 'MDA',
+  'PIHAK BERKUASA PERANTI PERUBATAN (MDA)': 'MDA',
+  'NPRA (GMP)': 'NPRA',
+  'MBJB': 'PBT',
+  'MBSA': 'PBT',
+  'JABATAN PERKHIDMATAN VETERINAR': 'JPV',
+  'JABATAN BOMBA': 'BOMBA',
+  'JABATAN IMIGRESEN': 'IMIGRESEN',
+  'POS MALAYSIA': 'POS MALAYSIA',
+};
+const AGENSI_SKIP = /^(LAIN[- ]?LAIN( AGENSI| AGNESI)?|TIADA|TIDAK BERKENAAN|N\/A|NA)$/;
+const AGENSI_NONE = '(TIADA AGENSI)';
+
+function parseAgensi(a, b) {
+  const out = new Set();
+  [a, b].forEach(txt => {
+    if (!txt) return;
+    String(txt).split(/[|,;\n]+/).forEach(tok => {
+      const t = tok.replace(/\s+/g, ' ').replace(/[.\s]+$/, '').trim().toUpperCase();
+      if (!t || t === '0' || t === '-' || AGENSI_SKIP.test(t)) return;
+      out.add(AGENSI_ALIAS[t] || t);
+    });
+  });
+  return [...out];
+}
+
+
 function preprocessRow(row) {
   row.__tahun = safeStr(row, 'Tahun');
   row.__negeri = safeStr(row, 'Negeri');
@@ -2995,6 +2675,8 @@ function preprocessRow(row) {
   row.__statusserbuan = safeStr(row, 'Status Serbuan');
   row.__tindakan = safeStr(row, 'Tindakan Selepas Serbuan Berjaya');
   row.__online = safeStr(row, 'Serbuan melibatkan penjualan online (Sub-KPI PK1-n5)');
+  row.__agensi = parseAgensi(safeStr(row, 'Agensi Lain Yang Terlibat'), safeStr(row, 'Nyatakan Agensi'));
+  row.__agensi_f = row.__agensi.length ? row.__agensi : [AGENSI_NONE];
   row.__katkhas_lc = safeStr(row, 'Kategori Khas').toLowerCase();
   row.__namaracun_lc = safeStr(row, 'Nama Racun').toLowerCase();
   row.__namaproduk_lc = safeStr(row, 'Nama Produk').toLowerCase();
@@ -3091,61 +2773,6 @@ function summarizeFilteredData(data) {
 // ─────────────────────────────────────────────
 // FILE UPLOAD
 // ─────────────────────────────────────────────
-const uploadZone = document.getElementById('upload-zone');
-uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
-uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
-uploadZone.addEventListener('drop', e => {
-  e.preventDefault();
-  uploadZone.classList.remove('drag-over');
-  if (e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]);
-});
-
-function handleFile(evt) {
-  const file = evt.target.files[0];
-  if (file) processFile(file);
-}
-
-function processFile(file) {
-  showLoading('MEMBACA FAIL EXCEL...');
-  setStatus(`📂 Membaca: ${file.name}`, '#00f5ff');
-  showProgress(10);
-  hasMapFitted = false;
-
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      showProgress(40);
-      setLoadingText('MEMPROSES DATA...');
-      const wb = XLSX.read(e.target.result, { type: 'array', cellDates: true });
-      const sheetName = wb.SheetNames[0];
-      const ws = wb.Sheets[sheetName];
-      showProgress(70);
-      const json = XLSX.utils.sheet_to_json(ws, { raw: true, defval: '' });
-      if (json.length === 0) { hideLoading(); setStatus('⚠️ Tiada data dalam fail ini.', '#ff6b00'); return; }
-
-      detectColumns(Object.keys(json[0]));
-      rawData = preprocessData(json);
-      showProgress(90);
-      setLoadingText('MEMBINA DASHBOARD...');
-
-      setTimeout(() => {
-        buildFilters();
-        applyFilters();
-        document.getElementById('main-content').style.display = 'block';
-        document.getElementById('analysis-section').style.display = 'block';
-        document.getElementById('row-count').textContent = rawData.length.toLocaleString('ms-MY');
-        enableChat();
-        showProgress(100);
-        setTimeout(() => { hideLoading(); setStatus(`✅ ${file.name} — ${rawData.length.toLocaleString('ms-MY')} rekod dimuatkan`, '#00ff88'); }, 250);
-      }, 60);
-    } catch(err) {
-      hideLoading();
-      setStatus('❌ Ralat membaca fail: ' + err.message, '#ff0090');
-    }
-  };
-  reader.readAsArrayBuffer(file);
-}
-
 function setStatus(msg, color='#00ff88') {
   const el = document.getElementById('upload-status');
   el.textContent = msg; el.style.color = color;
@@ -3232,6 +2859,7 @@ function buildFilters() {
   fillSingleSelect('f-statusserbuan','Status Serbuan');
   fillSingleSelect('f-tindakan','Tindakan Selepas Serbuan Berjaya');
   fillSingleSelect('f-online','Serbuan melibatkan penjualan online (Sub-KPI PK1-n5)');
+  delete tagTokenCache['agensi'];
   // Invalidate tag token caches for new fields
   delete tagTokenCache['namapremis'];
   delete tagTokenCache['alamat'];
@@ -3255,7 +2883,7 @@ function resetFilters() {
   ['f-pengkelasan','f-statuspendaftaran','f-statusnotifikasi','f-statusserbuan','f-online','f-tindakan'].forEach(id => {
     document.getElementById(id).value = '';
   });
-  ['katkhas','namaracun','namaproduk','namapremis','alamat','katpremis','jenispremis'].forEach(id => clearAllTags(id));
+  ['katkhas','namaracun','namaproduk','namapremis','alamat','katpremis','jenispremis','agensi'].forEach(id => clearAllTags(id));
   applyFilters();
 }
 
@@ -3271,6 +2899,7 @@ function applyFilters() {
   const fTindakan = getSingle('f-tindakan');
   const fSerbuan = getSingle('f-statusserbuan');
   const fOnline = getSingle('f-online');
+  const fAgensi = getTagTerms('agensi');
   const fNamaPremis = getTagTerms('namapremis');
   const fAlamat = getTagTerms('alamat');
 
@@ -3294,6 +2923,7 @@ function applyFilters() {
   if (fJenisPremis.length) countSerbuan++;
   if (fSerbuan) countSerbuan++;
   if (fOnline) countSerbuan++;
+  if (fAgensi.length) countSerbuan++;
   if (fNamaPremis.length) countSerbuan++;
   if (fAlamat.length) countSerbuan++;
 
@@ -3336,6 +2966,7 @@ function applyFilters() {
     if (fSerbuan && r.__statusserbuan && r.__statusserbuan !== fSerbuan) return false;
     if (fTindakan && r.__tindakan !== fTindakan) return false;
     if (fOnline && r.__online && r.__online !== fOnline) return false;
+    if (fAgensi.length && !fAgensi.some(t => r.__agensi_f.some(a => a.toLowerCase().includes(t)))) return false;
     if (fNamaPremis.length && !fNamaPremis.some(t => r.__namapremis_lc.includes(t))) return false;
     if (fAlamat.length && !fAlamat.some(t => r.__alamat_lc.includes(t))) return false;
     if (fKatKhas.length && !fKatKhas.some(t => r.__katkhas_lc.includes(t))) return false;
@@ -3362,6 +2993,7 @@ function applyFilters() {
   if (currentMapView === 'poskod') updatePoskodMap();
   triggerAnalysis();
   scheduleTableUpdate();
+  _scheduleLaporanRefresh();
 }
 
 // ─────────────────────────────────────────────
@@ -3842,6 +3474,22 @@ function getPoskodCoords(poskodRaw) {
   return null;
 }
 
+// ─── Tile peta ───────────────────────────────────────────────
+// Lalai: Esri Dark Gray (tanpa API key, berfungsi walaupun HTML dibuka dari komputer).
+// CARTO kini wajibkan API key (percuma) — kalau dah dapat, isi CARTO_KEY di bawah dan ia akan digunakan.
+// OSM rasmi pula menyekat akses tanpa Referer (fail dibuka terus dari komputer).
+const CARTO_KEY = '';   // cth: 'abc123...' daripada https://www.carto.com/basemaps/apikey/
+const MAP_TILE_URL = CARTO_KEY
+  ? 'https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png?key=' + CARTO_KEY
+  : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+const MAP_TILE_OPTS = CARTO_KEY ? {
+  subdomains: 'abcd', maxZoom: 19,
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+} : {
+  maxZoom: 16,
+  attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+};
+
 let poskodMap = null;
 let poskodMarkersLayer = null;
 let currentMapView = 'negeri';
@@ -3849,10 +3497,7 @@ let currentMapView = 'negeri';
 function initPoskodMap() {
   if (poskodMap) return;
   poskodMap = L.map('poskod-map', { center: [4.2105, 101.9758], zoom: 6, zoomControl: true });
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(poskodMap);
+  L.tileLayer(MAP_TILE_URL, MAP_TILE_OPTS).addTo(poskodMap);
   poskodMarkersLayer = L.layerGroup().addTo(poskodMap);
 }
 
@@ -4036,10 +3681,7 @@ function initRealMap() {
     zoomControl: true
   });
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(liveMap);
+  L.tileLayer(MAP_TILE_URL, MAP_TILE_OPTS).addTo(liveMap);
 
   liveMarkersLayer = L.layerGroup().addTo(liveMap);
 }
@@ -4181,26 +3823,6 @@ function updateHeatmap() {
   }, 80);
 }
 
-function showMapTooltip(e, text) {
-  const tt = document.getElementById('map-tooltip');
-  tt.textContent = text;
-  tt.style.display = 'block';
-  tt.style.left = (e.clientX + 12) + 'px';
-  tt.style.top = (e.clientY - 28) + 'px';
-}
-
-function hideMapTooltip() {
-  const tt = document.getElementById('map-tooltip');
-  if (tt) tt.style.display = 'none';
-}
-
-document.addEventListener('mousemove', e => {
-  const tt = document.getElementById('map-tooltip');
-  if (tt && tt.style.display === 'block') {
-    tt.style.left = (e.clientX + 12) + 'px';
-    tt.style.top = (e.clientY - 28) + 'px';
-  }
-});
 
 // ─────────────────────────────────────────────
 // SECTION TOGGLE
@@ -4628,7 +4250,7 @@ function buildSenaraiSerbuan() {
         tahun:     String(r[COL['Tahun']] ?? '').trim(),
         negeri:    String(r[COL['Negeri']] ?? '').trim(),
         rujukan:   ruj,
-        tarikh:    String(r[COL['Tarikh Serbuan']] ?? '').trim(),
+        tarikh:    fmtTarikh(r[COL['Tarikh Serbuan']]),
         rujAduan:  String(r[COL['No Rujukan Aduan / Maklumat']] ?? '').trim(),
         namaOps:   String(r[COL['Nama Ops']] ?? '').trim(),
         katPremis: String(r[COL['Kategori Premis']] ?? '').trim(),
@@ -4742,6 +4364,7 @@ function downloadSenaraiSerbuan() {
   const wsData = [
     headers,
     ...rows.map(r => keys.map(k => {
+      if (k === 'tarikh') { const n = tarikhToSerial(r[k]); return n === null ? (r[k] ?? '') : n; }
       if (k === 'nilai') return Number(r[k]) || 0;
       if (k === 'kuantiti' || k === 'perkara') return Number(r[k]) || 0;
       return r[k] ?? '';
@@ -4749,6 +4372,13 @@ function downloadSenaraiSerbuan() {
   ];
 
   const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+  // Format lajur Tarikh sebagai dd/mm/yyyy
+  const tarCol = keys.indexOf('tarikh');
+  rows.forEach((_, i) => {
+    const c = ws[XLSX.utils.encode_cell({ r: i + 1, c: tarCol })];
+    if (c && c.t === 'n') c.z = 'dd/mm/yyyy';
+  });
 
   // Format lajur Nilai sebagai nombor
   const valCol = keys.indexOf('nilai');
@@ -4768,16 +4398,53 @@ function downloadSenaraiSerbuan() {
   XLSX.writeFile(wb, `Senarai_Serbuan_Export_${ts}.xlsx`);
 }
 
+// ─── Tarikh: seragamkan kepada dd/mm/yyyy ───────────────────
+// Terima: Date, nombor siri Excel, 'd/m/yyyy', 'yyyy-mm-dd'. Pulang nombor siri Excel (atau null).
+function tarikhToSerial(raw) {
+  if (raw === null || raw === undefined || raw === '') return null;
+  let ms = null;
+  if (raw instanceof Date && !isNaN(raw)) {
+    ms = Date.UTC(raw.getFullYear(), raw.getMonth(), raw.getDate());
+  } else {
+    const s = String(raw).trim();
+    if (/^\d+(\.\d+)?$/.test(s)) { const n = Number(s); return n > 1000 ? Math.floor(n) : null; }
+    let m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/);
+    if (m) ms = Date.UTC(+m[3], +m[2] - 1, +m[1]);
+    else if ((m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))) ms = Date.UTC(+m[1], +m[2] - 1, +m[3]);
+  }
+  return ms === null ? null : Math.round(ms / 86400000) + 25569;
+}
+function fmtTarikh(raw) {
+  const n = tarikhToSerial(raw);
+  if (n === null) return String(raw ?? '').trim();
+  const d = new Date((n - 25569) * 86400000);
+  const p2 = x => String(x).padStart(2, '0');
+  return p2(d.getUTCDate()) + '/' + p2(d.getUTCMonth() + 1) + '/' + d.getUTCFullYear();
+}
+
 function downloadExcel() {
   if (!filteredData || filteredData.length === 0) return;
 
   // Build export rows using all original columns
-  const allCols = Object.keys(filteredData[0] || {});
-  const wsData = [allCols, ...filteredData.map(r => allCols.map(c => r[c] ?? ''))];
+  // Buang lajur kerja dalaman (__tahun, __negeri, __bulan, __agensi, dll.) — hanya lajur asal Excel dieksport
+  const allCols = Object.keys(filteredData[0] || {}).filter(c => !c.startsWith('__'));
+  const tCol = COL['Tarikh Serbuan'];
+  const tIdx = allCols.indexOf(tCol);
+  const wsData = [allCols, ...filteredData.map(r => allCols.map(c => {
+    const v = r[c];
+    if (c === tCol) { const n = tarikhToSerial(v); return n === null ? (v ?? '') : n; }
+    return v ?? '';
+  }))];
 
   const ws = XLSX.utils.aoa_to_sheet(wsData);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Data Penapisan');
+  if (tIdx >= 0) {
+    for (let i = 1; i <= filteredData.length; i++) {
+      const c = ws[XLSX.utils.encode_cell({ r: i, c: tIdx })];
+      if (c && c.t === 'n') c.z = 'dd/mm/yyyy';
+    }
+  }
 
   // Auto column width
   const colWidths = allCols.map(c => ({ wch: Math.max(c.length, 12) }));
@@ -4838,6 +4505,7 @@ function loadFromJson(evt) {
   note.textContent = '⏳ Membaca JSON...';
 
   showLoading('MEMUATKAN JSON...');
+  _laporanSourceFile = file.name;
   showProgress(20);
   hasMapFitted = false;
 
@@ -4867,8 +4535,6 @@ function loadFromJson(evt) {
         document.getElementById('main-content').style.display = 'block';
         document.getElementById('analysis-section').style.display = 'block';
         document.getElementById('row-count').textContent = rawData.length.toLocaleString('ms-MY');
-        enableChat();
-        enableChat();
         showProgress(100);
         const src = parsed._meta ? parsed._meta.source : file.name;
         setTimeout(() => {
@@ -4919,7 +4585,7 @@ function scSave(list) {
 function scCaptureState() {
   const multi = ['f-tahun','f-bulan','f-negeri','f-katitem'];
   const single = ['f-statusserbuan','f-online','f-pengkelasan','f-statuspendaftaran','f-statusnotifikasi','f-tindakan'];
-  const tags = ['katkhas','namaracun','namaproduk','namapremis','alamat','katpremis','jenispremis'];
+  const tags = ['katkhas','namaracun','namaproduk','namapremis','alamat','katpremis','jenispremis','agensi'];
   const state = { multi:{}, single:{}, tags:{} };
   multi.forEach(id => {
     const vals = [...document.getElementById(id).selectedOptions].map(o=>o.value).filter(Boolean);
@@ -4948,7 +4614,7 @@ function scApplyState(state) {
   ['f-statusserbuan','f-online','f-pengkelasan','f-statuspendaftaran','f-statusnotifikasi'].forEach(id => {
     document.getElementById(id).value = '';
   });
-  ['katkhas','namaracun','namaproduk','namapremis','alamat','katpremis','jenispremis'].forEach(f => clearAllTags(f));
+  ['katkhas','namaracun','namaproduk','namapremis','alamat','katpremis','jenispremis','agensi'].forEach(f => clearAllTags(f));
 
   // Apply saved state
   Object.entries(state.multi || {}).forEach(([id, vals]) => {
@@ -4973,7 +4639,7 @@ function scSummaryHTML(state) {
   const lines = [];
   const LABELS = {
     'f-tahun':'Tahun','f-bulan':'Bulan','f-negeri':'Negeri',
-    'f-katitem':'Kat. Item',
+    'f-katitem':'Kat. Item','agensi':'Agensi',
     'f-statusserbuan':'Status Serbuan','f-online':'Jualan Online',
     'f-pengkelasan':'Pengkelasan','f-statuspendaftaran':'Status Pendaftaran',
     'f-statusnotifikasi':'Status Notifikasi',
@@ -5056,7 +4722,7 @@ function renderShortcuts() {
 // Init shortcuts on page load
 document.addEventListener('DOMContentLoaded', renderShortcuts);
 
-const tagState = { katkhas: [], namaracun: [], namaproduk: [], namapremis: [], alamat: [], katpremis: [], jenispremis: [] };
+const tagState = { katkhas: [], namaracun: [], namaproduk: [], namapremis: [], alamat: [], katpremis: [], jenispremis: [], agensi: [] };
 let suggestTimeout = null;
 
 const tagColMap = {
@@ -5067,6 +4733,7 @@ const tagColMap = {
   alamat:       '__alamat_lc',
   katpremis:    '__katpremis',
   jenispremis:  '__jenispremis',
+  agensi:       '__agensi_f',
 };
 // Note: katpremis/jenispremis are categorical codes, so applyFilters() matches
 // them EXACTLY against tagState (unlike the free-text substring fields above).
@@ -5079,6 +4746,7 @@ function buildTokenCache(field) {
   rawData.forEach(r => {
     const v = r[col];
     if (!v) return;
+    if (Array.isArray(v)) { v.forEach(x => { if (x) set.add(x); }); return; }
     if (field === 'katkhas') {
       v.split('|').forEach(k => { const t = k.trim(); if (t && t !== '0') set.add(t); });
     } else {
@@ -5196,283 +4864,12 @@ function hideTagSuggestions(field, delay) {
   }, delay);
 }
 
-// ══════════════════════════════════════════════
-// AI CHATBOX
-// ══════════════════════════════════════════════
-let chatHistory = [];
-let chatboxOpen = false;  // default collapsed
-let chatDataReady = false;
-
-function toggleChatbox() {
-  chatboxOpen = !chatboxOpen;
-  const body  = document.getElementById('chatbox-body');
-  const label = document.getElementById('chatbox-toggle-label');
-  body.classList.toggle('collapsed', !chatboxOpen);
-  label.innerHTML = chatboxOpen
-    ? '<span>▼</span> SEMBUNYIKAN'
-    : '<span>►</span> PAPARKAN';
-}
-
-function enableChat() {
-  chatDataReady = true;
-  document.getElementById('chat-send-btn').disabled = false;
-  const noData = document.getElementById('chat-no-data');
-  if (noData) noData.remove();
-  appendAiMessage('Assalamualaikum! Saya telah menganalisis data yang anda muatkan. Anda boleh bertanya apa-apa soalan tentang data rampasan dan serbuan ini — trend, perbandingan negeri, kategori produk, cadangan operasi, dan sebagainya.');
-}
-
-function chatKeydown(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    sendChatMessage();
-  }
-}
-
-function autoResize(el) {
-  el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-}
-
-function sendQuick(btn) {
-  if (!chatDataReady) return;
-  document.getElementById('chat-input').value = btn.textContent;
-  sendChatMessage();
-}
-
-function getTimestamp() {
-  const n = new Date();
-  return n.getHours().toString().padStart(2,'0') + ':' + n.getMinutes().toString().padStart(2,'0');
-}
-
-function appendUserMessage(text) {
-  const wrap = document.getElementById('chat-messages');
-  const div = document.createElement('div');
-  div.className = 'chat-msg user';
-  div.innerHTML = `
-    <div>
-      <div class="msg-bubble">${escHtml(text)}</div>
-      <div class="msg-time">${getTimestamp()}</div>
-    </div>
-    <div class="msg-avatar user-avatar">👤</div>
-  `;
-  wrap.appendChild(div);
-  wrap.scrollTop = wrap.scrollHeight;
-}
-
-function appendAiMessage(text) {
-  const wrap = document.getElementById('chat-messages');
-  const div = document.createElement('div');
-  div.className = 'chat-msg ai';
-  div.innerHTML = `
-    <div class="msg-avatar ai-avatar">⬡</div>
-    <div>
-      <div class="msg-bubble">${renderMd(text)}</div>
-      <div class="msg-time">AI · ${getTimestamp()}</div>
-    </div>
-  `;
-  wrap.appendChild(div);
-  wrap.scrollTop = wrap.scrollHeight;
-  return div;
-}
-
-function showTyping() {
-  const wrap = document.getElementById('chat-messages');
-  const div = document.createElement('div');
-  div.className = 'chat-msg ai';
-  div.id = 'typing-indicator';
-  div.innerHTML = `
-    <div class="msg-avatar ai-avatar">⬡</div>
-    <div class="msg-bubble" style="padding:12px 14px">
-      <div class="typing-indicator">
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
-      </div>
-    </div>
-  `;
-  wrap.appendChild(div);
-  wrap.scrollTop = wrap.scrollHeight;
-}
-
-function removeTyping() {
-  const el = document.getElementById('typing-indicator');
-  if (el) el.remove();
-}
-
-function escHtml(t) {
-  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-}
-
-function renderMd(text) {
-  return text
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g,'<em>$1</em>')
-    .replace(/`(.+?)`/g,'<code>$1</code>')
-    .replace(/^- (.+)/gm,'<li>$1</li>')
-    .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
-    .replace(/\n/g,'<br>');
-}
-
-// Build a compact data context from current filteredData
-function buildDataContext() {
-  if (!filteredData || filteredData.length === 0) return 'Tiada data dimuatkan.';
-  const s = currentSummary || summarizeFilteredData(filteredData);
-
-  const years = Object.keys(s.byYear).sort();
-  const topNegeri = Object.entries(s.byNegeri)
-    .map(([n,d]) => [n.replace('NEGERI ','').replace('WP ',''), d.serbuanSet.size, d.harga])
-    .sort((a,b) => b[1]-a[1]).slice(0,8);
-  const topKat = Object.entries(s.byKat).sort((a,b)=>b[1]-a[1]).slice(0,6);
-  const topKH  = Object.entries(s.byKH).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  const berjaya = s.statusCount['Berjaya'] || 0;
-  const tidakBerjaya = s.statusCount['Tidak Berjaya'] || 0;
-  const total = berjaya + tidakBerjaya;
-  const successRate = total > 0 ? (berjaya/total*100).toFixed(1) : 'N/A';
-
-  const yearTrend = years.map(y => {
-    const d = s.byYear[y];
-    return `${y}: ${d.serbuanSet.size} serbuan, RM ${d.harga.toLocaleString('ms-MY')} nilai`;
-  }).join(' | ');
-
-  // Active filters
-  const activeFil = [];
-  const fTahun = [...document.getElementById('f-tahun').selectedOptions].map(o=>o.value).filter(Boolean);
-  const fBulan = [...document.getElementById('f-bulan').selectedOptions].map(o=>o.value).filter(Boolean);
-  const fNegeri = [...document.getElementById('f-negeri').selectedOptions].map(o=>o.value).filter(Boolean);
-  const fKatItem = [...document.getElementById('f-katitem').selectedOptions].map(o=>o.value).filter(Boolean);
-  const fPengkelasan = document.getElementById('f-pengkelasan').value;
-  const fStatusSerbuan = document.getElementById('f-statusserbuan').value;
-  if (fTahun.length) activeFil.push('Tahun: ' + fTahun.join(', '));
-  if (fBulan.length) activeFil.push('Bulan: ' + fBulan.join(', '));
-  if (fNegeri.length) activeFil.push('Negeri: ' + fNegeri.join(', '));
-  if (fKatItem.length) activeFil.push('Kategori Item: ' + fKatItem.join(', '));
-  if (fPengkelasan) activeFil.push('Pengkelasan: ' + fPengkelasan);
-  if (fStatusSerbuan) activeFil.push('Status Serbuan: ' + fStatusSerbuan);
-
-  return `
-KONTEKS DATA PENGUATKUASAAN FARMASI (CPO — Cawangan Perisikan dan Operasi, BPF KKM):
-
-PENAPIS AKTIF: ${activeFil.length ? activeFil.join(' | ') : 'Tiada (semua data)'}
-
-RINGKASAN:
-- Jumlah rekod dalam skop: ${filteredData.length.toLocaleString('ms-MY')}
-- Bilangan serbuan unik: ${s.serbuanSet.size.toLocaleString('ms-MY')}
-- Jumlah kuantiti dirampas: ${s.totalKuantiti.toLocaleString('ms-MY')} unit
-- Jumlah nilai rampasan: RM ${s.totalHarga.toLocaleString('ms-MY')}
-- Bilangan perkara: ${s.totalPerkara.toLocaleString('ms-MY')}
-- Kadar kejayaan serbuan: ${successRate}% (${berjaya} berjaya / ${tidakBerjaya} tidak berjaya)
-- Serbuan melibatkan online: ${s.onlineSet.size} (${s.serbuanSet.size > 0 ? (s.onlineSet.size/s.serbuanSet.size*100).toFixed(1) : 0}%)
-- Tempoh data: ${years[0] || 'N/A'} hingga ${years[years.length-1] || 'N/A'}
-
-TREND TAHUNAN: ${yearTrend || 'Tiada data'}
-
-TOP NEGERI (Bilangan Serbuan):
-${topNegeri.map((n,i) => `${i+1}. ${n[0]}: ${n[1]} serbuan, RM ${n[2].toLocaleString('ms-MY')}`).join('\n')}
-
-TOP KATEGORI ITEM:
-${topKat.map(([k,v]) => `- ${k}: ${v} rekod`).join('\n')}
-
-TOP KATEGORI KHAS:
-${topKH.map(([k,v]) => `- ${k}: ${v} kes`).join('\n')}
-`.trim();
-}
-
-async function sendChatMessage() {
-  if (!chatDataReady) return;
-  const input = document.getElementById('chat-input');
-  const text = input.value.trim();
-  if (!text) return;
-
-  input.value = '';
-  input.style.height = 'auto';
-  document.getElementById('chat-send-btn').disabled = true;
-
-  appendUserMessage(text);
-  showTyping();
-
-  chatHistory.push({ role: 'user', content: text });
-
-  // Build system prompt with data context
-  const dataCtx = buildDataContext();
-  const systemPrompt = `Anda adalah Pembantu Analitik AI untuk Cawangan Perisikan dan Operasi (CPO), Bahagian Penguatkuasaan Farmasi (BPF), Kementerian Kesihatan Malaysia. Anda membantu pegawai penguatkuasa menganalisis data rampasan dan serbuan farmasi.
-
-${dataCtx}
-
-ARAHAN:
-- Jawab dalam Bahasa Malaysia yang professional dan tepat
-- Gunakan data di atas sebagai asas jawapan anda
-- Berikan analisis yang berguna, insight yang actionable, dan cadangan operasi bila relevan
-- Format jawapan dengan jelas menggunakan **bold** untuk nombor/fakta penting
-- Jika soalan di luar skop data, beritahu dengan sopan
-- Kekalkan konteks perbualan sebelum ini`;
-
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: chatHistory.slice(-10), // last 10 turns for context
-      })
-    });
-
-    const data = await response.json();
-    removeTyping();
-
-    if (data.content && data.content[0]) {
-      const reply = data.content[0].text;
-      appendAiMessage(reply);
-      chatHistory.push({ role: 'assistant', content: reply });
-      // Keep history manageable
-      if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
-    } else {
-      appendAiMessage('Maaf, berlaku ralat semasa memproses permintaan anda. Sila cuba lagi.');
-    }
-  } catch (err) {
-    removeTyping();
-    appendAiMessage('⚠️ Ralat sambungan: ' + err.message + '. Sila semak sambungan internet anda.');
-  }
-
-  document.getElementById('chat-send-btn').disabled = false;
-  document.getElementById('chat-input').focus();
-}
-
-
 // ══════════════════════════════════════════════════════════════
 // LAPORAN RINGKASAN TAHUNAN
 // ══════════════════════════════════════════════════════════════
 
 // ─── Helpers ─────────────────────────────────────────────────
 let _laporanSourceFile = '';   // nama fail yang diupload
-
-// Hook: tangkap nama fail semasa upload — patch processFile & loadFromJson
-(function patchUploadHooks() {
-  const _origHandleFile = window.handleFile;
-  window.handleFile = function(evt) {
-    if (evt.target.files[0]) _laporanSourceFile = evt.target.files[0].name;
-    _origHandleFile && _origHandleFile(evt);
-  };
-  // loadFromJson dipanggil secara inline, kita patch via MutationObserver pada upload-status
-  const obs = new MutationObserver(() => {
-    const s = document.getElementById('upload-status');
-    if (s && s.textContent.includes('rekod dimuatkan')) {
-      // Bila laporan panel terbuka, auto-refresh
-      if (sectionState['laporan']) { autoGenerateLaporanTajuk(); renderLaporanPreview(); }
-    }
-  });
-  const statusEl = document.getElementById('upload-status');
-  if (statusEl) obs.observe(statusEl, { childList: true, characterData: true, subtree: true });
-})();
-
-// Patch loadFromJson untuk tangkap nama fail
-const _origLoadFromJson = window.loadFromJson;
-window.loadFromJson = function(evt) {
-  if (evt.target.files[0]) _laporanSourceFile = evt.target.files[0].name;
-  _origLoadFromJson && _origLoadFromJson(evt);
-};
 
 // ─── Auto-generate tajuk daripada tapisan aktif ───────────────
 function autoGenerateLaporanTajuk() {
@@ -5485,11 +4882,11 @@ function autoGenerateLaporanTajuk() {
   const fTahun = [...document.getElementById('f-tahun').selectedOptions].map(o=>o.value).filter(Boolean);
   // Kategori item / nama produk / kategori khas
   const fKatItem = [...document.getElementById('f-katitem').selectedOptions].map(o=>o.value).filter(Boolean);
-  const fProduk = (window.tagState && window.tagState.namaproduk) ? [...window.tagState.namaproduk] : [];
-  const fKatKhas = (window.tagState && window.tagState.katkhas) ? [...window.tagState.katkhas] : [];
+  const fProduk = [...tagState.namaproduk];
+  const fKatKhas = [...tagState.katkhas];
   const fNegeri = [...document.getElementById('f-negeri').selectedOptions].map(o=>o.value).filter(Boolean);
   const fPengkelasan = document.getElementById('f-pengkelasan').value;
-  const fKatPremis = (window.tagState && window.tagState.katpremis) ? [...window.tagState.katpremis] : [];
+  const fKatPremis = [...tagState.katpremis];
 
   // Build product/subject string
   const subjekArr = [];
@@ -5726,11 +5123,14 @@ function generateLaporanWord() {
   const dateStr = `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()}`;
   const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
   const footerText = _buildFooterText(dateStr, timeStr);
+  // Escape teks untuk RTF: \ { } dan aksara bukan ASCII (cth. ·) -> \uN?
+  const esc = t => String(t).replace(/[\\{}]/g, m => '\\' + m)
+    .replace(/[^\x00-\x7F]/g, c => { let n = c.charCodeAt(0); if (n > 32767) n -= 65536; return '\\u' + n + '?'; });
 
   // RTF column widths (twips): 1500, 1800, 2400, 2400, 2400
-  const COL = [1500,1800,2400,2400,2400];
+  const COLW = [1500,1800,2400,2400,2400];
   function rtfCell(x, align, bold, text) {
-    return `\\pard\\intbl${align==='r'?'\\qr':''}${bold?'\\b':''} ${text}${bold?'\\b0':''} \\cell`;
+    return `\\pard\\intbl${align==='r'?'\\qr':''}${bold?'\\b':''} ${esc(text)}${bold?'\\b0':''} \\cell`;
   }
   function rtfRow(cells, widths) {
     let header = '{\\trowd\\trgaph108\\trleft0';
@@ -5740,28 +5140,28 @@ function generateLaporanWord() {
   }
 
   const headerRow = rtfRow([
-    rtfCell(COL[0],'l',true,'Tahun'),
-    rtfCell(COL[1],'r',true,'Bil. Serbuan'),
-    rtfCell(COL[2],'r',true,'Bil. Perkara Dirampas'),
-    rtfCell(COL[3],'r',true,'Kuantiti Rampasan (unit)'),
-    rtfCell(COL[4],'r',true,'Nilai Rampasan (RM)'),
-  ], COL);
+    rtfCell(COLW[0],'l',true,'Tahun'),
+    rtfCell(COLW[1],'r',true,'Bil. Serbuan'),
+    rtfCell(COLW[2],'r',true,'Bil. Perkara Dirampas'),
+    rtfCell(COLW[3],'r',true,'Kuantiti Rampasan (unit)'),
+    rtfCell(COLW[4],'r',true,'Nilai Rampasan (RM)'),
+  ], COLW);
 
   const dataRows = rows.map(r => rtfRow([
-    rtfCell(COL[0],'l',true, r.tahun),
-    rtfCell(COL[1],'r',false, _fmtNum(r.serbuan)),
-    rtfCell(COL[2],'r',false, _fmtNum(r.perkara)),
-    rtfCell(COL[3],'r',false, _fmtNum(r.kuantiti)),
-    rtfCell(COL[4],'r',false, _fmtRM(r.nilai)),
-  ], COL)).join('\n');
+    rtfCell(COLW[0],'l',true, r.tahun),
+    rtfCell(COLW[1],'r',false, _fmtNum(r.serbuan)),
+    rtfCell(COLW[2],'r',false, _fmtNum(r.perkara)),
+    rtfCell(COLW[3],'r',false, _fmtNum(r.kuantiti)),
+    rtfCell(COLW[4],'r',false, _fmtRM(r.nilai)),
+  ], COLW)).join('\n');
 
   const totalRow = rtfRow([
-    rtfCell(COL[0],'l',true,'JUMLAH'),
-    rtfCell(COL[1],'r',true, _fmtNum(total.serbuan)),
-    rtfCell(COL[2],'r',true, _fmtNum(total.perkara)),
-    rtfCell(COL[3],'r',true, _fmtNum(total.kuantiti)),
-    rtfCell(COL[4],'r',true, _fmtRM(total.nilai)),
-  ], COL);
+    rtfCell(COLW[0],'l',true,'JUMLAH'),
+    rtfCell(COLW[1],'r',true, _fmtNum(total.serbuan)),
+    rtfCell(COLW[2],'r',true, _fmtNum(total.perkara)),
+    rtfCell(COLW[3],'r',true, _fmtNum(total.kuantiti)),
+    rtfCell(COLW[4],'r',true, _fmtRM(total.nilai)),
+  ], COLW);
 
   const rtf = `{\\rtf1\\ansi\\ansicpg1252\\deff0
 {\\fonttbl{\\f0\\froman\\fcharset0 Times New Roman;}{\\f1\\fswiss\\fcharset0 Arial;}}
@@ -5773,7 +5173,7 @@ function generateLaporanWord() {
 {\\pard\\qc\\b\\fs22\\cf1 BAHAGIAN PENGUATKUASAAN FARMASI\\par}
 {\\pard\\qc\\b\\fs22\\cf1 CAWANGAN PERISIKAN DAN OPERASI (CPO)\\par}
 \\pard\\brdrb\\brdrs\\brdrw15\\par
-{\\pard\\qc\\b\\fs26\\cf1 ${tajuk.toUpperCase()}\\b0\\par}
+{\\pard\\qc\\b\\fs26\\cf1 ${esc(tajuk.toUpperCase())}\\b0\\par}
 \\pard\\par
 {\\pard\\fs18 Tarikh Jana: ${dateStr}, ${timeStr}\\tab Jumlah Rekod Dianalisis: ${_fmtNum(filteredData.length)} rekod\\par}
 \\pard\\par
@@ -5784,8 +5184,8 @@ ${totalRow}
 
 \\pard\\par
 {\\pard\\brdrb\\brdrs\\brdrw5\\par}
-{\\pard\\fs17\\i ${footerText}\\i0\\par}
-{\\pard\\qr\\fs17 CPO · BPF · KKM · ${now.getFullYear()}\\par}
+{\\pard\\fs17\\i ${esc(footerText)}\\i0\\par}
+{\\pard\\qr\\fs17 ${esc('CPO · BPF · KKM · ' + now.getFullYear())}\\par}
 }`;
 
   const blob = new Blob([rtf], { type: 'application/msword' });
@@ -5810,12 +5210,6 @@ function _scheduleLaporanRefresh() {
   }, 400);
 }
 
-// Patch applyFilters to refresh laporan when open
-const _origApplyFilters = window.applyFilters;
-window.applyFilters = function() {
-  _origApplyFilters && _origApplyFilters.apply(this, arguments);
-  _scheduleLaporanRefresh();
-};
 
 
 </script>
