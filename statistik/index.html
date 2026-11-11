@@ -197,73 +197,6 @@
     box-shadow: 0 0 14px rgba(0,255,136,0.3);
   }
 
-  .btn-upload {
-    background: transparent;
-    border: 1px solid var(--neon-cyan);
-    color: var(--neon-cyan);
-  }
-  .btn-upload:hover {
-    background: rgba(0,245,255,0.1);
-    box-shadow: 0 0 14px rgba(0,245,255,0.3);
-  }
-  #upload-zone { cursor: pointer; }
-  .btn-parquet {
-    background: transparent;
-    border: 1px solid rgba(255,0,144,0.55);
-    color: var(--neon-pink);
-  }
-  .btn-parquet:hover {
-    background: rgba(255,0,144,0.1);
-    box-shadow: 0 0 14px rgba(255,0,144,0.3);
-  }
-  .tool-badge {
-    display: inline-block;
-    margin-left: 6px;
-    padding: 1px 6px;
-    font-size: 9px;
-    letter-spacing: 1px;
-    border-radius: 3px;
-    background: rgba(255,0,144,0.15);
-    color: var(--neon-pink);
-    vertical-align: middle;
-  }
-  .stored-bar {
-    margin: 6px 32px 0;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    color: var(--text-muted);
-  }
-  .stored-bar b { color: var(--neon-cyan); font-weight: normal; }
-  .stored-del {
-    background: transparent;
-    border: 1px solid rgba(255,0,144,0.5);
-    color: var(--neon-pink);
-    border-radius: 5px;
-    padding: 3px 10px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    cursor: pointer;
-  }
-  .stored-del:hover { background: rgba(255,0,144,0.1); }
-  .data-tab-row { margin: 16px 32px 0; display: flex; justify-content: flex-start; }
-  #urusdata-panel .tools-bar { margin-top: 8px; }
-  @media (max-width: 800px) {
-    .data-tab-row { margin: 12px 12px 0; }
-    .tools-bar { flex-direction: column; margin: 12px 12px 0; }
-    .tool-divider { width: auto; height: 1px; margin: 0 12px; }
-    .tool-card { padding: 12px 14px; }
-    .upload-status, .stored-bar { margin-left: 12px; margin-right: 12px; }
-  }
-  #upload-zone.drag-over {
-    background: rgba(0,245,255,0.08);
-    box-shadow: inset 0 0 20px rgba(0,245,255,0.15);
-  }
 
   .logo-mark {
     width: 44px; height: 44px;
@@ -395,6 +328,59 @@
   }
 
   #file-input { display: none; }
+  .btn-parquet {
+    background: transparent;
+    border: 1px solid rgba(255,0,144,0.55);
+    color: var(--neon-pink);
+  }
+  .btn-parquet:hover {
+    background: rgba(255,0,144,0.1);
+    box-shadow: 0 0 14px rgba(255,0,144,0.3);
+  }
+  .tool-badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 6px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    border-radius: 3px;
+    background: rgba(255,0,144,0.15);
+    color: var(--neon-pink);
+    vertical-align: middle;
+  }
+  .stored-bar {
+    margin: 6px 32px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .stored-bar b { color: var(--neon-cyan); font-weight: normal; }
+  .stored-del {
+    background: transparent;
+    border: 1px solid rgba(255,0,144,0.5);
+    color: var(--neon-pink);
+    border-radius: 5px;
+    padding: 3px 10px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+  }
+  .stored-del:hover { background: rgba(255,0,144,0.1); }
+  .data-tab-row { margin: 16px 32px 0; display: flex; justify-content: flex-start; }
+  #urusdata-panel .tools-bar { margin-top: 8px; }
+  @media (max-width: 800px) {
+    .data-tab-row { margin: 12px 12px 0; }
+    .tools-bar { flex-direction: column; margin: 12px 12px 0; }
+    .tool-divider { width: auto; height: 1px; margin: 0 12px; }
+    .tool-card { padding: 12px 14px; }
+    .upload-status, .stored-bar { margin-left: 12px; margin-right: 12px; }
+  }
 
   .upload-status {
     margin: 8px 32px 0;
@@ -568,10 +554,10 @@
   }
   .tag-input-field::placeholder { color: var(--text-muted); font-size: 11px; }
   .tag-suggestions {
-    position: absolute; top: 100%; left: 0; right: 0;
-    background: #080f1e; border: 1px solid rgba(0,245,255,0.25); border-top: none;
-    border-radius: 0 0 6px 6px; max-height: 160px; overflow-y: auto;
-    z-index: 200; display: none; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    position: fixed; left: 0; right: 0;
+    background: #080f1e; border: 1px solid rgba(0,245,255,0.25);
+    border-radius: 6px; max-height: 220px; overflow-y: auto;
+    z-index: 99999; display: none; box-shadow: 0 8px 32px rgba(0,0,0,0.7);
   }
   .tag-suggestions.open { display: block; }
   .sug-item {
@@ -594,7 +580,6 @@
     flex-wrap: wrap;
     gap: 10px;
     position: relative;
-    overflow: hidden;
   }
   .filter-master-bar::before {
     content:'';
@@ -811,6 +796,111 @@
     cursor: pointer; transition: all 0.2s;
   }
   .sc-btn-save:hover { background: rgba(0,245,255,0.18); box-shadow: 0 0 12px rgba(0,245,255,0.3); }
+
+  /* ── Alias Agensi Modal ── */
+  .alias-modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.80);
+    backdrop-filter: blur(5px);
+    z-index: 99998;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .alias-modal-overlay.open { opacity: 1; pointer-events: all; }
+  .alias-modal {
+    background: var(--bg-card);
+    border: 1px solid rgba(0,245,255,0.3);
+    border-radius: 14px;
+    padding: 24px 28px;
+    width: min(680px, 95vw);
+    max-height: 85vh;
+    display: flex; flex-direction: column;
+    box-shadow: 0 0 60px rgba(0,245,255,0.15);
+  }
+  .alias-modal-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+  }
+  .alias-modal-header h3 {
+    font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: 700;
+    letter-spacing: 2px; color: var(--neon-cyan); text-transform: uppercase; margin: 0;
+  }
+  .alias-modal-close {
+    background: none; border: none; color: var(--text-muted);
+    font-size: 18px; cursor: pointer; padding: 2px 6px; border-radius: 4px;
+    transition: color 0.2s;
+  }
+  .alias-modal-close:hover { color: var(--text-primary); }
+  .alias-add-row {
+    display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
+  }
+  .alias-add-row input {
+    flex: 1; min-width: 120px;
+    background: rgba(0,0,0,0.4); border: 1px solid rgba(0,245,255,0.25);
+    border-radius: 6px; padding: 7px 10px;
+    color: var(--text-primary); font-family: 'Share Tech Mono',monospace; font-size: 11px;
+    outline: none; transition: border-color 0.2s;
+  }
+  .alias-add-row input:focus { border-color: var(--neon-cyan); }
+  .alias-add-row input::placeholder { color: var(--text-muted); }
+  .alias-add-btn {
+    padding: 7px 16px; border-radius: 6px;
+    border: 1px solid rgba(0,245,255,0.5); background: rgba(0,245,255,0.1);
+    color: var(--neon-cyan); font-family: 'Share Tech Mono',monospace; font-size: 11px;
+    font-weight: 700; cursor: pointer; white-space: nowrap; transition: all 0.2s;
+  }
+  .alias-add-btn:hover { background: rgba(0,245,255,0.2); }
+  .alias-search-row {
+    margin-bottom: 10px;
+  }
+  .alias-search-row input {
+    width: 100%; background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(0,132,255,0.2); border-radius: 6px;
+    padding: 6px 10px; color: var(--text-primary);
+    font-family: 'Share Tech Mono',monospace; font-size: 11px; outline: none;
+  }
+  .alias-search-row input:focus { border-color: rgba(0,132,255,0.5); }
+  .alias-list-wrap {
+    flex: 1; overflow-y: auto; border: 1px solid var(--border);
+    border-radius: 8px; background: rgba(0,0,0,0.2);
+  }
+  .alias-list-header {
+    display: grid; grid-template-columns: 1fr 24px 1fr 36px;
+    gap: 8px; padding: 7px 12px;
+    background: rgba(0,132,255,0.08); border-bottom: 1px solid var(--border);
+    font-family: 'Share Tech Mono',monospace; font-size: 10px;
+    color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase;
+    position: sticky; top: 0; z-index: 1;
+  }
+  .alias-row {
+    display: grid; grid-template-columns: 1fr 24px 1fr 36px;
+    gap: 8px; padding: 6px 12px; align-items: center;
+    border-bottom: 1px solid rgba(0,132,255,0.05);
+    transition: background 0.1s;
+  }
+  .alias-row:hover { background: rgba(0,245,255,0.04); }
+  .alias-row:last-child { border-bottom: none; }
+  .alias-row-orig { font-family: 'Share Tech Mono',monospace; font-size: 11px; color: var(--text-primary); word-break: break-all; }
+  .alias-row-arrow { color: var(--text-muted); font-size: 12px; text-align: center; }
+  .alias-row-std { font-family: 'Share Tech Mono',monospace; font-size: 11px; color: var(--neon-cyan); font-weight: 600; }
+  .alias-row-src { font-family: 'Share Tech Mono',monospace; font-size: 9px; color: var(--text-muted); }
+  .alias-del-btn {
+    background: none; border: 1px solid rgba(255,68,68,0.2);
+    border-radius: 4px; color: rgba(255,68,68,0.5);
+    font-size: 12px; cursor: pointer; padding: 2px 6px;
+    transition: all 0.15s; line-height: 1;
+  }
+  .alias-del-btn:hover { border-color: #ff4444; color: #ff4444; background: rgba(255,68,68,0.08); }
+  .alias-del-btn:disabled { opacity: 0.3; cursor: default; }
+  .alias-modal-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 12px; gap: 10px; flex-wrap: wrap;
+  }
+  .alias-count { font-family: 'Share Tech Mono',monospace; font-size: 10px; color: var(--text-muted); }
+  .alias-notice { font-family: 'Share Tech Mono',monospace; font-size: 10px; color: #ffe600; display:none; }
+  .alias-notice.show { display: block; }
+
   .filter-sub-panel {
     margin-bottom: 8px;
     overflow: hidden;
@@ -1996,7 +2086,6 @@
     display: none;
   }
 
-
 </style>
 <link
   rel="stylesheet"
@@ -2125,6 +2214,48 @@
         <span class="sc-empty" id="sc-empty">Tiada shortcut — simpan tapisan aktif sebagai shortcut</span>
       </div>
       <button class="shortcut-add-btn" onclick="openShortcutModal()" id="sc-add-btn" title="Simpan tapisan semasa sebagai shortcut">＋ Simpan Tapisan</button>
+      <button class="shortcut-add-btn" onclick="openAliasModal()" title="Urus alias nama agensi" style="margin-left:4px;border-color:rgba(0,255,136,0.4);color:#00ff88">⚙ Alias Agensi</button>
+    </div>
+
+    <!-- ALIAS AGENSI MODAL -->
+    <div class="alias-modal-overlay" id="alias-modal-overlay" onclick="closeAliasModal(event)">
+      <div class="alias-modal" onclick="event.stopPropagation()">
+        <div class="alias-modal-header">
+          <h3>⚙ Pengurusan Alias Agensi</h3>
+          <button class="alias-modal-close" onclick="closeAliasModal()">✕</button>
+        </div>
+        <!-- Tambah alias baru -->
+        <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-bottom:8px">TAMBAH ALIAS BARU</div>
+        <div class="alias-add-row">
+          <input type="text" id="alias-input-orig" placeholder="Nama asal dalam Excel (cth: Caw. Pergigian KL)" maxlength="120"
+            onkeydown="if(event.key==='Enter')document.getElementById('alias-input-std').focus()">
+          <span style="color:var(--text-muted);font-size:16px;align-self:center">→</span>
+          <input type="text" id="alias-input-std" placeholder="Nama standard (cth: PERGIGIAN)" maxlength="60"
+            onkeydown="if(event.key==='Enter')addAliasEntry()">
+          <button class="alias-add-btn" onclick="addAliasEntry()">＋ Tambah</button>
+        </div>
+        <!-- Carian -->
+        <div class="alias-search-row">
+          <input type="text" id="alias-search-input" placeholder="🔍  Cari alias..." oninput="renderAliasList()">
+        </div>
+        <!-- Senarai -->
+        <div class="alias-list-wrap">
+          <div class="alias-list-header">
+            <div>Nama Asal (Excel)</div><div></div><div>Nama Standard</div><div></div>
+          </div>
+          <div id="alias-list-body"></div>
+        </div>
+        <div class="alias-modal-footer">
+          <div>
+            <span class="alias-count" id="alias-count"></span>
+            <span class="alias-notice" id="alias-notice">⚠ Ada perubahan — muat semula data untuk pakai alias baru</span>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="sc-btn-cancel" onclick="closeAliasModal()">Tutup</button>
+            <button class="sc-btn-save" onclick="applyAndCloseAlias()">✔ Guna &amp; Tutup</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- SHORTCUT MODAL -->
@@ -2193,6 +2324,17 @@
           <select class="filter-select" id="f-online" onchange="applyFilters()">
             <option value="">— Semua —</option>
           </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">🔍 Agensi Terlibat (gabungan 2 lajur)</label>
+          <div class="tag-input-wrap" id="wrap-agensi" onclick="focusTagInput('agensi')">
+            <div class="tag-list" id="tags-agensi"></div>
+            <input class="tag-input-field" id="f-agensi" type="text" placeholder="Taip & tekan Enter..." autocomplete="off"
+              oninput="showTagSuggestions('agensi', this.value)"
+              onkeydown="tagKeydown(event, 'agensi')"
+              onblur="hideTagSuggestions('agensi', 200)">
+          </div>
+          <div class="tag-suggestions" id="sug-agensi"></div>
         </div>
       </div>
       <div class="filter-text-row" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border)">
@@ -2446,6 +2588,139 @@
       </div>
     </div>
 
+    <!-- VSEC 3: PENGLIBATAN AGENSI -->
+    <div class="vsec-wrap">
+      <div class="vsec-header" onclick="toggleVsec('agensi')">
+        <div class="vsec-title">🤝 PENGLIBATAN AGENSI LUAR <small>bilangan serbuan · kadar penglibatan · komposisi</small></div>
+        <button class="vsec-toggle" id="vsec-btn-agensi" onclick="event.stopPropagation();toggleVsec('agensi')">
+          <span class="vsec-arrow" id="vsec-arrow-agensi">▼</span> PAPARKAN
+        </button>
+      </div>
+      <div class="vsec-body" id="vsec-body-agensi">
+        <div class="vsec-inner">
+
+          <!-- KPI ROW -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+            <div style="background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);border-radius:8px;padding:14px 16px;text-align:center">
+              <div id="ag-kpi-dengan" style="font-family:'Share Tech Mono',monospace;font-size:28px;font-weight:700;color:#00ff88;line-height:1">—</div>
+              <div style="font-size:10px;color:#5580a0;margin-top:4px;letter-spacing:1px;text-transform:uppercase">Serbuan Libat Agensi Luar</div>
+            </div>
+            <div style="background:rgba(85,128,160,0.06);border:1px solid rgba(85,128,160,0.2);border-radius:8px;padding:14px 16px;text-align:center">
+              <div id="ag-kpi-tanpa" style="font-family:'Share Tech Mono',monospace;font-size:28px;font-weight:700;color:#5580a0;line-height:1">—</div>
+              <div style="font-size:10px;color:#5580a0;margin-top:4px;letter-spacing:1px;text-transform:uppercase">Serbuan BPF Sahaja</div>
+            </div>
+            <div style="background:rgba(0,132,255,0.06);border:1px solid rgba(0,132,255,0.2);border-radius:8px;padding:14px 16px;text-align:center">
+              <div id="ag-kpi-pct" style="font-family:'Share Tech Mono',monospace;font-size:28px;font-weight:700;color:#0084ff;line-height:1">—</div>
+              <div style="font-size:10px;color:#5580a0;margin-top:4px;letter-spacing:1px;text-transform:uppercase">Kadar Penglibatan Agensi Luar</div>
+            </div>
+          </div>
+
+          <!-- ROW 1: Bar agensi + Doughnut -->
+          <div class="charts-row" style="margin-bottom:12px">
+            <div class="chart-panel" style="flex:2">
+              <div class="panel-title">BILANGAN SERBUAN MENGIKUT AGENSI <span>unik per No Rujukan Serbuan</span></div>
+              <div class="chart-container" style="height:260px">
+                <canvas id="chart-agensi"></canvas>
+              </div>
+            </div>
+            <div class="chart-panel" style="flex:1">
+              <div class="panel-title">PENGLIBATAN AGENSI <span>dengan / tanpa agensi luar</span></div>
+              <div class="chart-container" style="height:260px">
+                <canvas id="chart-agensi-pie"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- ROW 2: Taburan bilangan agensi per serbuan -->
+          <div class="charts-row" style="margin-bottom:0">
+            <div class="chart-panel" style="flex:1">
+              <div class="panel-title">KOMPOSISI SERBUAN <span>bilangan agensi yang terlibat per serbuan</span></div>
+              <div class="chart-container" style="height:200px">
+                <canvas id="chart-agensi-taburan"></canvas>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- VSEC 4: KPI & SASARAN OBB -->
+    <div class="vsec-wrap">
+      <div class="vsec-header" onclick="toggleVsec('kpiobb')">
+        <div class="vsec-title">🎯 KPI &amp; SASARAN OBB <small>PK1-n5 · Output 7 · pencapaian per negeri</small></div>
+        <button class="vsec-toggle" id="vsec-btn-kpiobb" onclick="event.stopPropagation();toggleVsec('kpiobb')">
+          <span class="vsec-arrow" id="vsec-arrow-kpiobb">▼</span> PAPARKAN
+        </button>
+      </div>
+      <div class="vsec-body" id="vsec-body-kpiobb">
+        <div class="vsec-inner">
+
+          <!-- ROW 1: PK1-n5 gauge + breakdown -->
+          <div class="charts-row" style="margin-bottom:16px">
+
+            <!-- Gauge PK1-n5 -->
+            <div class="chart-panel" style="flex:1;min-width:220px;max-width:320px">
+              <div class="panel-title">KPI PK1-n5 <span>keberkesanan serbuan dalam talian</span></div>
+              <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 8px 12px;gap:10px">
+
+                <!-- Nombor di atas gauge -->
+                <div style="text-align:center">
+                  <div id="pk1n5-pct-label" style="font-family:'Share Tech Mono',monospace;font-size:36px;font-weight:700;color:#00f5ff;line-height:1">—%</div>
+                  <div id="pk1n5-status-label" style="font-size:10px;letter-spacing:1px;margin-top:5px;color:#5580a0">—</div>
+                </div>
+
+                <!-- Gauge canvas -->
+                <div style="position:relative;width:160px;height:88px;overflow:hidden">
+                  <canvas id="chart-pk1n5-gauge" width="160" height="160" style="position:absolute;top:0;left:0"></canvas>
+                </div>
+
+                <!-- N dan D -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;font-family:'Share Tech Mono',monospace;font-size:11px">
+                  <div style="background:rgba(0,132,255,0.08);border:1px solid rgba(0,132,255,0.2);border-radius:6px;padding:8px;text-align:center">
+                    <div id="pk1n5-n" style="font-size:20px;font-weight:700;color:#0084ff">—</div>
+                    <div style="color:#5580a0;font-size:9px;margin-top:2px">BERJAYA (N)</div>
+                  </div>
+                  <div style="background:rgba(85,128,160,0.08);border:1px solid rgba(85,128,160,0.2);border-radius:6px;padding:8px;text-align:center">
+                    <div id="pk1n5-d" style="font-size:20px;font-weight:700;color:#5580a0">—</div>
+                    <div style="color:#5580a0;font-size:9px;margin-top:2px">SEMUA ONLINE (D)</div>
+                  </div>
+                </div>
+                <div style="font-size:10px;color:#5580a0;text-align:center;letter-spacing:0.5px">Sasaran: <span style="color:#ffe600">≥ 80%</span> &nbsp;|&nbsp; Formula: N/D × 100%</div>
+              </div>
+            </div>
+
+            <!-- OBB tahun selector + progres bar -->
+            <div class="chart-panel" style="flex:3">
+              <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+                <div class="panel-title" style="margin-bottom:0">OBB OUTPUT 7 <span>sasaran serbuan per negeri</span></div>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                  <label style="font-size:10px;color:#5580a0;font-family:'Share Tech Mono',monospace">
+                    <input type="checkbox" id="obb-takcapai-only" onchange="renderOBB()" style="margin-right:4px">
+                    Tidak capai sahaja
+                  </label>
+                  <select id="obb-tahun-select" class="filter-select" style="height:auto;padding:6px 10px;font-size:11px;width:auto;min-width:120px;border-color:rgba(0,245,255,0.25)" onchange="renderOBB()">
+                    <option value="2026">Tahun 2026</option>
+                    <option value="2025">Tahun 2025 &amp; Sebelum</option>
+                  </select>
+                </div>
+              </div>
+              <!-- BPF KKM Nasional -->
+              <div id="obb-nasional" style="margin-bottom:8px"></div>
+              <!-- senarai negeri -->
+              <div id="obb-container" style="display:flex;flex-direction:column;gap:7px;max-height:320px;overflow-y:auto;padding-right:4px"></div>
+              <div style="display:flex;gap:16px;margin-top:10px;font-size:10px;font-family:'Share Tech Mono',monospace">
+                <span style="color:#00ff88">■ ≥100% Tercapai</span>
+                <span style="color:#ffe600">■ 80–99% Hampir</span>
+                <span style="color:#ff4444">■ &lt;80% Perlu Perhatian</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /main-content -->
 
     <!-- ══════════════════════════════════════════ -->
@@ -2594,7 +2869,7 @@
     <div class="footer-inner">
       <div class="footer-text">
         <div class="footer-title">CPO 2026</div>
-        <div class="footer-sub">&nbsp;·&nbsp;Versi 8.1&nbsp;·&nbsp;Untuk Kegunaan CPO dan Cawangan berkaitan Sahaja&nbsp;·&nbsp;Bukan untuk Tatapan Umum&nbsp;·&nbsp;</div>
+        <div class="footer-sub">&nbsp;·&nbsp;Versi 8.3&nbsp;·&nbsp;Untuk Kegunaan CPO dan Cawangan berkaitan Sahaja&nbsp;·&nbsp;Bukan untuk Tatapan Umum&nbsp;·&nbsp;</div>
       </div>
     </div>
   </footer>
@@ -2689,6 +2964,94 @@ function getVal(row, key) {
   return String(row[COL[key]] ?? '').trim();
 }
 
+// ─────────────────────────────────────────────
+// AGENSI TERLIBAT — gabung 'Agensi Lain Yang Terlibat' + 'Nyatakan Agensi'
+// Pecah ikut koma / pipe / bertitik-koma, UPPERCASE, buang "LAIN-LAIN AGENSI",
+// kemudian seragamkan guna AGENSI_ALIAS (edit di sini untuk tambah padanan).
+// ─────────────────────────────────────────────
+const AGENSI_ALIAS = {
+  // ── MDA / Peranti Perubatan ──
+  'MDA': 'MDA',
+  'PENGUATKUASA PERANTI PERUBATAN': 'MDA',
+  'PIHAK BERKUASA PERANTI PERUBATAN (MDA)': 'MDA',
+  'PIHAK BERKUASA PERANTI PERUBATAN': 'MDA',
+  // ── NPRA / GMP ──
+  'NPRA (GMP)': 'NPRA',
+  'GMP': 'NPRA',
+  // ── CPTK / Perubatan Tradisional & Komplementari ──
+  'CAWANGAN PERUBATAN TRADISIONAL & KOMPLEMENTARI': 'CPTK',
+  'CAWANGAN PERUBATAN TRADISIONAL & KOMPLEMENTERI': 'CPTK',
+  'CAWANGAN PERUBATAN TRADISIONAL & KOMPLEMENTARI (CPTK)': 'CPTK',
+  'CAWANGAN PERUBATAN TRADISIONAL DAN KOMPLEMENTARI (PT&K)': 'CPTK',
+  'CAWANGAN PERUBATAN TRADISIONAL DAN KOMPLEMENTARI': 'CPTK',
+  'BAHAGIAN TCM': 'CPTK',
+  'TCM': 'CPTK',
+  'SEKSYEN TCM': 'CPTK',
+  'SEKSYEN TCM , PERUBATAN JKN PERAK': 'CPTK',
+  'BAHAGIAN PERUBATAN TRADISIONAL DAN KOMPLEMENTARI PULAU PINANG (BPTK)': 'CPTK',
+  'BAHAGIAN PERUBATAN TRADISIONAL DAN KOMPLEMENTARI': 'CPTK',
+  'BPTK': 'CPTK',
+  // ── Pergigian ──
+  'PERGIGIAN': 'PERGIGIAN',
+  'CAWANGAN AMALAN PERGIGIAN P.PINANG': 'PERGIGIAN',
+  'CAWANGAN AMALAN PERGIGIAN PULAU PINANG': 'PERGIGIAN',
+  'UNIT PENGUATKUASAAN PERGIGIAN': 'PERGIGIAN',
+  'UNIT PENGUATKUASAAN PERGIGIAN': 'PERGIGIAN',
+  'PERGIGIAN JKN PERAK DAN FRU KL': 'PERGIGIAN',
+  // ── Farmasi Forensik ──
+  'CAWANGAN FARMASI FORENSIK BPFKKM': 'FARMASI FORENSIK',
+  'CAWANGAN FARMASI FORENSIK': 'FARMASI FORENSIK',
+  // ── PBT ──
+  'MBJB': 'PBT',
+  'MBSA': 'PBT',
+  // ── JPV / Veterinar ──
+  'JABATAN PERKHIDMATAN VETERINAR': 'JPV',
+  'JABATAN PERHILITAN': 'PERHILITAN',
+  'PERHILITAN': 'PERHILITAN',
+  'PERKESO': 'PERKESO',
+  // ── Imigresen ──
+  'JABATAN IMIGRESEN': 'IMIGRESEN',
+  // ── Bomba ──
+  'JABATAN BOMBA': 'BOMBA',
+  'BOMBA': 'BOMBA',
+  // ── JPN ──
+  'JPN': 'JPN',
+  // ── JAIP ──
+  'JAIP': 'JAIP',
+  // ── RELA ──
+  'RELA': 'RELA',
+  // ── UIPN ──
+  'UIPN': 'UIPN',
+  'SURUHANJAYA INTEGRITI AGENSI PENGUATKUASAAN': 'UIPN',
+  // ── Kesihatan / JKN ──
+  'KESIHATAN AWAM': 'KESIHATAN AWAM',
+  'UNIT INSPEKTORAT KESIHATAN PERSEKITARAN PKD KEMAMAN': 'KESIHATAN AWAM',
+  // ── Lain-lain ──
+  'EAIC': 'EAIC',
+  'CYFORS': 'CYFORS',
+  'KA DAN RTG': 'KA DAN RTG',
+  'KEMENTERIAN PERTANIAN': 'KEMENTERIAN PERTANIAN',
+  'PENJARA': 'PENJARA',
+  'POS MALAYSIA': 'POS MALAYSIA',
+  'SSM': 'SSM',
+};
+const AGENSI_SKIP = /^(LAIN[- ]?LAIN( AGENSI| AGNESI)?|TIADA|TIDAK BERKENAAN|N\/A|NA|#N\/A|0)$/;
+const AGENSI_NONE = '(TIADA AGENSI)';
+
+function parseAgensi(a, b) {
+  const out = new Set();
+  [a, b].forEach(txt => {
+    if (!txt) return;
+    String(txt).split(/[|,;\n]+/).forEach(tok => {
+      const t = tok.replace(/\s+/g, ' ').replace(/[.\s]+$/, '').trim().toUpperCase();
+      if (!t || t === '0' || t === '-' || AGENSI_SKIP.test(t)) return;
+      out.add(AGENSI_ALIAS[t] || t);
+    });
+  });
+  return [...out];
+}
+
+
 function preprocessRow(row) {
   row.__tahun = safeStr(row, 'Tahun');
   row.__negeri = safeStr(row, 'Negeri');
@@ -2735,6 +3098,8 @@ function preprocessRow(row) {
   row.__statusserbuan = safeStr(row, 'Status Serbuan');
   row.__tindakan = safeStr(row, 'Tindakan Selepas Serbuan Berjaya');
   row.__online = safeStr(row, 'Serbuan melibatkan penjualan online (Sub-KPI PK1-n5)');
+  row.__agensi = parseAgensi(safeStr(row, 'Agensi Lain Yang Terlibat'), safeStr(row, 'Nyatakan Agensi'));
+  row.__agensi_f = row.__agensi.length ? row.__agensi : [AGENSI_NONE];
   row.__katkhas_lc = safeStr(row, 'Kategori Khas').toLowerCase();
   row.__namaracun_lc = safeStr(row, 'Nama Racun').toLowerCase();
   row.__namaproduk_lc = safeStr(row, 'Nama Produk').toLowerCase();
@@ -2936,6 +3301,7 @@ function buildFilters() {
   fillSingleSelect('f-statusserbuan','Status Serbuan');
   fillSingleSelect('f-tindakan','Tindakan Selepas Serbuan Berjaya');
   fillSingleSelect('f-online','Serbuan melibatkan penjualan online (Sub-KPI PK1-n5)');
+  delete tagTokenCache['agensi'];
   // Invalidate tag token caches for new fields
   delete tagTokenCache['namapremis'];
   delete tagTokenCache['alamat'];
@@ -2959,7 +3325,7 @@ function resetFilters() {
   ['f-pengkelasan','f-statuspendaftaran','f-statusnotifikasi','f-statusserbuan','f-online','f-tindakan'].forEach(id => {
     document.getElementById(id).value = '';
   });
-  ['katkhas','namaracun','namaproduk','namapremis','alamat','katpremis','jenispremis'].forEach(id => clearAllTags(id));
+  ['katkhas','namaracun','namaproduk','namapremis','alamat','katpremis','jenispremis','agensi'].forEach(id => clearAllTags(id));
   applyFilters();
 }
 
@@ -2975,6 +3341,7 @@ function applyFilters() {
   const fTindakan = getSingle('f-tindakan');
   const fSerbuan = getSingle('f-statusserbuan');
   const fOnline = getSingle('f-online');
+  const fAgensi = getTagTerms('agensi');
   const fNamaPremis = getTagTerms('namapremis');
   const fAlamat = getTagTerms('alamat');
 
@@ -2998,6 +3365,7 @@ function applyFilters() {
   if (fJenisPremis.length) countSerbuan++;
   if (fSerbuan) countSerbuan++;
   if (fOnline) countSerbuan++;
+  if (fAgensi.length) countSerbuan++;
   if (fNamaPremis.length) countSerbuan++;
   if (fAlamat.length) countSerbuan++;
 
@@ -3040,6 +3408,7 @@ function applyFilters() {
     if (fSerbuan && r.__statusserbuan && r.__statusserbuan !== fSerbuan) return false;
     if (fTindakan && r.__tindakan !== fTindakan) return false;
     if (fOnline && r.__online && r.__online !== fOnline) return false;
+    if (fAgensi.length && !fAgensi.some(t => r.__agensi_f.some(a => a.toLowerCase().includes(t)))) return false;
     if (fNamaPremis.length && !fNamaPremis.some(t => r.__namapremis_lc.includes(t))) return false;
     if (fAlamat.length && !fAlamat.some(t => r.__alamat_lc.includes(t))) return false;
     if (fKatKhas.length && !fKatKhas.some(t => r.__katkhas_lc.includes(t))) return false;
@@ -3062,10 +3431,13 @@ function applyFilters() {
   updateKPIs();
   updateNegeriTable();
   requestAnimationFrame(updateCharts);
+  requestAnimationFrame(updateAgensiCharts);
+  requestAnimationFrame(updateKpiObb);
   scheduleHeatmapUpdate();
   if (currentMapView === 'poskod') updatePoskodMap();
   triggerAnalysis();
   scheduleTableUpdate();
+  _scheduleLaporanRefresh();
 }
 
 // ─────────────────────────────────────────────
@@ -3141,7 +3513,57 @@ const chartDefaults = {
 // ─────────────────────────────────────────────
 // VISUAL SECTION TOGGLE — default: hidden
 // ─────────────────────────────────────────────
-const vsecState = { trend: false, peta: false };
+const vsecState = { trend: false, peta: false, agensi: false, kpiobb: false };
+
+// ── OBB OUTPUT 7 SASARAN (hardcode)
+// Kunci ikut nama negeri dalam data Excel
+const OBB_SASARAN = {
+  '2026': {
+    'NEGERI JOHOR':174,'NEGERI KEDAH':74,'NEGERI KELANTAN':74,'NEGERI MELAKA':37,
+    'NEGERI PAHANG':74,'NEGERI PERAK':105,'NEGERI PERLIS':32,'NEGERI PULAU PINANG':100,
+    'NEGERI SABAH':95,'NEGERI SARAWAK':95,'NEGERI SELANGOR':174,'NEGERI SEMBILAN':60,
+    'NEGERI TERENGGANU':63,'WP KUALA LUMPUR & PUTRAJAYA':131,'WP LABUAN':15
+  },
+  '2025': {
+    'NEGERI JOHOR':165,'NEGERI KEDAH':70,'NEGERI KELANTAN':70,'NEGERI MELAKA':35,
+    'NEGERI PAHANG':70,'NEGERI PERAK':100,'NEGERI PERLIS':30,'NEGERI PULAU PINANG':95,
+    'NEGERI SABAH':90,'NEGERI SARAWAK':90,'NEGERI SELANGOR':165,'NEGERI SEMBILAN':60,
+    'NEGERI TERENGGANU':60,'WP KUALA LUMPUR & PUTRAJAYA':125,'WP LABUAN':20
+  }
+};
+
+// peta normalisasi nama negeri dalam data → kunci OBB_SASARAN
+const NEGERI_OBB_MAP = {
+  // format dalam data Excel (uppercase)
+  'NEGERI JOHOR':'NEGERI JOHOR',
+  'NEGERI KEDAH':'NEGERI KEDAH',
+  'NEGERI KELANTAN':'NEGERI KELANTAN',
+  'NEGERI MELAKA':'NEGERI MELAKA',
+  'NEGERI PAHANG':'NEGERI PAHANG',
+  'NEGERI PERAK':'NEGERI PERAK',
+  'NEGERI PERLIS':'NEGERI PERLIS',
+  'NEGERI PULAU PINANG':'NEGERI PULAU PINANG',
+  'NEGERI SABAH':'NEGERI SABAH',
+  'NEGERI SARAWAK':'NEGERI SARAWAK',
+  'NEGERI SELANGOR':'NEGERI SELANGOR',
+  'NEGERI SEMBILAN':'NEGERI SEMBILAN',
+  'NEGERI TERENGGANU':'NEGERI TERENGGANU',
+  'WP KUALA LUMPUR & PUTRAJAYA':'WP KUALA LUMPUR & PUTRAJAYA',
+  'WP LABUAN':'WP LABUAN',
+  // variasi lain yang mungkin ada dalam data
+  'JOHOR':'NEGERI JOHOR','KEDAH':'NEGERI KEDAH','KELANTAN':'NEGERI KELANTAN',
+  'MELAKA':'NEGERI MELAKA','PAHANG':'NEGERI PAHANG','PERAK':'NEGERI PERAK',
+  'PERLIS':'NEGERI PERLIS','PULAU PINANG':'NEGERI PULAU PINANG',
+  'P.PINANG':'NEGERI PULAU PINANG','PENANG':'NEGERI PULAU PINANG',
+  'SABAH':'NEGERI SABAH','SARAWAK':'NEGERI SARAWAK','SELANGOR':'NEGERI SELANGOR',
+  'N.SEMBILAN':'NEGERI SEMBILAN','TERENGGANU':'NEGERI TERENGGANU',
+  'KUALA LUMPUR':'WP KUALA LUMPUR & PUTRAJAYA',
+  'WP KUALA LUMPUR':'WP KUALA LUMPUR & PUTRAJAYA',
+  'PUTRAJAYA':'WP KUALA LUMPUR & PUTRAJAYA',
+  'WP PUTRAJAYA':'WP KUALA LUMPUR & PUTRAJAYA',
+  'WPKL':'WP KUALA LUMPUR & PUTRAJAYA',
+  'LABUAN':'WP LABUAN','W.P. LABUAN':'WP LABUAN'
+};
 
 function toggleVsec(id) {
   vsecState[id] = !vsecState[id];
@@ -3260,6 +3682,176 @@ function updateCharts() {
 }
 
 // ─────────────────────────────────────────────
+// AGENSI CHARTS
+// ─────────────────────────────────────────────
+function updateAgensiCharts() {
+  const fd = filteredData;
+  if (!fd || !fd.length) return;
+
+  // ── Bina map: rujukan → Set agensi unik
+  const serbuanAgensiMap = {};
+  const agensiCount = {};
+  const agensiSeen  = new Set();
+
+  fd.forEach(r => {
+    const ruj = String(r[COL['No Rujukan Serbuan']]||'').trim();
+    if (!ruj) return;
+    if (!serbuanAgensiMap[ruj]) serbuanAgensiMap[ruj] = new Set();
+
+    (r.__agensi_f || [AGENSI_NONE]).forEach(ag => {
+      if (ag === AGENSI_NONE) return;
+      serbuanAgensiMap[ruj].add(ag);
+      // kira per-agensi (deduplicate)
+      const key = ruj + '|' + ag;
+      if (!agensiSeen.has(key)) {
+        agensiSeen.add(key);
+        agensiCount[ag] = (agensiCount[ag]||0) + 1;
+      }
+    });
+  });
+
+  // ── Statistik asas
+  const semuaRuj    = Object.keys(serbuanAgensiMap);
+  const totalSerbuan = semuaRuj.length;
+  const serbuanDengan = semuaRuj.filter(r => serbuanAgensiMap[r].size > 0);
+  const denganAg  = serbuanDengan.length;
+  const tanpaAg   = totalSerbuan - denganAg;
+  const pct       = totalSerbuan > 0 ? (denganAg / totalSerbuan * 100).toFixed(1) : 0;
+
+  // ── KPI cards
+  const elDengan = document.getElementById('ag-kpi-dengan');
+  const elTanpa  = document.getElementById('ag-kpi-tanpa');
+  const elPct    = document.getElementById('ag-kpi-pct');
+  if (elDengan) elDengan.textContent = denganAg.toLocaleString('ms-MY');
+  if (elTanpa)  elTanpa.textContent  = tanpaAg.toLocaleString('ms-MY');
+  if (elPct)    elPct.textContent    = pct + '%';
+
+  // ── Taburan: 0, 1, 2, 3, 4+ agensi per serbuan
+  const taburanKeys   = ['Tiada Agensi', '1 Agensi', '2 Agensi', '3 Agensi', '4+ Agensi'];
+  const taburanVals   = [0, 0, 0, 0, 0];
+  semuaRuj.forEach(r => {
+    const n = serbuanAgensiMap[r].size;
+    if      (n === 0) taburanVals[0]++;
+    else if (n === 1) taburanVals[1]++;
+    else if (n === 2) taburanVals[2]++;
+    else if (n === 3) taburanVals[3]++;
+    else              taburanVals[4]++;
+  });
+  const taburanColors = ['rgba(85,128,160,0.35)','rgba(0,132,255,0.35)','rgba(0,245,255,0.35)','rgba(176,0,255,0.35)','rgba(255,107,0,0.35)'];
+  const taburanBorder = ['#5580a0','#0084ff','#00f5ff','#b000ff','#ff6b00'];
+
+  // ── Bar chart horizontal: senarai agensi top 12
+  const neonBg  = ['rgba(0,132,255,0.35)','rgba(0,245,255,0.35)','rgba(176,0,255,0.35)','rgba(0,255,136,0.35)','rgba(255,107,0,0.35)','rgba(255,230,0,0.35)','rgba(255,0,144,0.35)','rgba(85,128,160,0.35)'];
+  const neonBdr = ['#0084ff','#00f5ff','#b000ff','#00ff88','#ff6b00','#ffe600','#ff0090','#5580a0'];
+  const sorted  = Object.entries(agensiCount).sort((a,b) => b[1]-a[1]).slice(0,12);
+  const agLabels = sorted.map(e => e[0]);
+  const agVals   = sorted.map(e => e[1]);
+
+  const ctx1 = document.getElementById('chart-agensi');
+  if (ctx1) {
+    if (!charts.agensi) {
+      charts.agensi = new Chart(ctx1.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: agLabels,
+          datasets: [{ label: 'Bilangan Serbuan', data: agVals,
+            backgroundColor: agVals.map((_,i) => neonBg[i%8]),
+            borderColor: agVals.map((_,i) => neonBdr[i%8]),
+            borderWidth: 1, borderRadius: 4 }]
+        },
+        options: {
+          indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { backgroundColor:'rgba(6,14,26,0.95)', titleColor:'#00f5ff', bodyColor:'#e0f4ff', borderColor:'#0084ff', borderWidth:1 }
+          },
+          scales: {
+            x: { ticks:{ color:'#5580a0', font:{size:10,family:"'Share Tech Mono'"} }, grid:{color:'rgba(0,132,255,0.06)'} },
+            y: { ticks:{ color:'#e0f4ff', font:{size:10,family:"'Share Tech Mono'"} }, grid:{color:'rgba(0,132,255,0.06)'} }
+          }
+        }
+      });
+    } else {
+      charts.agensi.data.labels = agLabels;
+      charts.agensi.data.datasets[0].data = agVals;
+      charts.agensi.data.datasets[0].backgroundColor = agVals.map((_,i) => neonBg[i%8]);
+      charts.agensi.data.datasets[0].borderColor = agVals.map((_,i) => neonBdr[i%8]);
+      charts.agensi.update('none');
+    }
+  }
+
+  // ── Doughnut: dengan vs tanpa agensi luar
+  const ctx2 = document.getElementById('chart-agensi-pie');
+  if (ctx2) {
+    if (!charts.agensiPie) {
+      charts.agensiPie = new Chart(ctx2.getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Dengan Agensi Luar', 'BPF Sahaja'],
+          datasets: [{ data: [denganAg, tanpaAg],
+            backgroundColor: ['rgba(0,255,136,0.3)','rgba(85,128,160,0.2)'],
+            borderColor: ['#00ff88','#5580a0'], borderWidth:2, hoverBorderWidth:3 }]
+        },
+        options: {
+          responsive:true, maintainAspectRatio:false, cutout:'65%',
+          plugins: {
+            legend: { position:'bottom', labels:{ color:'#5580a0', font:{family:"'Share Tech Mono'",size:9}, padding:10, boxWidth:10 } },
+            tooltip: {
+              backgroundColor:'rgba(6,14,26,0.95)', titleColor:'#00f5ff', bodyColor:'#e0f4ff', borderColor:'#0084ff', borderWidth:1,
+              callbacks: { label: ctx => {
+                const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+                const p = total>0 ? (ctx.parsed/total*100).toFixed(1) : 0;
+                return ` ${ctx.parsed.toLocaleString('ms-MY')} serbuan (${p}%)`;
+              }}
+            }
+          }
+        }
+      });
+    } else {
+      charts.agensiPie.data.datasets[0].data = [denganAg, tanpaAg];
+      charts.agensiPie.update('none');
+    }
+  }
+
+  // ── Bar chart: taburan bilangan agensi per serbuan
+  const ctx3 = document.getElementById('chart-agensi-taburan');
+  if (ctx3) {
+    if (!charts.agensiTaburan) {
+      charts.agensiTaburan = new Chart(ctx3.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: taburanKeys,
+          datasets: [{ label: 'Bilangan Serbuan', data: taburanVals,
+            backgroundColor: taburanColors, borderColor: taburanBorder,
+            borderWidth:1, borderRadius:4 }]
+        },
+        options: {
+          indexAxis: 'y', responsive:true, maintainAspectRatio:false,
+          plugins: {
+            legend: { display:false },
+            tooltip: {
+              backgroundColor:'rgba(6,14,26,0.95)', titleColor:'#00f5ff', bodyColor:'#e0f4ff', borderColor:'#0084ff', borderWidth:1,
+              callbacks: { label: ctx => {
+                const total = taburanVals.reduce((a,b)=>a+b,0);
+                const p = total>0 ? (ctx.parsed.x/total*100).toFixed(1) : 0;
+                return ` ${ctx.parsed.x.toLocaleString('ms-MY')} serbuan (${p}%)`;
+              }}
+            }
+          },
+          scales: {
+            x: { ticks:{color:'#5580a0',font:{size:10,family:"'Share Tech Mono'"}}, grid:{color:'rgba(0,132,255,0.06)'} },
+            y: { ticks:{color:'#e0f4ff',font:{size:10,family:"'Share Tech Mono'"}}, grid:{color:'rgba(0,132,255,0.06)'} }
+          }
+        }
+      });
+    } else {
+      charts.agensiTaburan.data.datasets[0].data = taburanVals;
+      charts.agensiTaburan.update('none');
+    }
+  }
+}
+
+// ─────────────────────────────────────────────
 // NEGERI TABLE
 // ─────────────────────────────────────────────
 function updateNegeriTable() {
@@ -3307,6 +3899,166 @@ function updateNegeriTable() {
       <td><div class="bar-cell"><div class="bar-fill" style="width:${Math.round(val/max*120)}px;background:${barColor};box-shadow:none"></div></div></td>
     </tr>
   `).join('');
+}
+
+// ─────────────────────────────────────────────
+// KPI PK1-n5 & OBB OUTPUT 7
+// ─────────────────────────────────────────────
+function updateKpiObb() {
+  const fd = filteredData;
+  if (!fd || !fd.length) return;
+
+  // ── KPI PK1-n5: serbuan online YA, status berjaya vs semua
+  const onlineSeen    = new Set();
+  const onlineBerjaya = new Set();
+  fd.forEach(r => {
+    const ruj    = String(r[COL['No Rujukan Serbuan']]||'').trim();
+    const online = (r.__online||'').toUpperCase();
+    const status = String(r[COL['Status Serbuan']]||'').trim();
+    if (!ruj || online !== 'YA') return;
+    onlineSeen.add(ruj);
+    if (status === 'Berjaya') onlineBerjaya.add(ruj);
+  });
+
+  const N = onlineBerjaya.size;
+  const D = onlineSeen.size;
+  const pct = D > 0 ? (N / D * 100) : 0;
+  const pctStr = D > 0 ? pct.toFixed(1) + '%' : '—%';
+  const pass = pct >= 80;
+
+  const elPct = document.getElementById('pk1n5-pct-label');
+  const elSts = document.getElementById('pk1n5-status-label');
+  const elN   = document.getElementById('pk1n5-n');
+  const elD   = document.getElementById('pk1n5-d');
+  if (elPct) { elPct.textContent = pctStr; elPct.style.color = D===0?'#5580a0':pass?'#00ff88':'#ff4444'; }
+  if (elSts) { elSts.textContent = D===0?'—':pass?'✅ SASARAN TERCAPAI':'⚠️ BAWAH SASARAN'; elSts.style.color = pass?'#00ff88':'#ff4444'; }
+  if (elN)   elN.textContent = N.toLocaleString('ms-MY');
+  if (elD)   elD.textContent = D.toLocaleString('ms-MY');
+
+  // Gauge doughnut (separuh bulatan)
+  const gaugeVal   = D > 0 ? Math.min(pct, 100) : 0;
+  const gaugeColor = D===0?'#5580a0':pass?'#00ff88':'#ff4444';
+  const ctxG = document.getElementById('chart-pk1n5-gauge');
+  if (ctxG) {
+    if (!charts.pk1n5) {
+      charts.pk1n5 = new Chart(ctxG.getContext('2d'), {
+        type: 'doughnut',
+        data: { datasets: [{ data:[gaugeVal,100-gaugeVal],
+          backgroundColor:[gaugeColor+'55','rgba(85,128,160,0.1)'],
+          borderColor:[gaugeColor,'transparent'], borderWidth:[3,0] }] },
+        options: { responsive:false, cutout:'78%', rotation:-90, circumference:180,
+          plugins:{ legend:{display:false}, tooltip:{enabled:false} }, animation:{duration:600} }
+      });
+    } else {
+      charts.pk1n5.data.datasets[0].data = [gaugeVal, 100-gaugeVal];
+      charts.pk1n5.data.datasets[0].backgroundColor = [gaugeColor+'55','rgba(85,128,160,0.1)'];
+      charts.pk1n5.data.datasets[0].borderColor = [gaugeColor,'transparent'];
+      charts.pk1n5.update('none');
+    }
+  }
+
+  renderOBB();
+}
+
+function renderOBB() {
+  const fd = filteredData;
+  const container = document.getElementById('obb-container');
+  const nasionalDiv = document.getElementById('obb-nasional');
+  if (!container) return;
+
+  const tahunSel     = (document.getElementById('obb-tahun-select')||{}).value || '2026';
+  const takcapaiOnly = (document.getElementById('obb-takcapai-only')||{}).checked || false;
+  const sasaran      = OBB_SASARAN[tahunSel] || OBB_SASARAN['2026'];
+
+  // sasaran nasional tetap (BPF KKM)
+  const sasaranNasional = tahunSel === '2026' ? 1300 : 1245;
+
+  // kira pencapaian per negeri — semua serbuan (unik rujukan)
+  const pencapaian   = {};
+  const serbuanSeen  = new Set();
+  // kira serbuan BERJAYA sahaja untuk BPF KKM nasional
+  const berjayaSeen  = new Set();
+  let   totalBerjaya = 0;
+
+  (fd||[]).forEach(r => {
+    const ruj    = String(r[COL['No Rujukan Serbuan']]||'').trim();
+    const negeri = (r.__negeri||'').toUpperCase().trim();
+    if (!ruj || !negeri) return;
+
+    // pencapaian negeri — kira unik serbuan tanpa mengira status
+    if (!serbuanSeen.has(ruj)) {
+      serbuanSeen.add(ruj);
+      const kunci = NEGERI_OBB_MAP[negeri] || negeri;
+      pencapaian[kunci] = (pencapaian[kunci]||0) + 1;
+    }
+
+    // BPF KKM nasional — kira BERJAYA sahaja, unik rujukan
+    const status = String(r[COL['Status Serbuan']]||'').trim();
+    const bKey   = ruj + '|BERJAYA';
+    if (status === 'Berjaya' && !berjayaSeen.has(bKey)) {
+      berjayaSeen.add(bKey);
+      totalBerjaya++;
+    }
+  });
+
+  // ── BPF KKM Nasional (papar di atas senarai negeri) ──
+  if (nasionalDiv) {
+    const nPct    = sasaranNasional > 0 ? (totalBerjaya / sasaranNasional) * 100 : 0;
+    const nColor  = nPct >= 100 ? '#00ff88' : nPct >= 80 ? '#ffe600' : '#ff4444';
+    const nIcon   = nPct >= 100 ? '✅' : nPct >= 80 ? '⚠️' : '🔴';
+    nasionalDiv.innerHTML = `<div style="background:rgba(0,132,255,0.10);border:1px solid rgba(0,132,255,0.35);border-radius:6px;padding:8px 12px">
+      <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:#5580a0;margin-bottom:4px;letter-spacing:0.5px">🏛️ BPF KKM — SASARAN NASIONAL (serbuan berjaya)</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;gap:8px">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:#00f5ff;font-weight:600">${nIcon} Jumlah Berjaya (Semua Negeri)</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:${nColor};white-space:nowrap;font-weight:600">
+          ${totalBerjaya.toLocaleString('ms-MY')} / ${sasaranNasional.toLocaleString('ms-MY')}
+          <span style="color:#5580a0;font-size:10px;margin-left:4px">(${nPct.toFixed(1)}%)</span>
+        </div>
+      </div>
+      <div style="background:rgba(85,128,160,0.12);border-radius:3px;height:7px;overflow:hidden">
+        <div style="width:${Math.min(nPct,100).toFixed(1)}%;height:100%;background:${nColor};border-radius:3px;transition:width 0.4s ease"></div>
+      </div>
+    </div>`;
+  }
+
+  // ── Senarai per negeri ──
+  let rows = Object.entries(sasaran).map(([negeri, sasarVal]) => {
+    const capai = pencapaian[negeri] || 0;
+    const pct   = sasarVal > 0 ? (capai / sasarVal) * 100 : 0;
+    return { negeri, sasarVal, capai, pct };
+  }).sort((a,b) => a.pct - b.pct); // terendah dahulu (lebih kritikal)
+
+  // filter: tunjuk HANYA tidak capai jika checkbox ditanda
+  if (takcapaiOnly) {
+    rows = rows.filter(r => r.pct < 100);
+  }
+
+  if (rows.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:20px;font-family:'Share Tech Mono',monospace;font-size:12px;color:#00ff88;opacity:0.7">
+      ✅ Semua negeri telah mencapai sasaran OBB
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = rows.map(({ negeri, sasarVal, capai, pct }) => {
+    const color  = pct >= 100 ? '#00ff88' : pct >= 80 ? '#ffe600' : '#ff4444';
+    const bgCol  = pct >= 100 ? 'rgba(0,255,136,0.08)' : pct >= 80 ? 'rgba(255,230,0,0.06)' : 'rgba(255,68,68,0.06)';
+    const icon   = pct >= 100 ? '✅' : pct >= 80 ? '⚠️' : '🔴';
+    const barPct = Math.min(pct, 100).toFixed(1);
+    const label  = negeri === 'NEGERI SEMBILAN' ? 'Negeri Sembilan' : negeri.replace('NEGERI ','').replace('WP KUALA LUMPUR & PUTRAJAYA','WPKL & Putrajaya').replace('WP LABUAN','WP Labuan');
+    return `<div style="background:${bgCol};border:1px solid ${color}22;border-radius:6px;padding:8px 12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;gap:8px">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:#e0f4ff;min-width:140px">${icon} ${label}</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:${color};white-space:nowrap">
+          ${capai.toLocaleString('ms-MY')} / ${sasarVal.toLocaleString('ms-MY')}
+          <span style="color:#5580a0;font-size:10px;margin-left:4px">(${pct.toFixed(1)}%)</span>
+        </div>
+      </div>
+      <div style="background:rgba(85,128,160,0.12);border-radius:3px;height:6px;overflow:hidden">
+        <div style="width:${barPct}%;height:100%;background:${color};border-radius:3px;transition:width 0.4s ease"></div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 // ─────────────────────────────────────────────
@@ -3546,6 +4298,22 @@ function getPoskodCoords(poskodRaw) {
   return null;
 }
 
+// ─── Tile peta ───────────────────────────────────────────────
+// Lalai: Esri Dark Gray (tanpa API key, berfungsi walaupun HTML dibuka dari komputer).
+// CARTO kini wajibkan API key (percuma) — kalau dah dapat, isi CARTO_KEY di bawah dan ia akan digunakan.
+// OSM rasmi pula menyekat akses tanpa Referer (fail dibuka terus dari komputer).
+const CARTO_KEY = '';   // cth: 'abc123...' daripada https://www.carto.com/basemaps/apikey/
+const MAP_TILE_URL = CARTO_KEY
+  ? 'https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png?key=' + CARTO_KEY
+  : 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+const MAP_TILE_OPTS = CARTO_KEY ? {
+  subdomains: 'abcd', maxZoom: 19,
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+} : {
+  maxZoom: 16,
+  attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+};
+
 let poskodMap = null;
 let poskodMarkersLayer = null;
 let currentMapView = 'negeri';
@@ -3553,10 +4321,7 @@ let currentMapView = 'negeri';
 function initPoskodMap() {
   if (poskodMap) return;
   poskodMap = L.map('poskod-map', { center: [4.2105, 101.9758], zoom: 6, zoomControl: true });
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(poskodMap);
+  L.tileLayer(MAP_TILE_URL, MAP_TILE_OPTS).addTo(poskodMap);
   poskodMarkersLayer = L.layerGroup().addTo(poskodMap);
 }
 
@@ -3740,10 +4505,7 @@ function initRealMap() {
     zoomControl: true
   });
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(liveMap);
+  L.tileLayer(MAP_TILE_URL, MAP_TILE_OPTS).addTo(liveMap);
 
   liveMarkersLayer = L.layerGroup().addTo(liveMap);
 }
@@ -3885,26 +4647,6 @@ function updateHeatmap() {
   }, 80);
 }
 
-function showMapTooltip(e, text) {
-  const tt = document.getElementById('map-tooltip');
-  tt.textContent = text;
-  tt.style.display = 'block';
-  tt.style.left = (e.clientX + 12) + 'px';
-  tt.style.top = (e.clientY - 28) + 'px';
-}
-
-function hideMapTooltip() {
-  const tt = document.getElementById('map-tooltip');
-  if (tt) tt.style.display = 'none';
-}
-
-document.addEventListener('mousemove', e => {
-  const tt = document.getElementById('map-tooltip');
-  if (tt && tt.style.display === 'block') {
-    tt.style.left = (e.clientX + 12) + 'px';
-    tt.style.top = (e.clientY - 28) + 'px';
-  }
-});
 
 // ─────────────────────────────────────────────
 // SECTION TOGGLE
@@ -4020,7 +4762,16 @@ function buildAnalysisHTML() {
 
   // ── Status serbuan
   const statusCount = {};
-  fd.forEach(r => { const s = String(r[COL['Status Serbuan']]||'').trim(); if (s) statusCount[s]=(statusCount[s]||0)+1; });
+  const statusSeen = new Set();
+  fd.forEach(r => {
+    const s = String(r[COL['Status Serbuan']]||'').trim();
+    const ruj = String(r[COL['No Rujukan Serbuan']]||'').trim();
+    if (!s || !ruj) return;
+    const key = ruj + '|' + s;
+    if (statusSeen.has(key)) return;
+    statusSeen.add(key);
+    statusCount[s] = (statusCount[s]||0) + 1;
+  });
   const berjaya = statusCount['Berjaya']||0;
   const tidakBerjaya = statusCount['Tidak Berjaya']||0;
   const successRate = totalSerbuan > 0 ? (berjaya/(berjaya+tidakBerjaya)*100).toFixed(1) : 0;
@@ -4332,7 +5083,7 @@ function buildSenaraiSerbuan() {
         tahun:     String(r[COL['Tahun']] ?? '').trim(),
         negeri:    String(r[COL['Negeri']] ?? '').trim(),
         rujukan:   ruj,
-        tarikh:    String(r[COL['Tarikh Serbuan']] ?? '').trim(),
+        tarikh:    fmtTarikh(r[COL['Tarikh Serbuan']]),
         rujAduan:  String(r[COL['No Rujukan Aduan / Maklumat']] ?? '').trim(),
         namaOps:   String(r[COL['Nama Ops']] ?? '').trim(),
         katPremis: String(r[COL['Kategori Premis']] ?? '').trim(),
@@ -4446,6 +5197,7 @@ function downloadSenaraiSerbuan() {
   const wsData = [
     headers,
     ...rows.map(r => keys.map(k => {
+      if (k === 'tarikh') { const n = tarikhToSerial(r[k]); return n === null ? (r[k] ?? '') : n; }
       if (k === 'nilai') return Number(r[k]) || 0;
       if (k === 'kuantiti' || k === 'perkara') return Number(r[k]) || 0;
       return r[k] ?? '';
@@ -4453,6 +5205,13 @@ function downloadSenaraiSerbuan() {
   ];
 
   const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+  // Format lajur Tarikh sebagai dd/mm/yyyy
+  const tarCol = keys.indexOf('tarikh');
+  rows.forEach((_, i) => {
+    const c = ws[XLSX.utils.encode_cell({ r: i + 1, c: tarCol })];
+    if (c && c.t === 'n') c.z = 'dd/mm/yyyy';
+  });
 
   // Format lajur Nilai sebagai nombor
   const valCol = keys.indexOf('nilai');
@@ -4472,16 +5231,53 @@ function downloadSenaraiSerbuan() {
   XLSX.writeFile(wb, `Senarai_Serbuan_Export_${ts}.xlsx`);
 }
 
+// ─── Tarikh: seragamkan kepada dd/mm/yyyy ───────────────────
+// Terima: Date, nombor siri Excel, 'd/m/yyyy', 'yyyy-mm-dd'. Pulang nombor siri Excel (atau null).
+function tarikhToSerial(raw) {
+  if (raw === null || raw === undefined || raw === '') return null;
+  let ms = null;
+  if (raw instanceof Date && !isNaN(raw)) {
+    ms = Date.UTC(raw.getFullYear(), raw.getMonth(), raw.getDate());
+  } else {
+    const s = String(raw).trim();
+    if (/^\d+(\.\d+)?$/.test(s)) { const n = Number(s); return n > 1000 ? Math.floor(n) : null; }
+    let m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/);
+    if (m) ms = Date.UTC(+m[3], +m[2] - 1, +m[1]);
+    else if ((m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))) ms = Date.UTC(+m[1], +m[2] - 1, +m[3]);
+  }
+  return ms === null ? null : Math.round(ms / 86400000) + 25569;
+}
+function fmtTarikh(raw) {
+  const n = tarikhToSerial(raw);
+  if (n === null) return String(raw ?? '').trim();
+  const d = new Date((n - 25569) * 86400000);
+  const p2 = x => String(x).padStart(2, '0');
+  return p2(d.getUTCDate()) + '/' + p2(d.getUTCMonth() + 1) + '/' + d.getUTCFullYear();
+}
+
 function downloadExcel() {
   if (!filteredData || filteredData.length === 0) return;
 
   // Build export rows using all original columns
-  const allCols = Object.keys(filteredData[0] || {});
-  const wsData = [allCols, ...filteredData.map(r => allCols.map(c => r[c] ?? ''))];
+  // Buang lajur kerja dalaman (__tahun, __negeri, __bulan, __agensi, dll.) — hanya lajur asal Excel dieksport
+  const allCols = Object.keys(filteredData[0] || {}).filter(c => !c.startsWith('__'));
+  const tCol = COL['Tarikh Serbuan'];
+  const tIdx = allCols.indexOf(tCol);
+  const wsData = [allCols, ...filteredData.map(r => allCols.map(c => {
+    const v = r[c];
+    if (c === tCol) { const n = tarikhToSerial(v); return n === null ? (v ?? '') : n; }
+    return v ?? '';
+  }))];
 
   const ws = XLSX.utils.aoa_to_sheet(wsData);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Data Penapisan');
+  if (tIdx >= 0) {
+    for (let i = 1; i <= filteredData.length; i++) {
+      const c = ws[XLSX.utils.encode_cell({ r: i, c: tIdx })];
+      if (c && c.t === 'n') c.z = 'dd/mm/yyyy';
+    }
+  }
 
   // Auto column width
   const colWidths = allCols.map(c => ({ wch: Math.max(c.length, 12) }));
@@ -4543,6 +5339,7 @@ function loadFromJson(evt) {
   note.textContent = '⏳ Membaca JSON...';
 
   showLoading('MEMUATKAN JSON...');
+  _laporanSourceFile = file.name;
   showProgress(20);
   hasMapFitted = false;
 
@@ -4563,6 +5360,7 @@ function loadFromJson(evt) {
       showProgress(50);
       setLoadingText('MEMPROSES DATA...');
       detectColumns(Object.keys(rows[0]));
+      loadUserAlias();   // muatkan alias pengguna sebelum preprocess
       rawData = preprocessData(rows);
       perf.mark('Pra-proses baris');
 
@@ -4628,7 +5426,7 @@ function scSave(list) {
 function scCaptureState() {
   const multi = ['f-tahun','f-bulan','f-negeri','f-katitem'];
   const single = ['f-statusserbuan','f-online','f-pengkelasan','f-statuspendaftaran','f-statusnotifikasi','f-tindakan'];
-  const tags = ['katkhas','namaracun','namaproduk','namapremis','alamat','katpremis','jenispremis'];
+  const tags = ['katkhas','namaracun','namaproduk','namapremis','alamat','katpremis','jenispremis','agensi'];
   const state = { multi:{}, single:{}, tags:{} };
   multi.forEach(id => {
     const vals = [...document.getElementById(id).selectedOptions].map(o=>o.value).filter(Boolean);
@@ -4657,7 +5455,7 @@ function scApplyState(state) {
   ['f-statusserbuan','f-online','f-pengkelasan','f-statuspendaftaran','f-statusnotifikasi'].forEach(id => {
     document.getElementById(id).value = '';
   });
-  ['katkhas','namaracun','namaproduk','namapremis','alamat','katpremis','jenispremis'].forEach(f => clearAllTags(f));
+  ['katkhas','namaracun','namaproduk','namapremis','alamat','katpremis','jenispremis','agensi'].forEach(f => clearAllTags(f));
 
   // Apply saved state
   Object.entries(state.multi || {}).forEach(([id, vals]) => {
@@ -4682,7 +5480,7 @@ function scSummaryHTML(state) {
   const lines = [];
   const LABELS = {
     'f-tahun':'Tahun','f-bulan':'Bulan','f-negeri':'Negeri',
-    'f-katitem':'Kat. Item',
+    'f-katitem':'Kat. Item','agensi':'Agensi',
     'f-statusserbuan':'Status Serbuan','f-online':'Jualan Online',
     'f-pengkelasan':'Pengkelasan','f-statuspendaftaran':'Status Pendaftaran',
     'f-statusnotifikasi':'Status Notifikasi',
@@ -4719,6 +5517,151 @@ function closeShortcutModal(e) {
   document.getElementById('sc-modal-overlay').classList.remove('open');
   _scPendingState = null;
 }
+
+// ══════════════════════════════════════════════════════════════
+// ALIAS AGENSI EDITOR
+// ══════════════════════════════════════════════════════════════
+const ALIAS_STORAGE_KEY = 'cpo_agensi_alias_v1';
+let _aliasDirty = false;
+
+// Muatkan alias tambahan dari localStorage dan gabungkan dengan AGENSI_ALIAS
+function loadUserAlias() {
+  try {
+    const saved = localStorage.getItem(ALIAS_STORAGE_KEY);
+    if (!saved) return;
+    const userAlias = JSON.parse(saved);
+    Object.entries(userAlias).forEach(([orig, std]) => {
+      AGENSI_ALIAS[orig.toUpperCase()] = std.toUpperCase();
+    });
+  } catch(e) {}
+}
+
+// Simpan HANYA alias tambahan pengguna (bukan hardcode) ke localStorage
+function saveUserAlias() {
+  try {
+    const saved = localStorage.getItem(ALIAS_STORAGE_KEY);
+    const existing = saved ? JSON.parse(saved) : {};
+    localStorage.setItem(ALIAS_STORAGE_KEY, JSON.stringify(existing));
+  } catch(e) {}
+}
+
+// Buka modal
+function openAliasModal() {
+  _aliasDirty = false;
+  renderAliasList();
+  document.getElementById('alias-modal-overlay').classList.add('open');
+  document.getElementById('alias-notice').classList.remove('show');
+}
+
+// Tutup modal
+function closeAliasModal(e) {
+  if (e && e.target !== document.getElementById('alias-modal-overlay')) return;
+  document.getElementById('alias-modal-overlay').classList.remove('open');
+}
+
+// Guna & Tutup — reprocess data dengan alias baru
+function applyAndCloseAlias() {
+  document.getElementById('alias-modal-overlay').classList.remove('open');
+  if (_aliasDirty && rawData.length) {
+    // clear token cache agensi
+    delete tagTokenCache['agensi'];
+    // reprocess __agensi_f untuk semua row
+    rawData.forEach(r => {
+      r.__agensi = parseAgensi(
+        String(r[COL['Agensi Lain Yang Terlibat']]||''),
+        String(r[COL['Nyatakan Agensi']]||'')
+      );
+      r.__agensi_f = r.__agensi.length ? r.__agensi : [AGENSI_NONE];
+    });
+    applyFilters();
+    _aliasDirty = false;
+  }
+}
+
+// Tambah alias baru
+function addAliasEntry() {
+  const origEl = document.getElementById('alias-input-orig');
+  const stdEl  = document.getElementById('alias-input-std');
+  const orig   = origEl.value.trim().toUpperCase();
+  const std    = stdEl.value.trim().toUpperCase();
+  if (!orig || !std) {
+    if (!orig) origEl.focus(); else stdEl.focus();
+    return;
+  }
+  // Simpan ke AGENSI_ALIAS (runtime)
+  AGENSI_ALIAS[orig] = std;
+  // Simpan ke localStorage
+  try {
+    const saved = localStorage.getItem(ALIAS_STORAGE_KEY);
+    const existing = saved ? JSON.parse(saved) : {};
+    existing[orig] = std;
+    localStorage.setItem(ALIAS_STORAGE_KEY, JSON.stringify(existing));
+  } catch(e) {}
+  origEl.value = '';
+  stdEl.value  = '';
+  origEl.focus();
+  _aliasDirty = true;
+  document.getElementById('alias-notice').classList.add('show');
+  renderAliasList();
+}
+
+// Padam alias (hanya alias user, bukan hardcode)
+function deleteAliasEntry(orig) {
+  delete AGENSI_ALIAS[orig];
+  try {
+    const saved = localStorage.getItem(ALIAS_STORAGE_KEY);
+    const existing = saved ? JSON.parse(saved) : {};
+    delete existing[orig];
+    localStorage.setItem(ALIAS_STORAGE_KEY, JSON.stringify(existing));
+  } catch(e) {}
+  _aliasDirty = true;
+  document.getElementById('alias-notice').classList.add('show');
+  renderAliasList();
+}
+
+// Render senarai alias
+function renderAliasList() {
+  const body   = document.getElementById('alias-list-body');
+  const countEl = document.getElementById('alias-count');
+  if (!body) return;
+
+  // Dapatkan alias user dari localStorage
+  let userAlias = {};
+  try {
+    const saved = localStorage.getItem(ALIAS_STORAGE_KEY);
+    if (saved) userAlias = JSON.parse(saved);
+  } catch(e) {}
+
+  const q = (document.getElementById('alias-search-input')||{}).value||'';
+  const qLc = q.toLowerCase();
+
+  // Gabung semua alias — tandakan mana hardcode, mana user
+  const allEntries = Object.entries(AGENSI_ALIAS).map(([orig, std]) => ({
+    orig, std,
+    isUser: Object.prototype.hasOwnProperty.call(userAlias, orig)
+  })).filter(({orig, std}) =>
+    !qLc || orig.toLowerCase().includes(qLc) || std.toLowerCase().includes(qLc)
+  ).sort((a,b) => a.orig.localeCompare(b.orig));
+
+  if (!allEntries.length) {
+    body.innerHTML = `<div style="padding:20px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-muted)">Tiada alias${qLc ? ' yang sepadan' : ''}</div>`;
+  } else {
+    body.innerHTML = allEntries.map(({orig, std, isUser}) => `
+      <div class="alias-row">
+        <div class="alias-row-orig">${orig}</div>
+        <div class="alias-row-arrow">→</div>
+        <div class="alias-row-std">${std}${isUser ? ' <span style="font-size:9px;color:#ffe600;border:1px solid #ffe60044;border-radius:3px;padding:0 4px">USER</span>' : ''}</div>
+        <button class="alias-del-btn" onclick="deleteAliasEntry('${orig.replace(/'/g,"\\'")}');event.stopPropagation()"
+          ${isUser ? '' : 'disabled title="Alias sistem — tidak boleh dipadam"'}>✕</button>
+      </div>`).join('');
+  }
+
+  const total = Object.keys(AGENSI_ALIAS).length;
+  const user  = Object.keys(userAlias).length;
+  if (countEl) countEl.textContent = `${total} alias (${user} tambahan pengguna)`;
+}
+
+// loadUserAlias() dipanggil terus sebelum preprocessData() dalam file load handler
 
 function saveShortcut() {
   const name = document.getElementById('sc-name-input').value.trim();
@@ -4765,7 +5708,7 @@ function renderShortcuts() {
 // Init shortcuts on page load
 document.addEventListener('DOMContentLoaded', renderShortcuts);
 
-const tagState = { katkhas: [], namaracun: [], namaproduk: [], namapremis: [], alamat: [], katpremis: [], jenispremis: [] };
+const tagState = { katkhas: [], namaracun: [], namaproduk: [], namapremis: [], alamat: [], katpremis: [], jenispremis: [], agensi: [] };
 let suggestTimeout = null;
 
 const tagColMap = {
@@ -4776,6 +5719,7 @@ const tagColMap = {
   alamat:       '__alamat_lc',
   katpremis:    '__katpremis',
   jenispremis:  '__jenispremis',
+  agensi:       '__agensi_f',
 };
 // Note: katpremis/jenispremis are categorical codes, so applyFilters() matches
 // them EXACTLY against tagState (unlike the free-text substring fields above).
@@ -4788,6 +5732,7 @@ function buildTokenCache(field) {
   rawData.forEach(r => {
     const v = r[col];
     if (!v) return;
+    if (Array.isArray(v)) { v.forEach(x => { if (x) set.add(x); }); return; }
     if (field === 'katkhas') {
       v.split('|').forEach(k => { const t = k.trim(); if (t && t !== '0') set.add(t); });
     } else {
@@ -4894,6 +5839,17 @@ function showTagSuggestions(field, query) {
         return `<div class="sug-item" data-val="${m}" onmousedown="addTag('${field}','${m.replace(/'/g,"\\'")}');document.getElementById('f-${field}').focus()">${hi}</div>`;
       }).join('');
     }
+    // posisi dropdown tepat di bawah input field (guna fixed + getBoundingClientRect)
+    const inp = document.getElementById('f-' + field);
+    if (inp) {
+      const rect = inp.getBoundingClientRect();
+      const tagContainer = inp.closest('.tag-input-wrap') || inp.parentElement;
+      const contRect = tagContainer ? tagContainer.getBoundingClientRect() : rect;
+      box.style.left   = contRect.left + 'px';
+      box.style.width  = contRect.width + 'px';
+      box.style.top    = (contRect.bottom + 2) + 'px';
+      box.style.right  = 'auto';
+    }
     box.classList.add('open');
   }, 150);
 }
@@ -4905,34 +5861,12 @@ function hideTagSuggestions(field, delay) {
   }, delay);
 }
 
-
 // ══════════════════════════════════════════════════════════════
 // LAPORAN RINGKASAN TAHUNAN
 // ══════════════════════════════════════════════════════════════
 
 // ─── Helpers ─────────────────────────────────────────────────
 let _laporanSourceFile = '';   // nama fail yang diupload
-
-// Hook: tangkap nama fail semasa upload — patch processFile & loadFromJson
-(function patchUploadHooks() {
-  // loadFromJson dipanggil secara inline, kita patch via MutationObserver pada upload-status
-  const obs = new MutationObserver(() => {
-    const s = document.getElementById('upload-status');
-    if (s && s.textContent.includes('rekod dimuatkan')) {
-      // Bila laporan panel terbuka, auto-refresh
-      if (sectionState['laporan']) { autoGenerateLaporanTajuk(); renderLaporanPreview(); }
-    }
-  });
-  const statusEl = document.getElementById('upload-status');
-  if (statusEl) obs.observe(statusEl, { childList: true, characterData: true, subtree: true });
-})();
-
-// Patch loadFromJson untuk tangkap nama fail
-const _origLoadFromJson = window.loadFromJson;
-window.loadFromJson = function(evt) {
-  if (evt.target.files[0]) _laporanSourceFile = evt.target.files[0].name;
-  _origLoadFromJson && _origLoadFromJson(evt);
-};
 
 // ─── Auto-generate tajuk daripada tapisan aktif ───────────────
 function autoGenerateLaporanTajuk() {
@@ -4945,11 +5879,11 @@ function autoGenerateLaporanTajuk() {
   const fTahun = [...document.getElementById('f-tahun').selectedOptions].map(o=>o.value).filter(Boolean);
   // Kategori item / nama produk / kategori khas
   const fKatItem = [...document.getElementById('f-katitem').selectedOptions].map(o=>o.value).filter(Boolean);
-  const fProduk = (window.tagState && window.tagState.namaproduk) ? [...window.tagState.namaproduk] : [];
-  const fKatKhas = (window.tagState && window.tagState.katkhas) ? [...window.tagState.katkhas] : [];
+  const fProduk = [...tagState.namaproduk];
+  const fKatKhas = [...tagState.katkhas];
   const fNegeri = [...document.getElementById('f-negeri').selectedOptions].map(o=>o.value).filter(Boolean);
   const fPengkelasan = document.getElementById('f-pengkelasan').value;
-  const fKatPremis = (window.tagState && window.tagState.katpremis) ? [...window.tagState.katpremis] : [];
+  const fKatPremis = [...tagState.katpremis];
 
   // Build product/subject string
   const subjekArr = [];
@@ -5186,11 +6120,14 @@ function generateLaporanWord() {
   const dateStr = `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()}`;
   const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
   const footerText = _buildFooterText(dateStr, timeStr);
+  // Escape teks untuk RTF: \ { } dan aksara bukan ASCII (cth. ·) -> \uN?
+  const esc = t => String(t).replace(/[\\{}]/g, m => '\\' + m)
+    .replace(/[^\x00-\x7F]/g, c => { let n = c.charCodeAt(0); if (n > 32767) n -= 65536; return '\\u' + n + '?'; });
 
   // RTF column widths (twips): 1500, 1800, 2400, 2400, 2400
-  const COL = [1500,1800,2400,2400,2400];
+  const COLW = [1500,1800,2400,2400,2400];
   function rtfCell(x, align, bold, text) {
-    return `\\pard\\intbl${align==='r'?'\\qr':''}${bold?'\\b':''} ${text}${bold?'\\b0':''} \\cell`;
+    return `\\pard\\intbl${align==='r'?'\\qr':''}${bold?'\\b':''} ${esc(text)}${bold?'\\b0':''} \\cell`;
   }
   function rtfRow(cells, widths) {
     let header = '{\\trowd\\trgaph108\\trleft0';
@@ -5200,28 +6137,28 @@ function generateLaporanWord() {
   }
 
   const headerRow = rtfRow([
-    rtfCell(COL[0],'l',true,'Tahun'),
-    rtfCell(COL[1],'r',true,'Bil. Serbuan'),
-    rtfCell(COL[2],'r',true,'Bil. Perkara Dirampas'),
-    rtfCell(COL[3],'r',true,'Kuantiti Rampasan (unit)'),
-    rtfCell(COL[4],'r',true,'Nilai Rampasan (RM)'),
-  ], COL);
+    rtfCell(COLW[0],'l',true,'Tahun'),
+    rtfCell(COLW[1],'r',true,'Bil. Serbuan'),
+    rtfCell(COLW[2],'r',true,'Bil. Perkara Dirampas'),
+    rtfCell(COLW[3],'r',true,'Kuantiti Rampasan (unit)'),
+    rtfCell(COLW[4],'r',true,'Nilai Rampasan (RM)'),
+  ], COLW);
 
   const dataRows = rows.map(r => rtfRow([
-    rtfCell(COL[0],'l',true, r.tahun),
-    rtfCell(COL[1],'r',false, _fmtNum(r.serbuan)),
-    rtfCell(COL[2],'r',false, _fmtNum(r.perkara)),
-    rtfCell(COL[3],'r',false, _fmtNum(r.kuantiti)),
-    rtfCell(COL[4],'r',false, _fmtRM(r.nilai)),
-  ], COL)).join('\n');
+    rtfCell(COLW[0],'l',true, r.tahun),
+    rtfCell(COLW[1],'r',false, _fmtNum(r.serbuan)),
+    rtfCell(COLW[2],'r',false, _fmtNum(r.perkara)),
+    rtfCell(COLW[3],'r',false, _fmtNum(r.kuantiti)),
+    rtfCell(COLW[4],'r',false, _fmtRM(r.nilai)),
+  ], COLW)).join('\n');
 
   const totalRow = rtfRow([
-    rtfCell(COL[0],'l',true,'JUMLAH'),
-    rtfCell(COL[1],'r',true, _fmtNum(total.serbuan)),
-    rtfCell(COL[2],'r',true, _fmtNum(total.perkara)),
-    rtfCell(COL[3],'r',true, _fmtNum(total.kuantiti)),
-    rtfCell(COL[4],'r',true, _fmtRM(total.nilai)),
-  ], COL);
+    rtfCell(COLW[0],'l',true,'JUMLAH'),
+    rtfCell(COLW[1],'r',true, _fmtNum(total.serbuan)),
+    rtfCell(COLW[2],'r',true, _fmtNum(total.perkara)),
+    rtfCell(COLW[3],'r',true, _fmtNum(total.kuantiti)),
+    rtfCell(COLW[4],'r',true, _fmtRM(total.nilai)),
+  ], COLW);
 
   const rtf = `{\\rtf1\\ansi\\ansicpg1252\\deff0
 {\\fonttbl{\\f0\\froman\\fcharset0 Times New Roman;}{\\f1\\fswiss\\fcharset0 Arial;}}
@@ -5233,7 +6170,7 @@ function generateLaporanWord() {
 {\\pard\\qc\\b\\fs22\\cf1 BAHAGIAN PENGUATKUASAAN FARMASI\\par}
 {\\pard\\qc\\b\\fs22\\cf1 CAWANGAN PERISIKAN DAN OPERASI (CPO)\\par}
 \\pard\\brdrb\\brdrs\\brdrw15\\par
-{\\pard\\qc\\b\\fs26\\cf1 ${tajuk.toUpperCase()}\\b0\\par}
+{\\pard\\qc\\b\\fs26\\cf1 ${esc(tajuk.toUpperCase())}\\b0\\par}
 \\pard\\par
 {\\pard\\fs18 Tarikh Jana: ${dateStr}, ${timeStr}\\tab Jumlah Rekod Dianalisis: ${_fmtNum(filteredData.length)} rekod\\par}
 \\pard\\par
@@ -5244,8 +6181,8 @@ ${totalRow}
 
 \\pard\\par
 {\\pard\\brdrb\\brdrs\\brdrw5\\par}
-{\\pard\\fs17\\i ${footerText}\\i0\\par}
-{\\pard\\qr\\fs17 CPO · BPF · KKM · ${now.getFullYear()}\\par}
+{\\pard\\fs17\\i ${esc(footerText)}\\i0\\par}
+{\\pard\\qr\\fs17 ${esc('CPO · BPF · KKM · ' + now.getFullYear())}\\par}
 }`;
 
   const blob = new Blob([rtf], { type: 'application/msword' });
@@ -5270,12 +6207,6 @@ function _scheduleLaporanRefresh() {
   }, 400);
 }
 
-// Patch applyFilters to refresh laporan when open
-const _origApplyFilters = window.applyFilters;
-window.applyFilters = function() {
-  _origApplyFilters && _origApplyFilters.apply(this, arguments);
-  _scheduleLaporanRefresh();
-};
 
 
 // ══════════════════════════════════════════════
@@ -5359,6 +6290,7 @@ async function ingestParquet(buf, info) {
 
   setLoadingText('MEMPROSES DATA...');
   detectColumns(Object.keys(rows[0]));
+  loadUserAlias();   // alias agensi pengguna (v8.2) sebelum preprocess
   rawData = preprocessData(rows);
   perf.mark('Pra-proses baris');
   showProgress(85);
