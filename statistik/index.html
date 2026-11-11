@@ -251,7 +251,10 @@
     cursor: pointer;
   }
   .stored-del:hover { background: rgba(255,0,144,0.1); }
+  .data-tab-row { margin: 16px 32px 0; display: flex; justify-content: flex-start; }
+  .data-tab-row + .tools-bar { margin-top: 8px; }
   @media (max-width: 800px) {
+    .data-tab-row { margin: 12px 12px 0; }
     .tools-bar { flex-direction: column; margin: 12px 12px 0; }
     .tool-divider { width: auto; height: 1px; margin: 0 12px; }
     .tool-card { padding: 12px 14px; }
@@ -2317,12 +2320,17 @@
   </header>
 
   <!-- JSON CONVERTER & LOADER -->
+  <div class="data-tab-row">
+    <button class="filter-tab-btn active" id="ftab-urusdata" onclick="toggleUrusData()" aria-expanded="true" title="Tunjuk / sembunyi alat muat naik &amp; tukar data">
+      <span class="ftab-dot"></span> 📁 URUS DATA
+    </button>
+  </div>
   <div class="tools-bar" id="tools-bar">
     <div class="tool-card" id="tool-parquet">
       <div class="tool-icon">🚀</div>
       <div class="tool-body">
         <div class="tool-title">1. MUAT NAIK PARQUET <span class="tool-badge">DISYORKAN</span></div>
-        <div class="tool-desc">Paling pantas &amp; kecil. Data disimpan dalam browser dan dimuat automatik bila dashboard dibuka semula</div>
+        <div class="tool-desc">Paling pantas. Disimpan dalam browser &amp; dimuat automatik</div>
         <div class="tool-note" id="parquet-note"></div>
       </div>
       <button class="tool-btn btn-parquet" onclick="document.getElementById('parquet-upload-input').click()">PILIH PARQUET</button>
@@ -2335,7 +2343,7 @@
       <div class="tool-icon">⚙</div>
       <div class="tool-body">
         <div class="tool-title">2. TUKAR EXCEL → PARQUET</div>
-        <div class="tool-desc">Tukar .xlsx/.xls kepada fail .parquet. Disyorkan di komputer (fail besar mengambil masa)</div>
+        <div class="tool-desc">Tukar .xlsx/.xls kepada .parquet (guna di PC)</div>
         <div class="tool-note" id="convertpq-note"></div>
       </div>
       <button class="tool-btn btn-parquet" onclick="document.getElementById('excel-to-parquet-input').click()">PILIH EXCEL</button>
@@ -6169,6 +6177,23 @@ async function convertToParquet(evt) {
   }
   evt.target.value = '';
 }
+
+// ── Tab URUS DATA: sembunyi / tunjuk kad muat naik & tukar ──
+const URUS_KEY = 'cpo_urusdata_hidden';
+function toggleUrusData(force) {
+  const bar = document.getElementById('tools-bar'), btn = document.getElementById('ftab-urusdata');
+  if (!bar || !btn) return;
+  const hide = (typeof force === 'boolean') ? force : bar.style.display !== 'none';
+  bar.style.display = hide ? 'none' : '';
+  btn.classList.toggle('inactive', hide);
+  btn.setAttribute('aria-expanded', String(!hide));
+  try { localStorage.setItem(URUS_KEY, hide ? '1' : '0'); } catch (e) {}
+}
+document.addEventListener('DOMContentLoaded', () => {
+  let hidden = false;
+  try { hidden = localStorage.getItem(URUS_KEY) === '1'; } catch (e) {}
+  if (hidden) toggleUrusData(true);
+});
 
 document.addEventListener('DOMContentLoaded', autoLoadStored);
 
