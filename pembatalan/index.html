@@ -295,8 +295,9 @@ function validate(d){
 }
 
 /* ---------- ingest ---------- */
-function ingest(d, label){
+function ingest(d, label, reset){
   DATA = d;
+  if (reset){ $("#fBil").value = ""; $("#fKat").value = ""; $("#q").value = ""; setMode("all"); }
   R = d.Pembatalan.map(r => { const o = {}; for (const k in r) o[k] = r[k] == null ? "" : (typeof r[k] === "number" ? String(r[k]) : String(r[k])); return o; });
   BAHAN = {};
   for (const b of d.Bahan_Dikesan){
@@ -400,10 +401,12 @@ function render(){
   const q = $("#q").value.trim();
   const rows = filtered();
   const firms = new Set(rows.map(r => r.Nama_Syarikat)).size;
-  $("#count").innerHTML = `<b>${rows.length}</b> produk · <b>${firms}</b> syarikat` + (rows.length !== R.length ? ` daripada ${R.length} rekod` : "");
+  const act = [$("#fBil").value, $("#fKat").value].filter(Boolean);
+  $("#count").innerHTML = `<b>${rows.length}</b> produk · <b>${firms}</b> syarikat` + (rows.length !== R.length ? ` daripada ${R.length} rekod` : "")
+    + (act.length ? ` · <span class="tag warn">Penapis: ${act.map(esc).join(", ")}</span> <button class="btn" type="button" data-clear="1">Buang penapis</button>` : "");
   const L = $("#list");
   if (!rows.length){
-    L.innerHTML = `<div class="empty">Tiada padanan untuk “${esc(q)}”.<br>Cuba mod <b>Semua</b>, buang penapis, atau taip sebahagian sahaja (contoh: 2208028).</div>`;
+    L.innerHTML = `<div class="empty">Tiada padanan untuk “${esc(q)}”${act.length ? " dengan penapis <b>" + act.map(esc).join(", ") + "</b>" : ""}.<br>${act.length ? '<button class="btn primary" type="button" data-clear="1" style="margin:8px 0">Buang penapis &amp; cari semula</button><br>' : ""}Cuba mod <b>Semua</b>, atau taip sebahagian sahaja (contoh: 2208028).</div>`;
     return;
   }
   L.innerHTML = rows.slice(0, shown).map(r => {
@@ -497,7 +500,7 @@ async function handleExcel(f){
   const out = $("#resX"); out.innerHTML = "<span>Menukar " + esc(f.name) + "…</span>";
   try{
     const d = excelToData(await readFile(f), f.name);
-    ingest(d, "Excel: " + f.name);
+    ingest(d, "Excel: " + f.name, true);
     out.innerHTML = `<span class="ok">Berjaya: ${d.Pembatalan.length} rekod dan ${d.Bahan_Dikesan.length} baris bahan ditukar.</span>
       <div class="row"><button class="btn primary" type="button" id="btnDlX">Muat turun JSON</button></div>`;
     $("#btnDlX").onclick = downloadJSON; notice(null);
@@ -508,7 +511,7 @@ async function handleJSON(f){
   try{
     let d; try{ d = JSON.parse(await readFile(f, "text")); }catch(_){ throw new Error("Fail ini bukan JSON yang sah."); }
     if (!d.sumber) d.sumber = f.name;
-    ingest(validate(d), "JSON: " + f.name);
+    ingest(validate(d), "JSON: " + f.name, true);
     out.innerHTML = `<span class="ok">Berjaya: ${d.Pembatalan.length} rekod dimuatkan.</span>`; notice(null);
   }catch(e){ out.innerHTML = `<span class="err">${esc(e.message)}</span>`; }
 }
@@ -531,6 +534,7 @@ let tmr;
 $("#q").addEventListener("input", () => { clearTimeout(tmr); tmr = setTimeout(() => { shown = PAGE; render(); if (!isMobile() && R.length) autoSelect(); }, 120); });
 document.querySelectorAll(".seg button").forEach(b => b.onclick = () => { setMode(b.dataset.mode); shown = PAGE; render(); if (!isMobile() && R.length) autoSelect(); $("#q").focus(); });
 ["#fBil", "#fKat"].forEach(s => $(s).onchange = () => { shown = PAGE; render(); if (!isMobile() && R.length) autoSelect(); });
+document.addEventListener("click", e => { if (e.target.closest("[data-clear]")){ $("#fBil").value = ""; $("#fKat").value = ""; shown = PAGE; render(); if (!isMobile() && R.length) autoSelect(); } });
 $("#list").addEventListener("click", e => { const it = e.target.closest(".item"); if (it) select(byId[it.dataset.id]); });
 document.addEventListener("keydown", e => {
   if (e.key === "/" && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){ e.preventDefault(); $("#q").focus(); $("#q").select(); }
