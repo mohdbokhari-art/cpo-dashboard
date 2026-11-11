@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard CPO</title>
+<style>
+  :root { --bg:#f4f6f8; --card:#fff; --text:#1f2933; --muted:#6b7785; --accent:#0f766e; --line:#e2e8f0; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#111827; --card:#1f2937; --text:#e5e7eb; --muted:#9ca3af; --accent:#2dd4bf; --line:#374151; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; display:grid; place-items:center; background:var(--bg); color:var(--text);
+         font-family:system-ui,-apple-system,"Segoe UI",sans-serif; padding:24px; }
+  main { width:100%; max-width:640px; }
+  h1 { font-size:1.4rem; margin:0 0 4px; }
+  p.sub { color:var(--muted); margin:0 0 24px; font-size:.95rem; }
+  .grid { display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+  a.card { display:block; background:var(--card); border:1px solid var(--line); border-radius:12px;
+           padding:20px; text-decoration:none; color:inherit; transition:border-color .15s, transform .15s; }
+  a.card:hover { border-color:var(--accent); transform:translateY(-2px); }
+  a.card h2 { margin:0 0 6px; font-size:1.05rem; color:var(--accent); }
+  a.card span { color:var(--muted); font-size:.88rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Dashboard CPO</h1>
+  <p class="sub">Pilih dashboard</p>
+  <div class="grid">
+    <a class="card" href="carian/">
+      <h2>🔍 Carian</h2>
+      <span>Cari dan semak rekod</span>
+    </a>
+    <a class="card" href="pembatalan/">
+      <h2>📋 Pembatalan</h2>
+      <span>Rekod dan status pembatalan</span>
+    </a>
+  </div>
+</main>
+</body>
+</html>
