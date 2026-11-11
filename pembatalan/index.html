@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Carian Pembatalan Notifikasi</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+[hidden]{display:none!important}
+
+/* Layout: header band → search console → two panes (result list | record sheet); one pane + overlay sheet on phones */
+:root{
+  --bg:#eef2f1; --surface:#ffffff; --surface-2:#f6f8f7; --ink:#15211f; --muted:#5a6b67; --line:#d3dcda;
+  --accent:#0a6a5b; --accent-ink:#ffffff; --accent-soft:#dbeee9; --mark:#ffe58a; --mark-ink:#15211f;
+  --warn:#9a4a05; --warn-soft:#fbeed9; --bad:#b42318; --bad-soft:#fce3df; --ok:#1d6b34; --ok-soft:#ddf1e2;
+  --shadow:0 1px 2px rgba(16,40,36,.06),0 6px 24px rgba(16,40,36,.06);
+  --f-sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1514; --surface:#162120; --surface-2:#1b2826; --ink:#e3ebe8; --muted:#94a6a2; --line:#2a3a37;
+  --accent:#4ec3ad; --accent-ink:#06211c; --accent-soft:#15332d; --mark:#7a5d00; --mark-ink:#fff6d6;
+  --warn:#f1a54a; --warn-soft:#382711; --bad:#f4826f; --bad-soft:#3a1915; --ok:#6fd38b; --ok-soft:#14301d;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1514; --surface:#162120; --surface-2:#1b2826; --ink:#e3ebe8; --muted:#94a6a2; --line:#2a3a37;
+  --accent:#4ec3ad; --accent-ink:#06211c; --accent-soft:#15332d; --mark:#7a5d00; --mark-ink:#fff6d6;
+  --warn:#f1a54a; --warn-soft:#382711; --bad:#f4826f; --bad-soft:#3a1915; --ok:#6fd38b; --ok-soft:#14301d;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.25); color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-sans);font-size:14px;line-height:1.45}
+.wrap{max-width:1360px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.band{background:var(--surface);border-bottom:1px solid var(--line)}
+header.band .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding-block:16px}
+.brand{display:flex;flex-direction:column;gap:2px;min-width:0}
+.brand h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.brand p{margin:0;color:var(--muted);font-size:12.5px}
+.source{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);color:var(--muted);font-size:12px;white-space:nowrap}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.chip.live{border-color:transparent;background:var(--ok-soft);color:var(--ok)} .chip.live .dot{background:var(--ok)}
+.chip.snap{border-color:transparent;background:var(--warn-soft);color:var(--warn)} .chip.snap .dot{background:var(--warn)}
+.chip.busy .dot{animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.25}}
+@media (prefers-reduced-motion: reduce){.chip.busy .dot{animation:none}}
+.btn{font:inherit;font-size:12.5px;padding:5px 10px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn:focus-visible,.seg button:focus-visible,select:focus-visible,input:focus-visible,.item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{color:var(--accent-ink);filter:brightness(1.05)}
+label.btn input{display:none}
+
+.console{padding-block:16px 8px;display:grid;gap:10px}
+.searchbox{position:relative}
+.searchbox svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
+#q{width:100%;font:inherit;font-size:16px;padding:13px 14px 13px 42px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+#q::placeholder{color:var(--muted)}
+.kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-family:var(--f-mono);font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:1px 6px}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{font:inherit;font-size:12.5px;padding:6px 11px;border:0;background:transparent;color:var(--muted);cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+select{font:inherit;font-size:12.5px;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);max-width:100%}
+.count{margin-left:auto;color:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums}
+.count b{color:var(--ink)}
+.notice{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;font-size:13px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.notice.warn{background:var(--warn-soft);border-color:transparent;color:var(--warn)}
+.notice.bad{background:var(--bad-soft);border-color:transparent;color:var(--bad)}
+
+.panes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:16px;padding-block:8px 32px;align-items:start}
+.list{display:flex;flex-direction:column;gap:6px;min-width:0}
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;text-align:left;width:100%;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer}
+.item:hover{border-color:var(--accent)}
+.item[aria-current="true"]{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.item .nm{font-weight:600;font-size:14px;min-width:0;overflow-wrap:anywhere}
+.item .no{font-family:var(--f-mono);font-size:12.5px;color:var(--accent);white-space:nowrap}
+.item .meta{grid-column:1/-1;color:var(--muted);font-size:12.5px;display:flex;flex-wrap:wrap;gap:4px 10px;min-width:0}
+.item .bh{grid-column:1/-1;font-size:12.5px;color:var(--ink)}
+.item .bh span{font-family:var(--f-mono)}
+mark{background:var(--mark);color:var(--mark-ink);border-radius:2px;padding:0 1px}
+.tag{display:inline-flex;align-items:center;padding:1px 7px;border-radius:5px;font-size:11.5px;font-weight:500;background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.tag.cat{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.tag.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.tag.bad{background:var(--bad-soft);color:var(--bad);border-color:transparent}
+.tag.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.more{align-self:center;margin-top:6px}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:10px;padding:24px;color:var(--muted);text-align:center}
+
+.detail{position:sticky;top:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
+.dhead{padding:16px 18px 12px;border-bottom:1px solid var(--line);display:grid;gap:8px;position:sticky;top:0;background:var(--surface);z-index:1}
+.dhead .top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.dhead h2{margin:0;font-size:18px;line-height:1.3;text-wrap:balance;overflow-wrap:anywhere}
+.dhead .notline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.dhead .notline code{font-family:var(--f-mono);font-size:15px;font-weight:600;color:var(--accent);letter-spacing:.02em}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.close{display:none}
+.dbody{padding:4px 18px 18px;display:grid;gap:4px}
+.sec{padding-block:12px;border-bottom:1px solid var(--line)}
+.sec:last-child{border-bottom:0}
+.sec h3{margin:0 0 8px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+dl{margin:0;display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr);gap:6px 14px}
+dt{color:var(--muted);font-size:12.5px}
+dd{margin:0;min-width:0;overflow-wrap:anywhere;white-space:pre-wrap}
+dd.mono{font-family:var(--f-mono);font-size:13px}
+dd.long{line-height:1.55}
+dd .nil{color:var(--muted)}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11.5px;color:var(--muted);font-weight:600}
+td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.sib{display:flex;flex-direction:column;gap:4px}
+.sib button{font:inherit;text-align:left;background:none;border:0;padding:4px 0;color:var(--ink);cursor:pointer;display:flex;gap:10px}
+.sib button:hover .n{color:var(--accent);text-decoration:underline}
+.sib .c{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.foot{color:var(--muted);font-size:12px;padding-block:0 24px}
+
+@media (max-width: 900px){
+  .panes{grid-template-columns:minmax(0,1fr)}
+  .detail{position:fixed;inset:0;top:0;max-height:none;border-radius:0;border:0;z-index:20;
+    padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+    padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+  .detail:not(.open){display:none}
+  .close{display:inline-flex}
+  dl{grid-template-columns:minmax(0,1fr)}
+  dt{margin-top:4px}
+  .count{margin-left:0;width:100%}
+  .kbd{display:none}
+}
+
+/* data panel */
+.datapanel{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+.datapanel>summary{cursor:pointer;list-style:none;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:600}
+.datapanel>summary::-webkit-details-marker{display:none}
+.datapanel>summary .hint{font-weight:400;color:var(--muted);font-size:12.5px}
+.datapanel>summary::after{content:"▾";color:var(--muted);transition:transform .15s}
+.datapanel[open]>summary::after{transform:rotate(180deg)}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px;padding:0 16px 16px}
+.card{border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:10px;align-content:start;background:var(--surface-2);min-width:0}
+.card h3{margin:0;font-size:14px;display:flex;gap:8px;align-items:center}
+.card h3 .step{font-family:var(--f-mono);font-size:11px;background:var(--accent-soft);color:var(--accent);border-radius:5px;padding:1px 6px}
+.card p{margin:0;color:var(--muted);font-size:12.5px}
+.drop{border:1.5px dashed var(--line);border-radius:9px;padding:16px;text-align:center;color:var(--muted);font-size:12.5px;cursor:pointer;background:var(--surface)}
+.drop:hover,.drop.over{border-color:var(--accent);color:var(--accent)}
+.drop input{display:none}
+.drop b{color:var(--ink)}
+.res{font-size:12.5px;display:grid;gap:8px}
+.res .ok{color:var(--ok)} .res .err{color:var(--bad)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.stats{display:flex;flex-wrap:wrap;gap:6px}
+.welcome{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:28px 20px;text-align:center;color:var(--muted);display:grid;gap:6px;justify-items:center}
+.welcome h2{margin:0;color:var(--ink);font-size:17px}
+.welcome ol{text-align:left;margin:6px 0 0;padding-left:20px;max-width:520px}
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="wrap">
+    <div class="brand">
+      <h1>Carian Pembatalan Notifikasi</h1>
+      <p>Arahan Peraturan 18A(8) PPKDK 1984 &middot; Cawangan Perisikan &amp; Operasi, BPF</p>
+    </div>
+    <div class="source">
+      <span id="srcChip" class="chip"><span class="dot"></span><span id="srcText">Tiada data dimuatkan</span></span>
+      <button class="btn" id="btnData" type="button">Urus data</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="console" aria-label="Carian">
+    <details class="datapanel" id="panel">
+      <summary><span>Data carian <span class="hint" id="panelHint">· muat naik Excel atau JSON</span></span></summary>
+      <div class="dgrid">
+        <div class="card">
+          <h3><span class="step">1</span>Tukar Excel ke JSON</h3>
+          <p>Pilih <b>Database_Pembatalan_Notifikasi_NPRA.xlsx</b>. Sheet <i>Pembatalan</i> dan <i>Bahan_Dikesan</i> akan ditukar ke JSON dan terus digunakan untuk carian.</p>
+          <label class="drop" id="dropX"><input type="file" id="inX" accept=".xlsx,.xls"><b>Pilih fail Excel</b><br>atau seret ke sini</label>
+          <div class="res" id="resX"></div>
+        </div>
+        <div class="card">
+          <h3><span class="step">2</span>Muat naik JSON</h3>
+          <p>Guna fail JSON yang telah ditukar sebelum ini. Lebih ringan dan cepat dimuatkan berbanding Excel.</p>
+          <label class="drop" id="dropJ"><input type="file" id="inJ" accept=".json,application/json"><b>Pilih fail JSON</b><br>atau seret ke sini</label>
+          <div class="res" id="resJ"></div>
+        </div>
+        <div class="card">
+          <h3>Data semasa</h3>
+          <div class="res" id="cur"><span>Belum ada data.</span></div>
+          <label class="row" style="font-size:12.5px;color:var(--muted)"><input type="checkbox" id="remember" checked> Ingat data dalam pelayar ini</label>
+          <div class="row"><button class="btn" id="btnDl" type="button" disabled>Muat turun JSON</button><button class="btn" id="btnClear" type="button" disabled>Padam data dari pelayar</button></div>
+          <p>Data hanya diproses dalam pelayar anda. Tiada apa-apa dihantar ke pelayan.</p>
+        </div>
+      </div>
+    </details>
+
+    <div class="searchbox">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Taip No. Notifikasi (NOT…), nama produk, bahan atau nama syarikat" aria-label="Kata carian">
+      <span class="kbd" aria-hidden="true">/</span>
+    </div>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Cari dalam">
+        <button type="button" data-mode="all" aria-pressed="true">Semua</button>
+        <button type="button" data-mode="not" aria-pressed="false">No. Notifikasi</button>
+        <button type="button" data-mode="name" aria-pressed="false">Nama Produk</button>
+        <button type="button" data-mode="bahan" aria-pressed="false">Bahan</button>
+        <button type="button" data-mode="firm" aria-pressed="false">Nama Syarikat</button>
+      </div>
+      <select id="fBil" aria-label="Tapis ikut bilangan arahan"><option value="">Semua bilangan</option></select>
+      <select id="fKat" aria-label="Tapis ikut kategori sebab"><option value="">Semua kategori sebab</option></select>
+      <span class="count" id="count"></span>
+    </div>
+    <div id="notice" hidden></div>
+  </section>
+
+  <section class="panes" id="panes" hidden>
+    <div class="list" id="list" aria-label="Senarai hasil carian"></div>
+    <article class="detail" id="detail" aria-live="polite"></article>
+  </section>
+  <section id="welcome" class="welcome">
+    <h2>Muat naik data untuk mula mencari</h2>
+    <span>Halaman ini tidak menyimpan sebarang data. Muatkan database dahulu:</span>
+    <ol>
+      <li><b>Excel</b>: buka <i>Urus data</i>, pilih fail <b>Database_Pembatalan_Notifikasi_NPRA.xlsx</b>. Simpan JSON yang terhasil untuk kegunaan seterusnya.</li>
+      <li><b>JSON</b>: pilih fail JSON yang telah ditukar sebelum ini.</li>
+    </ol>
+    <button class="btn primary" type="button" id="btnStart" style="margin-top:8px">Muat naik data</button>
+  </section>
+  <p class="foot">Klik mana-mana produk untuk lihat semua kolum dalam baris tersebut. Tekan / untuk mula mencari.</p>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const PAGE = 150, LS_KEY = "carianPembatalan.v1";
+let R = [], BAHAN = {}, byId = {}, DATA = null;
+let mode = "all", shown = PAGE, current = null;
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm = s => String(s ?? "").normalize("NFKD").replace(/[̀-ͯ]/g, "").toUpperCase();
+const compact = s => norm(s).replace(/[^A-Z0-9]/g, "");
+const pad = n => String(n).padStart(2, "0");
+const isMobile = () => matchMedia("(max-width: 900px)").matches;
+
+/* ---------- dates & numbers ---------- */
+function fmtDate(v){
+  if (v === "" || v == null) return "";
+  if (v instanceof Date && !isNaN(v)) return pad(v.getDate())+"/"+pad(v.getMonth()+1)+"/"+v.getFullYear();
+  const m = String(v).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return m ? m[3]+"/"+m[2]+"/"+m[1] : String(v);
+}
+function toDate(v){
+  const s = String(v ?? ""); let m = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (m) return new Date(+m[3], +m[2]-1, +m[1]);
+  m = s.match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? new Date(+m[1], +m[2]-1, +m[3]) : null;
+}
+function fmtNum(v){ const n = Number(v); if (v === "" || v == null || !isFinite(n)) return String(v ?? ""); return (Math.abs(n) < 0.001 && n !== 0) ? n.toFixed(7).replace(/0+$/,"") : String(+n.toPrecision(6)); }
+function stamp(d){ return fmtDate(d) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes()); }
+
+/* ---------- Excel -> JSON ---------- */
+function cellVal(k, v){
+  if (/^Tarikh/.test(k) || v instanceof Date) return fmtDate(v);
+  if (typeof v === "number") return v;
+  return String(v ?? "").trim();
+}
+function sheetRows(ws){
+  return XLSX.utils.sheet_to_json(ws, { defval: "", raw: true }).map(r => {
+    const o = {}; for (const k in r){ if (!/^__EMPTY/.test(k)) o[k] = cellVal(k, r[k]); } return o;
+  });
+}
+function excelToData(buf, filename){
+  if (typeof XLSX === "undefined") throw new Error("Pustaka pembaca Excel gagal dimuatkan. Semak sambungan internet dan muat semula halaman.");
+  const wb = XLSX.read(new Uint8Array(buf), { type: "array", cellDates: true });
+  const ws = wb.Sheets["Pembatalan"];
+  if (!ws) throw new Error("Sheet 'Pembatalan' tiada dalam fail ini. Sheet yang ada: " + wb.SheetNames.join(", "));
+  const P = sheetRows(ws).filter(r => String(r.No_Notifikasi || "").trim());
+  if (!P.length) throw new Error("Tiada baris dengan No_Notifikasi dalam sheet Pembatalan.");
+  P.forEach(r => { if (!r.Rujukan_Bilangan && r.No_Bilangan) r.Rujukan_Bilangan = "BIL. " + r.No_Bilangan + "/" + r.Tahun_Bilangan; });
+  const B = wb.Sheets["Bahan_Dikesan"] ? sheetRows(wb.Sheets["Bahan_Dikesan"]).filter(r => String(r.No_Notifikasi || "").trim()) : [];
+  return { format: "carian-pembatalan-notifikasi/1", dijana: new Date().toISOString(), sumber: filename, Pembatalan: P, Bahan_Dikesan: B };
+}
+function validate(d){
+  if (!d || !Array.isArray(d.Pembatalan)) throw new Error("Struktur JSON tidak sah: medan 'Pembatalan' (senarai) tiada. Gunakan JSON yang dijana oleh halaman ini.");
+  if (d.Pembatalan.length && !("No_Notifikasi" in d.Pembatalan[0])) throw new Error("Rekod JSON tiada medan 'No_Notifikasi'.");
+  d.Bahan_Dikesan = Array.isArray(d.Bahan_Dikesan) ? d.Bahan_Dikesan : [];
+  return d;
+}
+
+/* ---------- ingest ---------- */
+function ingest(d, label){
+  DATA = d;
+  R = d.Pembatalan.map(r => { const o = {}; for (const k in r) o[k] = r[k] == null ? "" : (typeof r[k] === "number" ? String(r[k]) : String(r[k])); return o; });
+  BAHAN = {};
+  for (const b of d.Bahan_Dikesan){
+    const n = String(b.No_Notifikasi || "").trim(); if (!n) continue;
+    (BAHAN[n] ||= []).push({ Bahan: String(b.Bahan ?? ""), Kandungan: b["Kandungan_%w_w"], Jenis: String(b.Jenis_Penemuan ?? "") });
+  }
+  byId = {};
+  R.forEach((r, i) => {
+    if (!r.ID_Rekod) r.ID_Rekod = "R" + (i + 1);
+    byId[r.ID_Rekod] = r;
+    const bl = BAHAN[r.No_Notifikasi] || [];
+    r._kNot = compact(r.No_Notifikasi);
+    r._kName = norm(r.Nama_Produk);
+    r._kBahan = norm([r.Bahan_Dikesan, r.Kandungan_Ujian_Makmal, ...bl.map(b => b.Bahan)].join(" | "));
+    r._kFirm = norm(r.Nama_Syarikat);
+  });
+  const firms = new Set(R.map(r => r.Nama_Syarikat)).size;
+  const gen = d.dijana ? new Date(d.dijana) : null;
+  setSource("live", label + " · " + R.length + " rekod");
+  $("#panelHint").textContent = "· " + R.length + " rekod dimuatkan";
+  $("#cur").innerHTML = `<div class="stats"><span class="tag ok">${R.length} produk</span><span class="tag">${firms} syarikat</span><span class="tag">${d.Bahan_Dikesan.length} baris bahan</span></div>
+    <span>Sumber: <b>${esc(d.sumber || label)}</b></span>${gen && !isNaN(gen) ? `<span>JSON dijana: ${esc(stamp(gen))}</span>` : ""}`;
+  $("#btnDl").disabled = false; $("#btnClear").disabled = false;
+  $("#welcome").hidden = true; $("#panes").hidden = false;
+  fillFilters(); shown = PAGE; current = null; render();
+  const h = decodeURIComponent(location.hash.slice(1));
+  if (h && byId[h]) select(byId[h], false); else autoSelect();
+  if ($("#remember").checked) saveLocal(d);
+}
+function setSource(kind, text){ $("#srcChip").className = "chip " + kind; $("#srcText").textContent = text; }
+function notice(kind, html){ const n = $("#notice"); if (!kind){ n.hidden = true; n.innerHTML = ""; return; } n.hidden = false; n.className = "notice " + kind; n.innerHTML = html; }
+
+/* ---------- browser storage (convenience only) ---------- */
+function saveLocal(d){ try{ localStorage.setItem(LS_KEY, JSON.stringify(d)); }catch(_){ notice("warn", "Data terlalu besar untuk diingat oleh pelayar ini. Carian tetap berfungsi, tetapi anda perlu muat naik semula selepas menutup halaman."); } }
+function loadLocal(){ try{ const s = localStorage.getItem(LS_KEY); return s ? validate(JSON.parse(s)) : null; }catch(_){ return null; } }
+function clearLocal(){ try{ localStorage.removeItem(LS_KEY); }catch(_){ } }
+
+/* ---------- search ---------- */
+function terms(q){ return norm(q).split(/\s+/).filter(Boolean); }
+function matches(r, q){
+  const t = terms(q); if (!t.length) return true;
+  const cq = compact(q);
+  const inNot = cq.length >= 3 && r._kNot.includes(cq);
+  const inName = t.every(w => r._kName.includes(w));
+  const inBahan = t.every(w => r._kBahan.includes(w));
+  const inFirm = t.every(w => r._kFirm.includes(w));
+  if (mode === "not") return inNot;
+  if (mode === "name") return inName;
+  if (mode === "bahan") return inBahan;
+  if (mode === "firm") return inFirm;
+  return inNot || inName || inBahan || inFirm;
+}
+function filtered(){
+  const q = $("#q").value.trim(), fb = $("#fBil").value, fk = $("#fKat").value;
+  let out = R.filter(r => (!fb || r.Rujukan_Bilangan === fb) && (!fk || r.Kategori_Sebab === fk) && matches(r, q));
+  if (!q) out = out.slice().sort((a, b) => String(b.ID_Rekod).localeCompare(String(a.ID_Rekod), undefined, { numeric: true }));
+  return out;
+}
+function hl(text, q, field){
+  const s = String(text ?? ""); if (!q) return esc(s);
+  if (field === "not"){
+    const cq = compact(q); if (cq.length < 3) return esc(s);
+    const i = compact(s).indexOf(cq); if (i < 0) return esc(s);
+    return esc(s.slice(0, i)) + "<mark>" + esc(s.slice(i, i + cq.length)) + "</mark>" + esc(s.slice(i + cq.length));
+  }
+  const ws = terms(q).map(w => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")); if (!ws.length) return esc(s);
+  const re = new RegExp("(" + ws.join("|") + ")", "gi");
+  return s.split(re).map((p, i) => i % 2 ? "<mark>" + esc(p) + "</mark>" : esc(p)).join("");
+}
+const on = m => mode === "all" || mode === m;
+
+/* ---------- render ---------- */
+function fillFilters(){
+  const keep = [$("#fBil").value, $("#fKat").value];
+  const bil = [...new Set(R.map(r => r.Rujukan_Bilangan).filter(Boolean))].sort((a, b) => {
+    const pa = a.match(/(\d+)\/(\d+)/) || [0, 0, 0], pb = b.match(/(\d+)\/(\d+)/) || [0, 0, 0];
+    return (pb[2] - pa[2]) || (pb[1] - pa[1]);
+  });
+  const kat = [...new Set(R.map(r => r.Kategori_Sebab).filter(Boolean))].sort();
+  const cnt = (k, v) => R.filter(r => r[k] === v).length;
+  $("#fBil").innerHTML = '<option value="">Semua bilangan</option>' + bil.map(b => `<option value="${esc(b)}">${esc(b)} (${cnt("Rujukan_Bilangan", b)})</option>`).join("");
+  $("#fKat").innerHTML = '<option value="">Semua kategori sebab</option>' + kat.map(k => `<option value="${esc(k)}">${esc(k)} (${cnt("Kategori_Sebab", k)})</option>`).join("");
+  $("#fBil").value = bil.includes(keep[0]) ? keep[0] : ""; $("#fKat").value = kat.includes(keep[1]) ? keep[1] : "";
+}
+function pelupusan(r){
+  if (r.Format_Arahan === "C") return { t: "Tiada arahan pelupusan", k: "" };
+  const d = toDate(r.Tarikh_Akhir_Borang_6C) || toDate(r.Tarikh_Akhir_Bukti_Pelupusan);
+  if (!d) return null;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const days = Math.round((d - today) / 86400000);
+  return days < 0 ? { t: "Tamat tempoh pelupusan", k: "bad" } : { t: "Dalam tempoh pelupusan (" + days + " hari)", k: "warn" };
+}
+function bahanLine(r, q){
+  const qq = on("bahan") ? q : "";
+  const bl = BAHAN[r.No_Notifikasi];
+  if (bl && bl.length) return bl.map(b => hl(b.Bahan, qq) + (b.Kandungan !== "" && b.Kandungan != null ? ` <span>${esc(fmtNum(b.Kandungan))}%</span>` : "")).join(" · ");
+  return r.Bahan_Dikesan ? hl(r.Bahan_Dikesan, qq) : "";
+}
+function render(){
+  if (!R.length) return;
+  const q = $("#q").value.trim();
+  const rows = filtered();
+  const firms = new Set(rows.map(r => r.Nama_Syarikat)).size;
+  $("#count").innerHTML = `<b>${rows.length}</b> produk · <b>${firms}</b> syarikat` + (rows.length !== R.length ? ` daripada ${R.length} rekod` : "");
+  const L = $("#list");
+  if (!rows.length){
+    L.innerHTML = `<div class="empty">Tiada padanan untuk “${esc(q)}”.<br>Cuba mod <b>Semua</b>, buang penapis, atau taip sebahagian sahaja (contoh: 2208028).</div>`;
+    return;
+  }
+  L.innerHTML = rows.slice(0, shown).map(r => {
+    const semak = r.Status_Semakan === "Perlu semak" ? '<span class="tag bad">Perlu semak</span>' : "";
+    const bh = bahanLine(r, q);
+    return `<button class="item" type="button" data-id="${esc(r.ID_Rekod)}" aria-current="${!!current && current.ID_Rekod === r.ID_Rekod}">
+      <span class="nm">${hl(r.Nama_Produk, on("name") ? q : "")}</span>
+      <span class="no">${hl(r.No_Notifikasi, on("not") ? q : "", "not")}</span>
+      <span class="meta"><span>${hl(r.Nama_Syarikat, on("firm") ? q : "")}</span><span>${esc(r.Rujukan_Bilangan)}</span>${r.Kategori_Sebab ? `<span class="tag cat">${esc(r.Kategori_Sebab)}</span>` : ""}${semak}</span>
+      ${bh ? `<span class="bh">Bahan: ${bh}</span>` : ""}
+    </button>`;
+  }).join("") + (rows.length > shown ? `<button class="btn more" type="button" id="btnMore">Tunjuk ${Math.min(PAGE, rows.length - shown)} lagi (${rows.length - shown} berbaki)</button>` : "");
+  const m = $("#btnMore"); if (m) m.onclick = () => { shown += PAGE; render(); };
+}
+
+const SECTIONS = [
+  ["Produk", [["Nama_Produk", "Nama produk"], ["No_Notifikasi", "No. notifikasi", "mono"], ["Bil_Lampiran", "Bil dalam Lampiran A"]]],
+  ["Sebab pembatalan", [["Kategori_Sebab", "Kategori"], ["Sebab_Pembatalan_Penuh", "Sebab penuh", "long"], ["Bahan_Dikesan", "Bahan dikesan"], ["Kandungan_Ujian_Makmal", "Kandungan / ujian makmal"], ["Nota_NPRA", "Nota NPRA", "long"], ["Saluran_Iklan", "Saluran iklan"]]],
+  ["Pemegang notifikasi", [["Nama_Syarikat", "Nama syarikat"], ["Alamat", "Alamat"], ["Poskod", "Poskod", "mono"], ["Bandar", "Bandar"], ["Negeri", "Negeri"]]],
+  ["Surat arahan", [["No_Rujukan_Surat", "No. rujukan surat", "mono"], ["Rujukan_Bilangan", "Bilangan"], ["Tarikh_Surat", "Tarikh surat", "mono"], ["Tarikh_Kuat_Kuasa", "Tarikh kuat kuasa", "mono"], ["Tarikh_Terima_BPF", "Tarikh terima BPF", "mono"], ["Format_Arahan", "Format arahan"], ["Arahan_Panggil_Balik", "Arahan panggil balik"], ["Pegawai_Penandatangan", "Ditandatangani oleh"]]],
+  ["Tarikh akhir syarikat", [["Tempoh_Makluman_Pelanggan", "Makluman pelanggan"], ["Tarikh_Akhir_Borang_6A", "Borang NPRA/435/6A", "mono"], ["Tarikh_Akhir_Borang_6B", "Borang NPRA/435/6B", "mono"], ["Tarikh_Akhir_Borang_6C", "Borang NPRA/435/6C", "mono"], ["Tarikh_Akhir_Laporan_LampiranB", "Laporan Lampiran B", "mono"], ["Tarikh_Akhir_Bukti_Pelupusan", "Bukti pelupusan", "mono"]]],
+  ["Tindakan BPF", [["Status_Tindakan_BPF", "Status tindakan"], ["Status_Semakan", "Status semakan"], ["Disemak_Oleh", "Disemak oleh"], ["Catatan", "Catatan", "long"]]],
+  ["Rekod", [["ID_Rekod", "ID rekod", "mono"], ["Sumber_Fail", "Fail sumber", "mono"], ["Tarikh_Data_Dimasukkan", "Tarikh dimasukkan", "mono"]]],
+];
+const FORMAT = { A: "A · Panggil balik, Borang 6A/6B/6C", B: "B · Panggil balik, Lampiran B (1 bln) & bukti pelupusan (4 bln)", C: "C · Larangan sahaja, tiada panggil balik" };
+
+function select(r, openSheet = true){
+  current = r;
+  document.querySelectorAll(".item").forEach(el => el.setAttribute("aria-current", el.dataset.id === r.ID_Rekod));
+  try{ if (location.hash.slice(1) !== r.ID_Rekod) history.replaceState(null, "", "#" + r.ID_Rekod); }catch(_){ }
+  const p = pelupusan(r);
+  const tags = [
+    r.Rujukan_Bilangan && `<span class="tag">${esc(r.Rujukan_Bilangan)}</span>`,
+    r.Kategori_Sebab && `<span class="tag cat">${esc(r.Kategori_Sebab)}</span>`,
+    p && `<span class="tag ${p.k}">${esc(p.t)}</span>`,
+    r.Status_Semakan && `<span class="tag ${r.Status_Semakan === "Perlu semak" ? "bad" : r.Status_Semakan === "Disahkan" ? "ok" : ""}">${esc(r.Status_Semakan)}</span>`,
+  ].filter(Boolean).join("");
+  const used = new Set(["Status_Tempoh_Pelupusan", "No_Bilangan", "Tahun_Bilangan", "_kNot", "_kName", "_kBahan", "_kFirm"]);
+  const secs = SECTIONS.map(([title, fields]) => {
+    const rows = fields.map(([k, label, cls]) => { used.add(k);
+      let v = r[k]; if (k === "Format_Arahan" && FORMAT[v]) v = FORMAT[v];
+      return `<dt>${esc(label)}</dt><dd class="${cls || ""}">${v ? esc(v) : '<span class="nil">–</span>'}</dd>`; }).join("");
+    let extra = "";
+    if (title === "Sebab pembatalan"){
+      const bl = BAHAN[r.No_Notifikasi];
+      if (bl && bl.length) extra = `<div class="tbl" style="margin-top:10px"><table><thead><tr><th>Bahan</th><th>Kepekatan (% w/w)</th><th>Jenis penemuan</th></tr></thead><tbody>${
+        bl.map(b => `<tr><td>${esc(b.Bahan)}</td><td class="num">${b.Kandungan === "" || b.Kandungan == null ? "Tidak dinyatakan" : esc(fmtNum(b.Kandungan))}</td><td>${esc(b.Jenis)}</td></tr>`).join("")}</tbody></table></div>`;
+    }
+    return `<section class="sec"><h3>${esc(title)}</h3><dl>${rows}</dl>${extra}</section>`;
+  }).join("");
+  const others = Object.keys(r).filter(k => !used.has(k) && r[k]);
+  const otherSec = others.length ? `<section class="sec"><h3>Lain-lain kolum</h3><dl>${others.map(k => `<dt>${esc(k.replace(/_/g, " "))}</dt><dd>${esc(r[k])}</dd>`).join("")}</dl></section>` : "";
+  const sibs = R.filter(x => x.Nama_Syarikat === r.Nama_Syarikat && x.ID_Rekod !== r.ID_Rekod);
+  const sibSec = sibs.length ? `<section class="sec"><h3>Produk lain oleh ${esc(r.Nama_Syarikat)} (${sibs.length})</h3><div class="sib">${
+    sibs.slice(0, 80).map(x => `<button type="button" data-id="${esc(x.ID_Rekod)}"><span class="c">${esc(x.No_Notifikasi)}</span><span class="n">${esc(x.Nama_Produk)}</span><span class="c">${esc(x.Rujukan_Bilangan)}</span></button>`).join("")}</div></section>` : "";
+  const D = $("#detail");
+  D.innerHTML = `<div class="dhead">
+      <div class="top"><h2>${esc(r.Nama_Produk)}</h2><button class="btn close" type="button" id="btnClose">Tutup</button></div>
+      <div class="notline"><code>${esc(r.No_Notifikasi)}</code><button class="btn" type="button" id="btnCopy">Salin no.</button><button class="btn" type="button" id="btnFirm">Cari syarikat ini</button></div>
+      <div class="tags">${tags}</div>
+    </div>
+    <div class="dbody">${secs}${otherSec}${sibSec}</div>`;
+  D.scrollTop = 0;
+  D.classList.toggle("open", openSheet && isMobile());
+  $("#btnClose").onclick = () => D.classList.remove("open");
+  $("#btnCopy").onclick = async ev => {
+    const b = ev.currentTarget;
+    try{ await navigator.clipboard.writeText(r.No_Notifikasi); b.textContent = "Disalin"; }
+    catch(_){ const sel = getSelection(), rg = document.createRange(); rg.selectNodeContents(D.querySelector(".notline code")); sel.removeAllRanges(); sel.addRange(rg); b.textContent = "Dipilih, tekan Ctrl+C"; }
+    setTimeout(() => b.textContent = "Salin no.", 1800);
+  };
+  $("#btnFirm").onclick = () => { setMode("firm"); $("#q").value = r.Nama_Syarikat; D.classList.remove("open"); shown = PAGE; render(); };
+  D.querySelectorAll(".sib button").forEach(b => b.onclick = () => select(byId[b.dataset.id]));
+}
+function autoSelect(){
+  const rows = filtered();
+  if (rows.length) select(rows[0], false); else $("#detail").innerHTML = '<div class="empty" style="margin:16px">Pilih produk dari senarai untuk lihat maklumat penuh.</div>';
+}
+function setMode(m){ mode = m; document.querySelectorAll(".seg button").forEach(x => x.setAttribute("aria-pressed", x.dataset.mode === m)); }
+
+/* ---------- file handling ---------- */
+function readFile(f, as){ return new Promise((res, rej) => { const rd = new FileReader(); rd.onload = () => res(rd.result); rd.onerror = () => rej(new Error("Fail tidak dapat dibaca.")); as === "text" ? rd.readAsText(f, "utf-8") : rd.readAsArrayBuffer(f); }); }
+function jsonName(){ const d = new Date(); return `pembatalan_notifikasi_${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.json`; }
+function downloadJSON(){
+  if (!DATA) return;
+  const blob = new Blob([JSON.stringify(DATA)], { type: "application/json" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = jsonName();
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+async function handleExcel(f){
+  const out = $("#resX"); out.innerHTML = "<span>Menukar " + esc(f.name) + "…</span>";
+  try{
+    const d = excelToData(await readFile(f), f.name);
+    ingest(d, "Excel: " + f.name);
+    out.innerHTML = `<span class="ok">Berjaya: ${d.Pembatalan.length} rekod dan ${d.Bahan_Dikesan.length} baris bahan ditukar.</span>
+      <div class="row"><button class="btn primary" type="button" id="btnDlX">Muat turun JSON</button></div>`;
+    $("#btnDlX").onclick = downloadJSON; notice(null);
+  }catch(e){ out.innerHTML = `<span class="err">${esc(e.message)}</span>`; }
+}
+async function handleJSON(f){
+  const out = $("#resJ"); out.innerHTML = "<span>Membaca " + esc(f.name) + "…</span>";
+  try{
+    let d; try{ d = JSON.parse(await readFile(f, "text")); }catch(_){ throw new Error("Fail ini bukan JSON yang sah."); }
+    if (!d.sumber) d.sumber = f.name;
+    ingest(validate(d), "JSON: " + f.name);
+    out.innerHTML = `<span class="ok">Berjaya: ${d.Pembatalan.length} rekod dimuatkan.</span>`; notice(null);
+  }catch(e){ out.innerHTML = `<span class="err">${esc(e.message)}</span>`; }
+}
+function wireDrop(lab, input, fn){
+  input.onchange = () => { const f = input.files[0]; if (f) fn(f); input.value = ""; };
+  ["dragenter", "dragover"].forEach(t => lab.addEventListener(t, e => { e.preventDefault(); lab.classList.add("over"); }));
+  ["dragleave", "drop"].forEach(t => lab.addEventListener(t, e => { e.preventDefault(); lab.classList.remove("over"); }));
+  lab.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) fn(f); });
+}
+wireDrop($("#dropX"), $("#inX"), handleExcel);
+wireDrop($("#dropJ"), $("#inJ"), handleJSON);
+$("#btnDl").onclick = downloadJSON;
+$("#btnClear").onclick = () => { clearLocal(); $("#btnClear").textContent = "Dipadam dari pelayar"; setTimeout(() => $("#btnClear").textContent = "Padam data dari pelayar", 1800); };
+$("#remember").onchange = e => { if (e.target.checked){ if (DATA) saveLocal(DATA); } else clearLocal(); };
+$("#btnData").onclick = () => { $("#panel").open = !$("#panel").open; if ($("#panel").open) $("#panel").scrollIntoView({ behavior: "smooth", block: "start" }); };
+$("#btnStart").onclick = () => { $("#panel").open = true; $("#panel").scrollIntoView({ behavior: "smooth", block: "start" }); };
+
+/* ---------- search events ---------- */
+let tmr;
+$("#q").addEventListener("input", () => { clearTimeout(tmr); tmr = setTimeout(() => { shown = PAGE; render(); if (!isMobile() && R.length) autoSelect(); }, 120); });
+document.querySelectorAll(".seg button").forEach(b => b.onclick = () => { setMode(b.dataset.mode); shown = PAGE; render(); if (!isMobile() && R.length) autoSelect(); $("#q").focus(); });
+["#fBil", "#fKat"].forEach(s => $(s).onchange = () => { shown = PAGE; render(); if (!isMobile() && R.length) autoSelect(); });
+$("#list").addEventListener("click", e => { const it = e.target.closest(".item"); if (it) select(byId[it.dataset.id]); });
+document.addEventListener("keydown", e => {
+  if (e.key === "/" && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){ e.preventDefault(); $("#q").focus(); $("#q").select(); }
+  if (e.key === "Escape") $("#detail").classList.remove("open");
+});
+window.addEventListener("hashchange", () => { const h = decodeURIComponent(location.hash.slice(1)); if (byId[h] && current?.ID_Rekod !== h) select(byId[h]); });
+
+/* ---------- boot: browser memory, then optional data.json beside this file ---------- */
+(async function boot(){
+  const saved = loadLocal();
+  if (saved){ ingest(saved, "Disimpan dalam pelayar"); return; }
+  try{
+    const res = await fetch("data.json", { cache: "no-store" });
+    if (res.ok){ const d = validate(await res.json()); ingest(d, "data.json"); return; }
+  }catch(_){ }
+  $("#panel").open = true;
+})();
+</script>
+</body>
+</html>
