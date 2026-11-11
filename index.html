@@ -5,36 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dashboard CPO</title>
 <style>
-  :root { --bg:#f4f6f8; --card:#fff; --text:#1f2933; --muted:#6b7785; --accent:#0f766e; --line:#e2e8f0; }
-  @media (prefers-color-scheme: dark) {
-    :root { --bg:#111827; --card:#1f2937; --text:#e5e7eb; --muted:#9ca3af; --accent:#2dd4bf; --line:#374151; }
-  }
+  :root { --bg:#050b1a; --card:#0b1426; --line:#16304a; --text:#e5eefc; --muted:#7c8fa8; --cyan:#22d3ee; --pink:#f43f8e; }
   * { box-sizing:border-box; }
-  body { margin:0; min-height:100vh; display:grid; place-items:center; background:var(--bg); color:var(--text);
-         font-family:system-ui,-apple-system,"Segoe UI",sans-serif; padding:24px; }
-  main { width:100%; max-width:640px; }
-  h1 { font-size:1.4rem; margin:0 0 4px; }
-  p.sub { color:var(--muted); margin:0 0 24px; font-size:.95rem; }
-  .grid { display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
-  a.card { display:block; background:var(--card); border:1px solid var(--line); border-radius:12px;
-           padding:20px; text-decoration:none; color:inherit; transition:border-color .15s, transform .15s; }
-  a.card:hover { border-color:var(--accent); transform:translateY(-2px); }
-  a.card h2 { margin:0 0 6px; font-size:1.05rem; color:var(--accent); }
+  body { margin:0; min-height:100vh; display:grid; place-items:center; padding:24px;
+         background:radial-gradient(circle at 20% 0%, #0b1f3a 0%, var(--bg) 55%); color:var(--text);
+         font-family:system-ui,-apple-system,"Segoe UI",sans-serif; }
+  main { width:100%; max-width:680px; }
+  h1 { font-family:Consolas,"Courier New",monospace; letter-spacing:.12em; text-transform:uppercase;
+       font-size:1.3rem; color:var(--cyan); margin:0 0 6px; }
+  p.sub { font-family:Consolas,monospace; letter-spacing:.1em; font-size:.75rem; color:var(--muted);
+          margin:0 0 28px; text-transform:uppercase; }
+  .grid { display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); }
+  a.card { display:block; background:var(--card); border:1px solid var(--line); border-radius:10px;
+           padding:22px; text-decoration:none; color:inherit; transition:all .15s; }
+  a.card:hover { border-color:var(--cyan); box-shadow:0 0 18px rgba(34,211,238,.25); transform:translateY(-2px); }
+  a.card h2 { margin:0 0 8px; font-family:Consolas,monospace; letter-spacing:.1em; text-transform:uppercase;
+              font-size:1rem; color:var(--cyan); }
+  a.card.alt:hover { border-color:var(--pink); box-shadow:0 0 18px rgba(244,63,142,.25); }
+  a.card.alt h2 { color:var(--pink); }
   a.card span { color:var(--muted); font-size:.88rem; }
 </style>
 </head>
 <body>
 <main>
   <h1>Dashboard CPO</h1>
-  <p class="sub">Pilih dashboard</p>
+  <p class="sub">Bahagian Penguatkuasaan Farmasi · KKM</p>
   <div class="grid">
     <a class="card" href="statistik/">
-      <h2>🔍 Statistik Serbuan dan Rampasan</h2>
-      <span>Cari dan semak rekod</span>
+      <h2>📊 Statistik</h2>
+      <span>Rampasan dan serbuan</span>
     </a>
-    <a class="card" href="pembatalan/">
-      <h2>📋 Pembatalan Notifikasi</h2>
-      <span>Rekod dan status pembatalan</span>
+    <a class="card alt" href="pembatalan/">
+      <h2>📋 Pembatalan</h2>
+      <span>Carian pembatalan notifikasi</span>
     </a>
   </div>
 </main>
