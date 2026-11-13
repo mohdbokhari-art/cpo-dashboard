@@ -673,14 +673,14 @@ async function loadTindakan(force){
 function tarikhKey(v){ const m = String(v || "").match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? m[0] : ""; }
 function fmtTarikhSurat(v){ const m = String(v || "").match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? `${m[3]}/${m[2]}/${m[1]}` : (v ? String(v) : ""); }
 function tindakanFor(no){
-  // Kronologi ikut Tarikh_Surat, terbaru dulu; rekod tanpa tarikh surat ditolak ke bawah sekali.
+  // Kronologi ikut Tarikh_Surat, paling lama dulu, terbaru di bawah sekali; rekod tanpa tarikh surat ditolak ke bawah sekali.
   return (TINDAKAN_CACHE || []).filter(x => x.No_Notifikasi === no)
     .slice()
     .sort((a, b) => {
       const da = tarikhKey(a.Tarikh_Surat), db = tarikhKey(b.Tarikh_Surat);
-      if (!da && !db) return String(b.Tarikh_Kemaskini || "").localeCompare(String(a.Tarikh_Kemaskini || ""));
+      if (!da && !db) return String(a.Tarikh_Kemaskini || "").localeCompare(String(b.Tarikh_Kemaskini || ""));
       if (!da) return 1; if (!db) return -1;
-      return db.localeCompare(da);
+      return da.localeCompare(db);
     });
 }
 function tindakanListHTML(items){
@@ -689,7 +689,6 @@ function tindakanListHTML(items){
     <div class="th1"><span class="cat">${esc(x.Jenis_Tindakan || "Tindakan")}</span><span>${esc(fmtTarikhSurat(x.Tarikh_Surat) || "Tiada tarikh surat")}</span></div>
     ${x.No_Surat ? `<div><b>No. surat:</b> ${esc(x.No_Surat)}</div>` : ""}
     ${x.Catatan ? `<div>${esc(x.Catatan)}</div>` : ""}
-    <div class="sub">Dikemaskini oleh: ${esc(x.Dikemaskini_Oleh || "–")} · ${esc(x.Tarikh_Kemaskini || "")}</div>
   </div>`).join("")}</div>`;
 }
 function tindakanFormHTML(){
