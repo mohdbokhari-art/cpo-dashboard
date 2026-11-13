@@ -660,7 +660,7 @@ function select(r, openSheet = true){
 
 /* ---------- Tindakan BPF (log langsung, Google Sheet via Apps Script) ---------- */
 const TINDAKAN_URL = "https://script.google.com/macros/s/AKfycbycR5ui3hn2ZGGUV438wiC2Wh8xjIgC63q2EM7hKOz2Ayv3e9MPTNf4qRj3wBzTgF9l/exec";
-const TINDAKAN_JENIS = ["Surat Amaran", "Pemeriksaan Premis", "Sitaan / Serbuan", "Kertas Siasatan", "Rampasan Produk", "Lain-lain"];
+const TINDAKAN_JENIS = ["Surat Amaran", "Pemeriksaan Premis", "Sitaan / Serbuan", "Kertas Siasatan", "Rampasan Produk", "Sebaran Maklumat", "Lain-lain"];
 let TINDAKAN_CACHE = null, TINDAKAN_LOADING = null;
 function tindakanLocal(k, v){ try{ if (v === undefined) return localStorage.getItem(k) || ""; localStorage.setItem(k, v); }catch(_){ } }
 async function loadTindakan(force){
@@ -670,17 +670,26 @@ async function loadTindakan(force){
     .catch(() => { TINDAKAN_CACHE = TINDAKAN_CACHE || []; return TINDAKAN_CACHE; });
   return TINDAKAN_LOADING;
 }
+function tarikhKey(v){ const m = String(v || "").match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? m[0] : ""; }
+function fmtTarikhSurat(v){ const m = String(v || "").match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? `${m[3]}/${m[2]}/${m[1]}` : (v ? String(v) : ""); }
 function tindakanFor(no){
+  // Kronologi ikut Tarikh_Surat, terbaru dulu; rekod tanpa tarikh surat ditolak ke bawah sekali.
   return (TINDAKAN_CACHE || []).filter(x => x.No_Notifikasi === no)
-    .sort((a, b) => String(b.Tarikh_Kemaskini || "").localeCompare(String(a.Tarikh_Kemaskini || "")));
+    .slice()
+    .sort((a, b) => {
+      const da = tarikhKey(a.Tarikh_Surat), db = tarikhKey(b.Tarikh_Surat);
+      if (!da && !db) return String(b.Tarikh_Kemaskini || "").localeCompare(String(a.Tarikh_Kemaskini || ""));
+      if (!da) return 1; if (!db) return -1;
+      return db.localeCompare(da);
+    });
 }
 function tindakanListHTML(items){
   if (!items.length) return '<p class="sub" style="margin:0 0 4px">Tiada tindakan direkodkan setakat ini.</p>';
   return `<div class="tlog">${items.map(x => `<div class="trow">
-    <div class="th1"><span class="cat">${esc(x.Jenis_Tindakan || "Tindakan")}</span><span>${esc(x.Tarikh_Kemaskini || "")}</span></div>
-    <div>${x.No_Surat ? `<b>No. surat:</b> ${esc(x.No_Surat)} ` : ""}${x.Tarikh_Surat ? `· <b>Tarikh surat:</b> ${esc(x.Tarikh_Surat)}` : ""}</div>
+    <div class="th1"><span class="cat">${esc(x.Jenis_Tindakan || "Tindakan")}</span><span>${esc(fmtTarikhSurat(x.Tarikh_Surat) || "Tiada tarikh surat")}</span></div>
+    ${x.No_Surat ? `<div><b>No. surat:</b> ${esc(x.No_Surat)}</div>` : ""}
     ${x.Catatan ? `<div>${esc(x.Catatan)}</div>` : ""}
-    <div class="sub">Dikemaskini oleh: ${esc(x.Dikemaskini_Oleh || "–")}</div>
+    <div class="sub">Dikemaskini oleh: ${esc(x.Dikemaskini_Oleh || "–")} · ${esc(x.Tarikh_Kemaskini || "")}</div>
   </div>`).join("")}</div>`;
 }
 function tindakanFormHTML(){
