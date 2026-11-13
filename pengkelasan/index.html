@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Carian Keputusan Pengkelasan</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+[hidden]{display:none!important}
+
+/* Palet: indigo + kelabu-ungu (bukan neon, bukan hijau-teal Pembatalan) */
+:root{
+  --bg:#f1f0f7; --surface:#ffffff; --surface-2:#f7f6fb; --ink:#1d1b30; --muted:#605e78; --line:#d9d7ea;
+  --accent:#4a42b5; --accent-ink:#ffffff; --accent-soft:#e7e5f8; --mark:#ffe58a; --mark-ink:#1d1b30;
+  --warn:#8a4b00; --warn-soft:#fbeed9; --bad:#b42318; --bad-soft:#fce3df; --ok:#1d6b34; --ok-soft:#ddf1e2;
+  --reg:#0b5cad; --reg-soft:#dcebfa;
+  --shadow:0 1px 2px rgba(30,24,80,.06),0 6px 24px rgba(30,24,80,.07);
+  --f-sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12111f; --surface:#1b1a2e; --surface-2:#211f37; --ink:#e6e4f5; --muted:#9d9bb8; --line:#2f2d4a;
+  --accent:#aaa5f2; --accent-ink:#15133a; --accent-soft:#2a2750; --mark:#7a5d00; --mark-ink:#fff6d6;
+  --warn:#f1a54a; --warn-soft:#382711; --bad:#f4826f; --bad-soft:#3a1915; --ok:#6fd38b; --ok-soft:#14301d;
+  --reg:#7db8f5; --reg-soft:#15293f;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 24px rgba(0,0,0,.25); color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-sans);font-size:14px;line-height:1.45}
+.wrap{max-width:1360px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.band{background:var(--surface);border-bottom:1px solid var(--line);border-top:4px solid var(--accent)}
+header.band .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding-block:14px}
+.brand{display:flex;flex-direction:column;gap:2px;min-width:0}
+.brand h1{margin:0;font-size:20px;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.brand p{margin:0;color:var(--muted);font-size:12.5px}
+.source{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2);color:var(--muted);font-size:12px;white-space:nowrap}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.chip.live{border-color:transparent;background:var(--accent-soft);color:var(--accent)} .chip.live .dot{background:var(--accent)}
+.btn{font:inherit;font-size:12.5px;padding:5px 10px;border-radius:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn:focus-visible,.seg button:focus-visible,select:focus-visible,input:focus-visible,.item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{color:var(--accent-ink);filter:brightness(1.08)}
+
+.console{padding-block:16px 8px;display:grid;gap:10px}
+.searchbox{position:relative}
+.searchbox svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
+#q{width:100%;font:inherit;font-size:16px;padding:13px 14px 13px 42px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+#q::placeholder{color:var(--muted)}
+.kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-family:var(--f-mono);font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:1px 6px}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{font:inherit;font-size:12.5px;padding:6px 11px;border:0;background:transparent;color:var(--muted);cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+select{font:inherit;font-size:12.5px;padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);max-width:260px}
+.count{margin-left:auto;color:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums}
+.count b{color:var(--ink)}
+.notice{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;font-size:13px}
+.notice.warn{background:var(--warn-soft);border-color:transparent;color:var(--warn)}
+
+.panes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:16px;padding-block:8px 32px;align-items:start}
+.list{display:flex;flex-direction:column;gap:6px;min-width:0}
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;text-align:left;width:100%;font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer}
+.item:hover{border-color:var(--accent)}
+.item[aria-current="true"]{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.item .nm{font-weight:600;font-size:14px;min-width:0;overflow-wrap:anywhere}
+.item .no{font-family:var(--f-mono);font-size:12.5px;color:var(--accent);white-space:nowrap}
+.item .meta{grid-column:1/-1;color:var(--muted);font-size:12.5px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;min-width:0}
+mark{background:var(--mark);color:var(--mark-ink);border-radius:2px;padding:0 1px}
+.tag{display:inline-flex;align-items:center;padding:1px 7px;border-radius:5px;font-size:11.5px;font-weight:500;background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.tag.cat{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.tag.reg{background:var(--reg-soft);color:var(--reg);border-color:transparent}
+.tag.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.tag.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.more{align-self:center;margin-top:6px}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:10px;padding:24px;color:var(--muted);text-align:center}
+
+.detail{position:sticky;top:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);max-height:calc(100vh - 24px);overflow:auto;min-width:0}
+.dhead{padding:16px 18px 12px;border-bottom:1px solid var(--line);display:grid;gap:8px;position:sticky;top:0;background:var(--surface);z-index:1}
+.dhead .top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.dhead h2{margin:0;font-size:18px;line-height:1.3;text-wrap:balance;overflow-wrap:anywhere}
+.dhead .notline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.dhead .notline code{font-family:var(--f-mono);font-size:15px;font-weight:600;color:var(--accent);letter-spacing:.02em}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.close{display:none}
+.dbody{padding:4px 18px 18px;display:grid;gap:4px}
+.sec{padding-block:12px;border-bottom:1px solid var(--line)}
+.sec:last-child{border-bottom:0}
+.sec h3{margin:0 0 8px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+dl{margin:0;display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr);gap:6px 14px}
+dt{color:var(--muted);font-size:12.5px}
+dd{margin:0;min-width:0;overflow-wrap:anywhere;white-space:pre-wrap}
+dd.mono{font-family:var(--f-mono);font-size:13px}
+dd.long{line-height:1.55}
+dd .nil{color:var(--muted)}
+.sib{display:flex;flex-direction:column;gap:4px}
+.sib button{font:inherit;text-align:left;background:none;border:0;padding:4px 0;color:var(--ink);cursor:pointer;display:flex;gap:10px}
+.sib button:hover .n{color:var(--accent);text-decoration:underline}
+.sib .c{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.foot{color:var(--muted);font-size:12px;padding-block:0 24px}
+
+@media (max-width: 900px){
+  .panes{grid-template-columns:minmax(0,1fr)}
+  .detail{position:fixed;inset:0;top:0;max-height:none;border-radius:0;border:0;z-index:20;
+    padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+    padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+  .detail:not(.open){display:none}
+  .close{display:inline-flex}
+  dl{grid-template-columns:minmax(0,1fr)}
+  dt{margin-top:4px}
+  .count{margin-left:0;width:100%}
+  .kbd{display:none}
+}
+
+/* panel data (sama gaya dengan Pembatalan) */
+.datapanel{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+.datapanel>summary{cursor:pointer;list-style:none;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:600}
+.datapanel>summary::-webkit-details-marker{display:none}
+.datapanel>summary .hint{font-weight:400;color:var(--muted);font-size:12.5px}
+.datapanel>summary::after{content:"▾";color:var(--muted);transition:transform .15s}
+.datapanel[open]>summary::after{transform:rotate(180deg)}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px;padding:0 16px 16px}
+.card{border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:10px;align-content:start;background:var(--surface-2);min-width:0}
+.card h3{margin:0;font-size:14px;display:flex;gap:8px;align-items:center}
+.card h3 .step{font-family:var(--f-mono);font-size:11px;background:var(--accent-soft);color:var(--accent);border-radius:5px;padding:1px 6px}
+.card p{margin:0;color:var(--muted);font-size:12.5px}
+.drop{border:1.5px dashed var(--line);border-radius:9px;padding:16px;text-align:center;color:var(--muted);font-size:12.5px;cursor:pointer;background:var(--surface)}
+.drop:hover,.drop.over{border-color:var(--accent);color:var(--accent)}
+.drop input{display:none}
+.drop b{color:var(--ink)}
+.res{font-size:12.5px;display:grid;gap:8px}
+.res .ok{color:var(--ok)} .res .err{color:var(--bad)}
+.res ul{margin:0;padding-left:18px;max-height:120px;overflow:auto}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.stats{display:flex;flex-wrap:wrap;gap:6px}
+.welcome{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:28px 20px;text-align:center;color:var(--muted);display:grid;gap:6px;justify-items:center}
+.welcome h2{margin:0;color:var(--ink);font-size:17px}
+.welcome ol{text-align:left;margin:6px 0 0;padding-left:20px;max-width:520px}
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="wrap">
+    <div class="brand">
+      <h1>Carian Keputusan Pengkelasan</h1>
+      <p>Surat pengelasan produk NPRA &middot; Cawangan Perisikan &amp; Operasi, BPF</p>
+    </div>
+    <div class="source">
+      <span id="srcChip" class="chip"><span class="dot"></span><span id="srcText">Tiada data dimuatkan</span></span>
+      <button class="btn" id="btnData" type="button">Urus data</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="console" aria-label="Carian">
+    <details class="datapanel" id="panel">
+      <summary><span>Data carian <span class="hint" id="panelHint">· muat naik Excel atau JSON</span></span></summary>
+      <div class="dgrid">
+        <div class="card">
+          <h3><span class="step">1</span>Tukar Excel ke JSON</h3>
+          <p>Pilih fail Excel keputusan pengkelasan (contoh: <b>SKR.xlsx</b>). Lajur wajib: <i>nama produk</i>, <i>siri permohonan</i>, <i>nama syarikat</i>. Semua lajur lain turut dipaparkan dalam maklumat penuh.</p>
+          <label class="drop" id="dropX"><input type="file" id="inX" accept=".xlsx,.xls,.csv"><b>Pilih fail Excel</b><br>atau seret ke sini</label>
+          <div class="res" id="resX"></div>
+        </div>
+        <div class="card">
+          <h3><span class="step">2</span>Muat naik JSON</h3>
+          <p>Guna fail JSON yang telah ditukar sebelum ini. Lebih ringan dan cepat dimuatkan berbanding Excel.</p>
+          <label class="drop" id="dropJ"><input type="file" id="inJ" accept=".json,application/json"><b>Pilih fail JSON</b><br>atau seret ke sini</label>
+          <div class="res" id="resJ"></div>
+        </div>
+        <div class="card">
+          <h3>Data semasa</h3>
+          <div class="res" id="cur"><span>Belum ada data.</span></div>
+          <label class="row" style="font-size:12.5px;color:var(--muted)"><input type="checkbox" id="remember" checked> Ingat data dalam pelayar ini</label>
+          <div class="row"><button class="btn" id="btnDl" type="button" disabled>Muat turun JSON</button><button class="btn" id="btnClear" type="button" disabled>Padam data dari pelayar</button></div>
+          <p>Data hanya diproses dalam pelayar anda. Tiada apa-apa dihantar ke pelayan.</p>
+        </div>
+      </div>
+    </details>
+
+    <div class="searchbox">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Taip nama produk, siri permohonan atau nama syarikat" aria-label="Kata carian">
+      <span class="kbd" aria-hidden="true">/</span>
+    </div>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Cari dalam">
+        <button type="button" data-mode="all" aria-pressed="true">Semua</button>
+        <button type="button" data-mode="name" aria-pressed="false">Nama Produk</button>
+        <button type="button" data-mode="siri" aria-pressed="false">Siri Permohonan</button>
+        <button type="button" data-mode="firm" aria-pressed="false">Nama Syarikat</button>
+      </div>
+      <select id="fKep" aria-label="Tapis ikut keputusan"><option value="">Semua keputusan</option></select>
+      <select id="fPeng" aria-label="Tapis ikut pengkelasan"><option value="">Semua pengkelasan</option></select>
+      <select id="fNeg" aria-label="Tapis ikut negeri"><option value="">Semua negeri</option></select>
+      <span class="count" id="count"></span>
+    </div>
+    <div id="notice" hidden></div>
+  </section>
+
+  <section class="panes" id="panes" hidden>
+    <div class="list" id="list" aria-label="Senarai hasil carian"></div>
+    <article class="detail" id="detail" aria-live="polite"></article>
+  </section>
+  <section id="welcome" class="welcome">
+    <h2>Muat naik data untuk mula mencari</h2>
+    <span>Halaman ini tidak menyimpan sebarang data. Muatkan database dahulu:</span>
+    <ol>
+      <li><b>Excel</b>: buka <i>Urus data</i>, pilih fail Excel keputusan pengkelasan. Simpan JSON yang terhasil untuk kegunaan seterusnya.</li>
+      <li><b>JSON</b>: pilih fail JSON yang telah ditukar sebelum ini.</li>
+    </ol>
+    <button class="btn primary" type="button" id="btnStart" style="margin-top:8px">Muat naik data</button>
+  </section>
+  <p class="foot">Klik mana-mana produk untuk lihat semua maklumat dalam baris Excel tersebut. Tekan / untuk mula mencari.</p>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const PAGE = 150, LS_KEY = "carianPengkelasan.v1", FORMAT = "carian-keputusan-pengkelasan/1";
+let R = [], COLS = [], F = {}, DATA = null, byId = {};
+let mode = "all", shown = PAGE, current = null;
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm = s => String(s ?? "").normalize("NFKD").replace(/[̀-ͯ]/g, "").toUpperCase();
+const compact = s => norm(s).replace(/[^A-Z0-9]/g, "");
+const hkey = s => String(s ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+const pad = n => String(n).padStart(2, "0");
+const isMobile = () => matchMedia("(max-width: 900px)").matches;
+const clean = v => String(v ?? "").replace(/\s*,(\s*,)+/g, ",").replace(/[\s,]+$/, "").trim();
+const label = k => { const s = String(k).replace(/_/g, " ").trim(); return s.charAt(0).toUpperCase() + s.slice(1); };
+
+/* peranan lajur: dikenal pasti ikut nama pengepala (tidak kira huruf besar/kecil) */
+const ALIAS = {
+  produk: ["namaproduk", "produk"],
+  siri: ["siripermohonan", "nosiripermohonan", "nosiri", "siri"],
+  syarikat: ["namasyarikat", "syarikat", "namapemohon", "pemohon"],
+  alamat: ["alamatsyarikat", "alamat"],
+  negeri: ["negeri"],
+  keputusan: ["keputusan"],
+  pengkelasan: ["pengkelasan", "pengelasan"],
+  catatan: ["catatan"],
+  fail: ["failsumber", "fail"],
+  bil: ["bil", "bilangan"]
+};
+function mapCols(cols){
+  const m = {};
+  for (const role in ALIAS){ m[role] = cols.find(c => ALIAS[role].includes(hkey(c))) || ""; }
+  return m;
+}
+
+/* ---------- tarikh ---------- */
+function fmtDate(v){ return pad(v.getDate()) + "/" + pad(v.getMonth() + 1) + "/" + v.getFullYear(); }
+function stamp(d){ return fmtDate(d) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes()); }
+function cellVal(v){
+  if (v instanceof Date && !isNaN(v)) return fmtDate(v);
+  return String(v ?? "").trim();
+}
+
+/* ---------- Excel -> JSON ---------- */
+function excelToData(buf, filename){
+  if (typeof XLSX === "undefined") throw new Error("Pustaka pembaca Excel gagal dimuatkan. Semak sambungan internet dan muat semula halaman.");
+  const wb = XLSX.read(new Uint8Array(buf), { type: "array", cellDates: true });
+  let best = null;
+  for (const name of wb.SheetNames){
+    const rows = XLSX.utils.sheet_to_json(wb.Sheets[name], { header: 1, defval: "", raw: true, blankrows: false });
+    for (let i = 0; i < Math.min(rows.length, 15); i++){
+      const hdr = rows[i].map(cellVal);
+      const m = mapCols(hdr);
+      if (m.produk && m.siri && m.syarikat){ best = { name, hdr, body: rows.slice(i + 1) }; break; }
+    }
+    if (best) break;
+  }
+  if (!best) throw new Error("Lajur 'nama produk', 'siri permohonan' dan 'nama syarikat' tidak dijumpai dalam mana-mana sheet. Sheet yang ada: " + wb.SheetNames.join(", "));
+  const idx = best.hdr.map((h, i) => h ? i : -1).filter(i => i >= 0);
+  const cols = idx.map(i => best.hdr[i]);
+  const m = mapCols(cols);
+  const Rekod = best.body.map(r => { const o = {}; idx.forEach((i, j) => o[cols[j]] = cellVal(r[i])); return o; })
+    .filter(o => o[m.produk] || o[m.siri]);
+  if (!Rekod.length) throw new Error("Tiada baris data dengan nama produk atau siri permohonan dalam sheet " + best.name + ".");
+  return { format: FORMAT, dijana: new Date().toISOString(), sumber: filename, sheet: best.name, kolum: cols, Rekod };
+}
+function validate(d){
+  if (!d || !Array.isArray(d.Rekod)) throw new Error("Struktur JSON tidak sah: medan 'Rekod' (senarai) tiada. Gunakan JSON yang dijana oleh halaman ini.");
+  if (!Array.isArray(d.kolum) || !d.kolum.length) d.kolum = d.Rekod.length ? Object.keys(d.Rekod[0]) : [];
+  const m = mapCols(d.kolum);
+  if (!m.produk || !m.siri || !m.syarikat) throw new Error("JSON tiada lajur 'nama produk', 'siri permohonan' atau 'nama syarikat'.");
+  return d;
+}
+
+/* ---------- ingest ---------- */
+function ingest(d, label_, reset){
+  DATA = d; COLS = d.kolum; F = mapCols(COLS);
+  if (reset){ $("#fKep").value = ""; $("#fPeng").value = ""; $("#fNeg").value = ""; $("#q").value = ""; setMode("all"); }
+  R = d.Rekod.map((v, i) => {
+    const o = {}; COLS.forEach(c => o[c] = v[c] == null ? "" : String(v[c]));
+    return { id: "R" + (i + 1), v: o,
+      name: o[F.produk], siri: o[F.siri], firm: o[F.syarikat],
+      kName: norm(o[F.produk]), kSiri: compact(o[F.siri]), kFirm: norm(o[F.syarikat]) };
+  });
+  byId = {}; R.forEach(r => byId[r.id] = r);
+  const firms = new Set(R.map(r => r.kFirm)).size;
+  const gen = d.dijana ? new Date(d.dijana) : null;
+  setSource("live", label_ + " · " + R.length + " rekod");
+  $("#panelHint").textContent = "· " + R.length + " rekod dimuatkan";
+  $("#cur").innerHTML = `<div class="stats"><span class="tag ok">${R.length} produk</span><span class="tag">${firms} syarikat</span><span class="tag">${COLS.length} lajur</span></div>
+    <span>Sumber: <b>${esc(d.sumber || label_)}</b></span>${gen && !isNaN(gen) ? `<span>JSON dijana: ${esc(stamp(gen))}</span>` : ""}`;
+  $("#btnDl").disabled = false; $("#btnClear").disabled = false;
+  $("#welcome").hidden = true; $("#panes").hidden = false;
+  fillFilters(); shown = PAGE; current = null; render();
+  const h = decodeURIComponent(location.hash.slice(1));
+  if (h && byId[h]) select(byId[h], false); else autoSelect();
+  if ($("#remember").checked) saveLocal(d);
+}
+function setSource(kind, text){ $("#srcChip").className = "chip " + kind; $("#srcText").textContent = text; }
+function notice(kind, html){ const n = $("#notice"); if (!kind){ n.hidden = true; n.innerHTML = ""; return; } n.hidden = false; n.className = "notice " + kind; n.innerHTML = html; }
+
+/* ---------- storan pelayar (kemudahan sahaja) ---------- */
+function saveLocal(d){ try{ localStorage.setItem(LS_KEY, JSON.stringify(d)); }catch(_){ notice("warn", "Data terlalu besar untuk diingat oleh pelayar ini. Carian tetap berfungsi, tetapi anda perlu muat naik semula selepas menutup halaman."); } }
+function loadLocal(){ try{ const s = localStorage.getItem(LS_KEY); return s ? validate(JSON.parse(s)) : null; }catch(_){ return null; } }
+function clearLocal(){ try{ localStorage.removeItem(LS_KEY); }catch(_){ } }
+
+/* ---------- carian ---------- */
+function terms(q){ return norm(q).split(/\s+/).filter(Boolean); }
+function matches(r, q){
+  const t = terms(q); if (!t.length) return true;
+  const cq = compact(q);
+  const inSiri = cq.length >= 3 && r.kSiri.includes(cq);
+  const inName = t.every(w => r.kName.includes(w));
+  const inFirm = t.every(w => r.kFirm.includes(w));
+  if (mode === "siri") return inSiri;
+  if (mode === "name") return inName;
+  if (mode === "firm") return inFirm;
+  return inSiri || inName || inFirm;
+}
+const FILT = [["#fKep", "keputusan"], ["#fPeng", "pengkelasan"], ["#fNeg", "negeri"]];
+function filtered(){
+  const q = $("#q").value.trim();
+  const fs = FILT.map(([s, role]) => [$(s).value, F[role]]).filter(([v, c]) => v && c);
+  let out = R.filter(r => fs.every(([v, c]) => r.v[c] === v) && matches(r, q));
+  if (!q) out = out.slice().reverse();   // paling baru (baris akhir) di atas
+  return out;
+}
+function hl(text, q, field){
+  const s = String(text ?? ""); if (!q) return esc(s);
+  if (field === "siri"){
+    const cq = compact(q); if (cq.length < 3) return esc(s);
+    // padankan atas aksara beralfanumerik sahaja, kekalkan "/" dalam paparan
+    let map = [], flat = "";
+    for (let i = 0; i < s.length; i++){ const c = norm(s[i]); if (/[A-Z0-9]/.test(c)){ flat += c; map.push(i); } }
+    const k = flat.indexOf(cq); if (k < 0) return esc(s);
+    const a = map[k], b = map[k + cq.length - 1] + 1;
+    return esc(s.slice(0, a)) + "<mark>" + esc(s.slice(a, b)) + "</mark>" + esc(s.slice(b));
+  }
+  const ws = terms(q).map(w => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")); if (!ws.length) return esc(s);
+  const re = new RegExp("(" + ws.join("|") + ")", "gi");
+  return s.split(re).map((p, i) => i % 2 ? "<mark>" + esc(p) + "</mark>" : esc(p)).join("");
+}
+const on = m => mode === "all" || mode === m;
+function kepClass(v){ const n = norm(v); return /PERLU BERDAFTAR/.test(n) ? "reg" : /TIDAK DIKAWAL/.test(n) ? "warn" : ""; }
+
+/* ---------- paparan ---------- */
+function fillFilters(){
+  FILT.forEach(([sel, role], i) => {
+    const el = $(sel), col = F[role], keep = el.value;
+    el.hidden = !col;
+    const vals = col ? [...new Set(R.map(r => r.v[col]).filter(Boolean))].sort((a, b) => a.localeCompare(b)) : [];
+    const cnt = v => R.filter(r => r.v[col] === v).length;
+    const first = el.options[0].textContent;
+    el.innerHTML = `<option value="">${esc(first)}</option>` + vals.map(v => `<option value="${esc(v)}">${esc(v)} (${cnt(v)})</option>`).join("");
+    el.value = vals.includes(keep) ? keep : "";
+  });
+}
+function render(){
+  if (!R.length) return;
+  const q = $("#q").value.trim();
+  const rows = filtered();
+  const firms = new Set(rows.map(r => r.kFirm)).size;
+  const act = FILT.map(([s]) => $(s).value).filter(Boolean);
+  $("#count").innerHTML = `<b>${rows.length}</b> produk · <b>${firms}</b> syarikat` + (rows.length !== R.length ? ` daripada ${R.length} rekod` : "")
+    + (act.length ? ` · <span class="tag warn">Penapis: ${act.map(esc).join(", ")}</span> <button class="btn" type="button" data-clear="1">Buang penapis</button>` : "");
+  const L = $("#list");
+  if (!rows.length){
+    L.innerHTML = `<div class="empty">Tiada padanan untuk “${esc(q)}”${act.length ? " dengan penapis <b>" + act.map(esc).join(", ") + "</b>" : ""}.<br>${act.length ? '<button class="btn primary" type="button" data-clear="1" style="margin:8px 0">Buang penapis &amp; cari semula</button><br>' : ""}Cuba mod <b>Semua</b>, atau taip sebahagian sahaja (contoh: 140715).</div>`;
+    return;
+  }
+  L.innerHTML = rows.slice(0, shown).map(r => {
+    const kep = F.keputusan ? r.v[F.keputusan] : "", peng = F.pengkelasan ? r.v[F.pengkelasan] : "";
+    return `<button class="item" type="button" data-id="${r.id}" aria-current="${!!current && current.id === r.id}">
+      <span class="nm">${hl(r.name, on("name") ? q : "")}</span>
+      <span class="no">${hl(r.siri, on("siri") ? q : "", "siri")}</span>
+      <span class="meta"><span>${hl(clean(r.firm), on("firm") ? q : "")}</span>${F.negeri && r.v[F.negeri] ? `<span>${esc(r.v[F.negeri])}</span>` : ""}${kep ? `<span class="tag ${kepClass(kep)}">${esc(kep)}</span>` : ""}${peng ? `<span class="tag cat">${esc(peng)}</span>` : ""}</span>
+    </button>`;
+  }).join("") + (rows.length > shown ? `<button class="btn more" type="button" id="btnMore">Tunjuk ${Math.min(PAGE, rows.length - shown)} lagi (${rows.length - shown} berbaki)</button>` : "");
+  const m = $("#btnMore"); if (m) m.onclick = () => { shown += PAGE; render(); };
+}
+
+const SECTIONS = [
+  ["Produk", [["produk"], ["siri", "mono"]]],
+  ["Pemohon", [["syarikat"], ["alamat"], ["negeri"]]],
+  ["Keputusan pengkelasan", [["keputusan"], ["pengkelasan"], ["catatan", "long"]]],
+  ["Rekod", [["bil"], ["fail", "mono"]]]
+];
+function select(r, openSheet = true){
+  current = r;
+  document.querySelectorAll(".item").forEach(el => el.setAttribute("aria-current", el.dataset.id === r.id));
+  try{ if (location.hash.slice(1) !== r.id) history.replaceState(null, "", "#" + r.id); }catch(_){ }
+  const kep = F.keputusan ? r.v[F.keputusan] : "", peng = F.pengkelasan ? r.v[F.pengkelasan] : "";
+  const tags = [kep && `<span class="tag ${kepClass(kep)}">${esc(kep)}</span>`, peng && `<span class="tag cat">${esc(peng)}</span>`, F.negeri && r.v[F.negeri] && `<span class="tag">${esc(r.v[F.negeri])}</span>`].filter(Boolean).join("");
+  const used = new Set();
+  const secs = SECTIONS.map(([title, fields]) => {
+    const rows = fields.filter(([role]) => F[role]).map(([role, cls]) => {
+      const k = F[role]; used.add(k);
+      const v = r.v[k], shownV = (role === "syarikat" || role === "alamat") ? clean(v) : v;
+      return `<dt>${esc(label(k))}</dt><dd class="${cls || ""}">${shownV ? esc(shownV) : '<span class="nil">–</span>'}</dd>`;
+    }).join("");
+    return rows ? `<section class="sec"><h3>${esc(title)}</h3><dl>${rows}</dl></section>` : "";
+  }).join("");
+  const others = COLS.filter(k => !used.has(k));
+  const otherSec = others.length ? `<section class="sec"><h3>Lain-lain lajur</h3><dl>${others.map(k => `<dt>${esc(label(k))}</dt><dd>${r.v[k] ? esc(r.v[k]) : '<span class="nil">–</span>'}</dd>`).join("")}</dl></section>` : "";
+  const sibs = R.filter(x => x.kFirm === r.kFirm && x.id !== r.id);
+  const sibSec = sibs.length ? `<section class="sec"><h3>Produk lain oleh ${esc(clean(r.firm))} (${sibs.length})</h3><div class="sib">${
+    sibs.slice(0, 80).map(x => `<button type="button" data-id="${x.id}"><span class="c">${esc(x.siri)}</span><span class="n">${esc(x.name)}</span></button>`).join("")}</div></section>` : "";
+  const D = $("#detail");
+  D.innerHTML = `<div class="dhead">
+      <div class="top"><h2>${esc(r.name)}</h2><button class="btn close" type="button" id="btnClose">Tutup</button></div>
+      <div class="notline"><code>${esc(r.siri)}</code><button class="btn" type="button" id="btnCopy">Salin siri</button><button class="btn" type="button" id="btnFirm">Cari syarikat ini</button></div>
+      <div class="tags">${tags}</div>
+    </div>
+    <div class="dbody">${secs}${otherSec}${sibSec}</div>`;
+  D.scrollTop = 0;
+  D.classList.toggle("open", openSheet && isMobile());
+  $("#btnClose").onclick = () => D.classList.remove("open");
+  $("#btnCopy").onclick = async ev => {
+    const b = ev.currentTarget;
+    try{ await navigator.clipboard.writeText(r.siri); b.textContent = "Disalin"; }
+    catch(_){ const sel = getSelection(), rg = document.createRange(); rg.selectNodeContents(D.querySelector(".notline code")); sel.removeAllRanges(); sel.addRange(rg); b.textContent = "Dipilih, tekan Ctrl+C"; }
+    setTimeout(() => b.textContent = "Salin siri", 1800);
+  };
+  $("#btnFirm").onclick = () => { setMode("firm"); $("#q").value = clean(r.firm); D.classList.remove("open"); shown = PAGE; render(); };
+  D.querySelectorAll(".sib button").forEach(b => b.onclick = () => select(byId[b.dataset.id]));
+}
+function autoSelect(){
+  const rows = filtered();
+  if (rows.length) select(rows[0], false); else $("#detail").innerHTML = '<div class="empty" style="margin:16px">Pilih produk dari senarai untuk lihat maklumat penuh.</div>';
+}
+function setMode(m){ mode = m; document.querySelectorAll(".seg button").forEach(x => x.setAttribute("aria-pressed", x.dataset.mode === m)); }
+
+/* ---------- pengendalian fail ---------- */
+function readFile(f, as){ return new Promise((res, rej) => { const rd = new FileReader(); rd.onload = () => res(rd.result); rd.onerror = () => rej(new Error("Fail tidak dapat dibaca.")); as === "text" ? rd.readAsText(f, "utf-8") : rd.readAsArrayBuffer(f); }); }
+function jsonName(){ const d = new Date(); return `keputusan_pengkelasan_${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.json`; }
+function downloadJSON(){
+  if (!DATA) return;
+  const blob = new Blob([JSON.stringify(DATA)], { type: "application/json" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = jsonName();
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+async function handleExcel(f){
+  const out = $("#resX"); out.innerHTML = "<span>Menukar " + esc(f.name) + "…</span>";
+  try{
+    const d = excelToData(await readFile(f), f.name);
+    ingest(d, "Excel: " + f.name, true);
+    out.innerHTML = `<span class="ok">Berjaya: ${d.Rekod.length} rekod dan ${d.kolum.length} lajur ditukar (sheet ${esc(d.sheet)}).</span>
+      <div class="row"><button class="btn primary" type="button" id="btnDlX">Muat turun JSON</button></div>`;
+    $("#btnDlX").onclick = downloadJSON; notice(null);
+  }catch(e){ out.innerHTML = `<span class="err">${esc(e.message)}</span>`; }
+}
+async function handleJSON(f){
+  const out = $("#resJ"); out.innerHTML = "<span>Membaca " + esc(f.name) + "…</span>";
+  try{
+    let d; try{ d = JSON.parse(await readFile(f, "text")); }catch(_){ throw new Error("Fail ini bukan JSON yang sah."); }
+    if (!d.sumber) d.sumber = f.name;
+    ingest(validate(d), "JSON: " + f.name, true);
+    out.innerHTML = `<span class="ok">Berjaya: ${d.Rekod.length} rekod dimuatkan.</span>`; notice(null);
+  }catch(e){ out.innerHTML = `<span class="err">${esc(e.message)}</span>`; }
+}
+function wireDrop(lab, input, fn){
+  input.onchange = () => { const f = input.files[0]; if (f) fn(f); input.value = ""; };
+  ["dragenter", "dragover"].forEach(t => lab.addEventListener(t, e => { e.preventDefault(); lab.classList.add("over"); }));
+  ["dragleave", "drop"].forEach(t => lab.addEventListener(t, e => { e.preventDefault(); lab.classList.remove("over"); }));
+  lab.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) fn(f); });
+}
+wireDrop($("#dropX"), $("#inX"), handleExcel);
+wireDrop($("#dropJ"), $("#inJ"), handleJSON);
+$("#btnDl").onclick = downloadJSON;
+$("#btnClear").onclick = () => { clearLocal(); $("#btnClear").textContent = "Dipadam dari pelayar"; setTimeout(() => $("#btnClear").textContent = "Padam data dari pelayar", 1800); };
+$("#remember").onchange = e => { if (e.target.checked){ if (DATA) saveLocal(DATA); } else clearLocal(); };
+$("#btnData").onclick = () => { $("#panel").open = !$("#panel").open; if ($("#panel").open) $("#panel").scrollIntoView({ behavior: "smooth", block: "start" }); };
+$("#btnStart").onclick = () => { $("#panel").open = true; $("#panel").scrollIntoView({ behavior: "smooth", block: "start" }); };
+
+/* ---------- acara carian ---------- */
+let tmr;
+$("#q").addEventListener("input", () => { clearTimeout(tmr); tmr = setTimeout(() => { shown = PAGE; render(); if (!isMobile() && R.length) autoSelect(); }, 120); });
+document.querySelectorAll(".seg button").forEach(b => b.onclick = () => { setMode(b.dataset.mode); shown = PAGE; render(); if (!isMobile() && R.length) autoSelect(); $("#q").focus(); });
+FILT.forEach(([s]) => $(s).onchange = () => { shown = PAGE; render(); if (!isMobile() && R.length) autoSelect(); });
+document.addEventListener("click", e => { if (e.target.closest("[data-clear]")){ FILT.forEach(([s]) => $(s).value = ""); shown = PAGE; render(); if (!isMobile() && R.length) autoSelect(); } });
+$("#list").addEventListener("click", e => { const it = e.target.closest(".item"); if (it) select(byId[it.dataset.id]); });
+document.addEventListener("keydown", e => {
+  if (e.key === "/" && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){ e.preventDefault(); $("#q").focus(); $("#q").select(); }
+  if (e.key === "Escape") $("#detail").classList.remove("open");
+});
+window.addEventListener("hashchange", () => { const h = decodeURIComponent(location.hash.slice(1)); if (byId[h] && current?.id !== h) select(byId[h]); });
+
+/* ---------- boot: ingatan pelayar, kemudian data.json di sebelah fail ini ---------- */
+(async function boot(){
+  const saved = loadLocal();
+  if (saved){ ingest(saved, "Disimpan dalam pelayar"); return; }
+  try{
+    const res = await fetch("data.json", { cache: "no-store" });
+    if (res.ok){ const d = validate(await res.json()); ingest(d, "data.json"); return; }
+  }catch(_){ }
+  $("#panel").open = true;
+})();
+</script>
+</body>
+</html>
