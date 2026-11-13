@@ -121,6 +121,15 @@ td.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:n
 .sib button:hover .n{color:var(--accent);text-decoration:underline}
 .sib .c{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:nowrap}
 .foot{color:var(--muted);font-size:12px;padding-block:0 24px}
+.tform{display:grid;gap:8px;margin-top:10px}
+.tform .g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tform label{display:grid;gap:3px;font-size:12px;color:var(--muted)}
+.tform input,.tform select,.tform textarea{font:inherit;font-size:13px;padding:7px 9px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);width:100%}
+.tform textarea{resize:vertical;min-height:50px}
+.tlog{display:grid;gap:6px}
+.tlog .trow{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12.5px;display:grid;gap:3px;background:var(--surface-2)}
+.tlog .trow .th1{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:11.5px}
+.tlog .trow .cat{font-weight:600;color:var(--ink)}
 
 @media (max-width: 900px){
   .panes{grid-template-columns:minmax(0,1fr)}
@@ -633,7 +642,7 @@ function select(r, openSheet = true){
       <div class="notline"><code>${esc(r.No_Notifikasi)}</code><button class="btn" type="button" id="btnCopy">Salin no.</button><button class="btn" type="button" id="btnFirm">Cari syarikat ini</button></div>
       <div class="tags">${tags}</div>
     </div>
-    <div class="dbody">${galSec(r)}${secs}${otherSec}${sibSec}</div>`;
+    <div class="dbody">${galSec(r)}${secs}<section class="sec"><h3>Log Tindakan BPF (Langsung)</h3><div id="tindakanLive"><p class="sub">Memuatkan log tindakan…</p></div></section>${otherSec}${sibSec}</div>`;
   D.scrollTop = 0;
   D.classList.toggle("open", openSheet && isMobile());
   $("#btnClose").onclick = () => D.classList.remove("open");
@@ -646,6 +655,85 @@ function select(r, openSheet = true){
   $("#btnFirm").onclick = () => { setMode("firm"); $("#q").value = r.Nama_Syarikat; D.classList.remove("open"); shown = PAGE; render(); };
   D.querySelectorAll(".sib button").forEach(b => b.onclick = () => select(byId[b.dataset.id]));
   D.querySelectorAll(".gal button").forEach(b => b.onclick = () => lbOpen(IMG[r.No_Notifikasi], +b.dataset.gi));
+  renderTindakanSection(r.No_Notifikasi);
+}
+
+/* ---------- Tindakan BPF (log langsung, Google Sheet via Apps Script) ---------- */
+const TINDAKAN_URL = "https://script.google.com/macros/s/AKfycbycR5ui3hn2ZGGUV438wiC2Wh8xjIgC63q2EM7hKOz2Ayv3e9MPTNf4qRj3wBzTgF9l/exec";
+const TINDAKAN_JENIS = ["Surat Amaran", "Pemeriksaan Premis", "Sitaan / Serbuan", "Kertas Siasatan", "Rampasan Produk", "Lain-lain"];
+let TINDAKAN_CACHE = null, TINDAKAN_LOADING = null;
+function tindakanLocal(k, v){ try{ if (v === undefined) return localStorage.getItem(k) || ""; localStorage.setItem(k, v); }catch(_){ } }
+async function loadTindakan(force){
+  if (TINDAKAN_CACHE && !force) return TINDAKAN_CACHE;
+  if (TINDAKAN_LOADING && !force) return TINDAKAN_LOADING;
+  TINDAKAN_LOADING = fetch(TINDAKAN_URL).then(r => r.json()).then(d => { TINDAKAN_CACHE = Array.isArray(d) ? d : []; return TINDAKAN_CACHE; })
+    .catch(() => { TINDAKAN_CACHE = TINDAKAN_CACHE || []; return TINDAKAN_CACHE; });
+  return TINDAKAN_LOADING;
+}
+function tindakanFor(no){
+  return (TINDAKAN_CACHE || []).filter(x => x.No_Notifikasi === no)
+    .sort((a, b) => String(b.Tarikh_Kemaskini || "").localeCompare(String(a.Tarikh_Kemaskini || "")));
+}
+function tindakanListHTML(items){
+  if (!items.length) return '<p class="sub" style="margin:0 0 4px">Tiada tindakan direkodkan setakat ini.</p>';
+  return `<div class="tlog">${items.map(x => `<div class="trow">
+    <div class="th1"><span class="cat">${esc(x.Jenis_Tindakan || "Tindakan")}</span><span>${esc(x.Tarikh_Kemaskini || "")}</span></div>
+    <div>${x.No_Surat ? `<b>No. surat:</b> ${esc(x.No_Surat)} ` : ""}${x.Tarikh_Surat ? `· <b>Tarikh surat:</b> ${esc(x.Tarikh_Surat)}` : ""}</div>
+    ${x.Catatan ? `<div>${esc(x.Catatan)}</div>` : ""}
+    <div class="sub">Dikemaskini oleh: ${esc(x.Dikemaskini_Oleh || "–")}</div>
+  </div>`).join("")}</div>`;
+}
+function tindakanFormHTML(){
+  const nama = tindakanLocal("tindakanNama"), kod = tindakanLocal("tindakanKod");
+  return `<form class="tform" id="formTindakan">
+    <div class="g2">
+      <label>No. surat<input type="text" name="noSurat" placeholder="Contoh: (5) dlm. NPRA/PKKK/..."></label>
+      <label>Tarikh surat<input type="date" name="tarikhSurat"></label>
+    </div>
+    <label>Jenis tindakan<select name="jenisTindakan"><option value="">— Pilih —</option>${TINDAKAN_JENIS.map(j => `<option>${esc(j)}</option>`).join("")}</select></label>
+    <label>Catatan<textarea name="catatan" placeholder="Butiran tindakan..."></textarea></label>
+    <div class="g2">
+      <label>Nama pegawai<input type="text" name="nama" value="${esc(nama)}" placeholder="Nama awak"></label>
+      <label>Kod akses<input type="password" name="kod" value="${esc(kod)}" placeholder="Kod team"></label>
+    </div>
+    <div class="row"><button class="btn primary" type="submit">Simpan tindakan</button>
+      <button class="btn" type="button" id="btnTindakanRefresh">Muat semula log</button>
+      <span id="tindakanMsg" class="sub"></span></div>
+  </form>`;
+}
+async function submitTindakan(no, form){
+  const msg = form.querySelector("#tindakanMsg");
+  const fd = new FormData(form);
+  const nama = (fd.get("nama") || "").trim(), kod = (fd.get("kod") || "").trim();
+  if (!kod){ msg.textContent = "Sila isi kod akses."; msg.className = "err"; return; }
+  if (!nama){ msg.textContent = "Sila isi nama pegawai."; msg.className = "err"; return; }
+  tindakanLocal("tindakanNama", nama); tindakanLocal("tindakanKod", kod);
+  msg.textContent = "Menyimpan…"; msg.className = "sub";
+  const body = { noNotifikasi: no, noSurat: (fd.get("noSurat") || "").trim(), tarikhSurat: fd.get("tarikhSurat") || "",
+    jenisTindakan: fd.get("jenisTindakan") || "", catatan: (fd.get("catatan") || "").trim(), dikemaskiniOleh: nama, kodAkses: kod };
+  try{
+    const res = await fetch(TINDAKAN_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(body) });
+    const j = await res.json();
+    if (j.ok){
+      msg.textContent = "Disimpan."; msg.className = "ok";
+      await loadTindakan(true);
+      if (current && current.No_Notifikasi === no) renderTindakanSection(no);
+    } else { msg.textContent = j.error || "Gagal simpan."; msg.className = "err"; }
+  }catch(e){ msg.textContent = "Ralat sambungan: " + e.message; msg.className = "err"; }
+}
+async function renderTindakanSection(no){
+  const el = $("#tindakanLive");
+  if (!el) return;
+  await loadTindakan(false);
+  if (!current || current.No_Notifikasi !== no) return;
+  el.innerHTML = tindakanListHTML(tindakanFor(no)) + tindakanFormHTML();
+  const f = el.querySelector("#formTindakan");
+  f.onsubmit = ev => { ev.preventDefault(); submitTindakan(no, f); };
+  el.querySelector("#btnTindakanRefresh").onclick = async () => {
+    el.querySelector("#tindakanMsg").textContent = "Memuat semula…";
+    await loadTindakan(true);
+    if (current && current.No_Notifikasi === no) renderTindakanSection(no);
+  };
 }
 function autoSelect(){
   const rows = filtered();
