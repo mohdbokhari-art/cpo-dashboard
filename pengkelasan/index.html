@@ -166,22 +166,22 @@ dd .nil{color:var(--muted)}
       <summary><span>Data carian <span class="hint" id="panelHint">· muat naik Excel atau JSON</span></span></summary>
       <div class="dgrid">
         <div class="card">
-          <h3><span class="step">1</span>Tukar Excel ke JSON</h3>
-          <p>Pilih fail Excel keputusan pengkelasan (contoh: <b>SKR.xlsx</b>). Lajur wajib: <i>nama produk</i>, <i>siri permohonan</i>, <i>nama syarikat</i>. Semua lajur lain turut dipaparkan dalam maklumat penuh.</p>
+          <h3><span class="step">1</span>Tukar Excel ke Parquet / JSON</h3>
+          <p>Pilih fail Excel keputusan pengkelasan (contoh: <b>SKR.xlsx</b>). Lajur wajib: <i>nama produk</i>, <i>siri permohonan</i>, <i>nama syarikat</i>. Semua lajur lain turut dipaparkan dalam maklumat penuh. Muat turun hasilnya sebagai <b>Parquet</b> (disyorkan untuk data besar) atau JSON.</p>
           <label class="drop" id="dropX"><input type="file" id="inX" accept=".xlsx,.xls,.csv"><b>Pilih fail Excel</b><br>atau seret ke sini</label>
           <div class="res" id="resX"></div>
         </div>
         <div class="card">
-          <h3><span class="step">2</span>Muat naik JSON</h3>
-          <p>Guna fail JSON yang telah ditukar sebelum ini. Lebih ringan dan cepat dimuatkan berbanding Excel.</p>
-          <label class="drop" id="dropJ"><input type="file" id="inJ" accept=".json,application/json"><b>Pilih fail JSON</b><br>atau seret ke sini</label>
+          <h3><span class="step">2</span>Muat naik Parquet / JSON</h3>
+          <p>Guna fail Parquet atau JSON yang telah ditukar sebelum ini. Jauh lebih ringan dan cepat dimuatkan berbanding Excel. Parquet dari Python (pandas / pyarrow) juga boleh digunakan, asalkan ada lajur nama produk, siri permohonan dan nama syarikat.</p>
+          <label class="drop" id="dropJ"><input type="file" id="inJ" accept=".parquet,.pq,.json,application/json"><b>Pilih fail Parquet atau JSON</b><br>atau seret ke sini</label>
           <div class="res" id="resJ"></div>
         </div>
         <div class="card">
           <h3>Data semasa</h3>
           <div class="res" id="cur"><span>Belum ada data.</span></div>
           <label class="row" style="font-size:12.5px;color:var(--muted)"><input type="checkbox" id="remember" checked> Ingat data dalam pelayar ini</label>
-          <div class="row"><button class="btn" id="btnDl" type="button" disabled>Muat turun JSON</button><button class="btn" id="btnClear" type="button" disabled>Padam data dari pelayar</button></div>
+          <div class="row"><button class="btn" id="btnDlP" type="button" disabled>Muat turun Parquet</button><button class="btn" id="btnDl" type="button" disabled>Muat turun JSON</button><button class="btn" id="btnClear" type="button" disabled>Padam data dari pelayar</button></div>
           <p>Data hanya diproses dalam pelayar anda. Tiada apa-apa dihantar ke pelayan.</p>
         </div>
       </div>
@@ -215,8 +215,8 @@ dd .nil{color:var(--muted)}
     <h2>Muat naik data untuk mula mencari</h2>
     <span>Halaman ini tidak menyimpan sebarang data. Muatkan database dahulu:</span>
     <ol>
-      <li><b>Excel</b>: buka <i>Urus data</i>, pilih fail Excel keputusan pengkelasan. Simpan JSON yang terhasil untuk kegunaan seterusnya.</li>
-      <li><b>JSON</b>: pilih fail JSON yang telah ditukar sebelum ini.</li>
+      <li><b>Excel</b>: buka <i>Urus data</i>, pilih fail Excel keputusan pengkelasan. Simpan Parquet yang terhasil untuk kegunaan seterusnya.</li>
+      <li><b>Parquet / JSON</b>: pilih fail yang telah ditukar sebelum ini.</li>
     </ol>
     <button class="btn primary" type="button" id="btnStart" style="margin-top:8px">Muat naik data</button>
   </section>
@@ -226,7 +226,7 @@ dd .nil{color:var(--muted)}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 const PAGE = 150, LS_KEY = "carianPengkelasan.v1", FORMAT = "carian-keputusan-pengkelasan/1";
-let R = [], COLS = [], F = {}, DATA = null, byId = {};
+let R = [], COLS = [], F = {}, DATA = null, byId = {}, BYFIRM = {};
 let mode = "all", shown = PAGE, current = null;
 
 const $ = s => document.querySelector(s);
@@ -307,14 +307,14 @@ function ingest(d, label_, reset){
       name: o[F.produk], siri: o[F.siri], firm: o[F.syarikat],
       kName: norm(o[F.produk]), kSiri: compact(o[F.siri]), kFirm: norm(o[F.syarikat]) };
   });
-  byId = {}; R.forEach(r => byId[r.id] = r);
-  const firms = new Set(R.map(r => r.kFirm)).size;
+  byId = {}; BYFIRM = {}; R.forEach(r => { byId[r.id] = r; (BYFIRM[r.kFirm] ||= []).push(r); });
+  const firms = Object.keys(BYFIRM).length;
   const gen = d.dijana ? new Date(d.dijana) : null;
   setSource("live", label_ + " · " + R.length + " rekod");
   $("#panelHint").textContent = "· " + R.length + " rekod dimuatkan";
   $("#cur").innerHTML = `<div class="stats"><span class="tag ok">${R.length} produk</span><span class="tag">${firms} syarikat</span><span class="tag">${COLS.length} lajur</span></div>
     <span>Sumber: <b>${esc(d.sumber || label_)}</b></span>${gen && !isNaN(gen) ? `<span>JSON dijana: ${esc(stamp(gen))}</span>` : ""}`;
-  $("#btnDl").disabled = false; $("#btnClear").disabled = false;
+  $("#btnDl").disabled = false; $("#btnDlP").disabled = false; $("#btnClear").disabled = false;
   $("#welcome").hidden = true; $("#panes").hidden = false;
   fillFilters(); shown = PAGE; current = null; render();
   const h = decodeURIComponent(location.hash.slice(1));
@@ -324,10 +324,26 @@ function ingest(d, label_, reset){
 function setSource(kind, text){ $("#srcChip").className = "chip " + kind; $("#srcText").textContent = text; }
 function notice(kind, html){ const n = $("#notice"); if (!kind){ n.hidden = true; n.innerHTML = ""; return; } n.hidden = false; n.className = "notice " + kind; n.innerHTML = html; }
 
-/* ---------- storan pelayar (kemudahan sahaja) ---------- */
-function saveLocal(d){ try{ localStorage.setItem(LS_KEY, JSON.stringify(d)); }catch(_){ notice("warn", "Data terlalu besar untuk diingat oleh pelayar ini. Carian tetap berfungsi, tetapi anda perlu muat naik semula selepas menutup halaman."); } }
-function loadLocal(){ try{ const s = localStorage.getItem(LS_KEY); return s ? validate(JSON.parse(s)) : null; }catch(_){ return null; } }
-function clearLocal(){ try{ localStorage.removeItem(LS_KEY); }catch(_){ } }
+/* ---------- storan pelayar (IndexedDB; kemudahan sahaja, muat 30k+ baris) ---------- */
+let idb = null;
+function idbOpen(){
+  return new Promise(res => {
+    try{
+      const rq = indexedDB.open("carianPengkelasan", 1);
+      rq.onupgradeneeded = () => rq.result.createObjectStore("kv");
+      rq.onsuccess = () => res(rq.result); rq.onerror = () => res(null); rq.onblocked = () => res(null);
+    }catch(_){ res(null); }
+  });
+}
+function idbOp(mode, fn){
+  return new Promise((res, rej) => {
+    if (!idb) return rej(new Error("IndexedDB tidak tersedia"));
+    try{ const tx = idb.transaction("kv", mode), r = fn(tx.objectStore("kv")); tx.oncomplete = () => res(r && r.result); tx.onerror = tx.onabort = () => rej(tx.error); }catch(e){ rej(e); }
+  });
+}
+async function saveLocal(d){ try{ await idbOp("readwrite", st => st.put(d, "data")); }catch(_){ notice("warn", "Data tidak dapat diingat oleh pelayar ini (storan penuh atau disekat). Carian tetap berfungsi, tetapi anda perlu muat naik semula selepas menutup halaman."); } }
+async function loadLocal(){ try{ const d = await idbOp("readonly", st => st.get("data")); return d ? validate(d) : null; }catch(_){ return null; } }
+async function clearLocal(){ try{ await idbOp("readwrite", st => st.delete("data")); }catch(_){ } try{ localStorage.removeItem(LS_KEY); }catch(_){ } }
 
 /* ---------- carian ---------- */
 function terms(q){ return norm(q).split(/\s+/).filter(Boolean); }
@@ -373,8 +389,9 @@ function fillFilters(){
   FILT.forEach(([sel, role], i) => {
     const el = $(sel), col = F[role], keep = el.value;
     el.hidden = !col;
-    const vals = col ? [...new Set(R.map(r => r.v[col]).filter(Boolean))].sort((a, b) => a.localeCompare(b)) : [];
-    const cnt = v => R.filter(r => r.v[col] === v).length;
+    const tally = new Map(); if (col) R.forEach(r => { const x = r.v[col]; if (x) tally.set(x, (tally.get(x) || 0) + 1); });
+    const vals = [...tally.keys()].sort((a, b) => a.localeCompare(b));
+    const cnt = v => tally.get(v);
     const first = el.options[0].textContent;
     el.innerHTML = `<option value="">${esc(first)}</option>` + vals.map(v => `<option value="${esc(v)}">${esc(v)} (${cnt(v)})</option>`).join("");
     el.value = vals.includes(keep) ? keep : "";
@@ -427,7 +444,7 @@ function select(r, openSheet = true){
   }).join("");
   const others = COLS.filter(k => !used.has(k));
   const otherSec = others.length ? `<section class="sec"><h3>Lain-lain lajur</h3><dl>${others.map(k => `<dt>${esc(label(k))}</dt><dd>${r.v[k] ? esc(r.v[k]) : '<span class="nil">–</span>'}</dd>`).join("")}</dl></section>` : "";
-  const sibs = R.filter(x => x.kFirm === r.kFirm && x.id !== r.id);
+  const sibs = (BYFIRM[r.kFirm] || []).filter(x => x.id !== r.id);
   const sibSec = sibs.length ? `<section class="sec"><h3>Produk lain oleh ${esc(clean(r.firm))} (${sibs.length})</h3><div class="sib">${
     sibs.slice(0, 80).map(x => `<button type="button" data-id="${x.id}"><span class="c">${esc(x.siri)}</span><span class="n">${esc(x.name)}</span></button>`).join("")}</div></section>` : "";
   const D = $("#detail");
@@ -457,29 +474,86 @@ function setMode(m){ mode = m; document.querySelectorAll(".seg button").forEach(
 
 /* ---------- pengendalian fail ---------- */
 function readFile(f, as){ return new Promise((res, rej) => { const rd = new FileReader(); rd.onload = () => res(rd.result); rd.onerror = () => rej(new Error("Fail tidak dapat dibaca.")); as === "text" ? rd.readAsText(f, "utf-8") : rd.readAsArrayBuffer(f); }); }
+/* ---------- Parquet (pustaka hyparquet dimuat hanya bila perlu) ---------- */
+const CDN = { read: "https://cdn.jsdelivr.net/npm/hyparquet@1.33.0/+esm", write: "https://cdn.jsdelivr.net/npm/hyparquet-writer@0.18.0/+esm", comp: "https://cdn.jsdelivr.net/npm/hyparquet-compressors@1.1.3/+esm" };
+let PQ_READ = null, PQ_WRITE = null;
+async function pqRead(){
+  PQ_READ ||= (async () => {
+    const lib = await import(CDN.read);
+    let compressors; try{ compressors = (await import(CDN.comp)).compressors; }catch(_){ }
+    return { ...lib, compressors };
+  })();
+  try{ return await PQ_READ; }catch(_){ PQ_READ = null; throw new Error("Pustaka Parquet gagal dimuatkan. Semak sambungan internet dan cuba lagi."); }
+}
+async function pqWrite(){
+  PQ_WRITE ||= import(CDN.write);
+  try{ return await PQ_WRITE; }catch(_){ PQ_WRITE = null; throw new Error("Pustaka Parquet gagal dimuatkan. Semak sambungan internet dan cuba lagi."); }
+}
+const tick = () => new Promise(r => setTimeout(r, 30));
+function pqCell(v){
+  if (v == null) return "";
+  if (v instanceof Date) return isNaN(v) ? "" : fmtDate(v);
+  if (typeof v === "object") return JSON.stringify(v, (_, x) => typeof x === "bigint" ? String(x) : x);
+  return String(v).trim();
+}
+async function parquetToData(buf, filename){
+  const lib = await pqRead();
+  const meta = lib.parquetMetadata(buf);
+  const cols = meta.schema.slice(1).filter(c => !c.num_children).map(c => c.name);
+  if (!cols.length) throw new Error("Fail Parquet ini tiada lajur.");
+  const rows = await lib.parquetReadObjects({ file: buf, compressors: lib.compressors });
+  const kv = {}; (meta.key_value_metadata || []).forEach(x => kv[x.key] = x.value);
+  const Rekod = rows.map(r => { const o = {}; cols.forEach(c => o[c] = pqCell(r[c])); return o; });
+  return validate({ format: FORMAT, dijana: kv.dijana || "", sumber: kv.sumber || filename, sheet: kv.sheet || "", kolum: cols, Rekod });
+}
+async function downloadParquet(){
+  if (!DATA) return;
+  const b = $("#btnDlP"), old = b.textContent; b.disabled = true; b.textContent = "Menjana Parquet…";
+  try{
+    await tick();
+    const { parquetWriteBuffer } = await pqWrite();
+    const columnData = DATA.kolum.map(c => ({ name: c, type: "STRING", data: DATA.Rekod.map(r => r[c] == null ? "" : String(r[c])) }));
+    const kvMetadata = [["format", FORMAT], ["sumber", DATA.sumber || ""], ["dijana", DATA.dijana || ""], ["sheet", DATA.sheet || ""]].map(([key, value]) => ({ key, value }));
+    const buf = parquetWriteBuffer({ columnData, kvMetadata, rowGroupSize: 10000 });
+    saveBlob(new Blob([buf], { type: "application/octet-stream" }), fileName("parquet"));
+  }catch(e){ notice("warn", esc(e.message)); }
+  b.disabled = false; b.textContent = old;
+}
+function saveBlob(blob, name){
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+function fileName(ext){ const d = new Date(); return `keputusan_pengkelasan_${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.${ext}`; }
 function jsonName(){ const d = new Date(); return `keputusan_pengkelasan_${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.json`; }
 function downloadJSON(){
   if (!DATA) return;
-  const blob = new Blob([JSON.stringify(DATA)], { type: "application/json" });
-  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = jsonName();
-  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  saveBlob(new Blob([JSON.stringify(DATA)], { type: "application/json" }), fileName("json"));
 }
 async function handleExcel(f){
-  const out = $("#resX"); out.innerHTML = "<span>Menukar " + esc(f.name) + "…</span>";
+  const out = $("#resX"); out.innerHTML = "<span>Menukar " + esc(f.name) + "… (fail besar mungkin ambil beberapa saat)</span>";
   try{
+    await tick();
     const d = excelToData(await readFile(f), f.name);
     ingest(d, "Excel: " + f.name, true);
     out.innerHTML = `<span class="ok">Berjaya: ${d.Rekod.length} rekod dan ${d.kolum.length} lajur ditukar (sheet ${esc(d.sheet)}).</span>
-      <div class="row"><button class="btn primary" type="button" id="btnDlX">Muat turun JSON</button></div>`;
-    $("#btnDlX").onclick = downloadJSON; notice(null);
+      <div class="row"><button class="btn primary" type="button" id="btnDlXP">Muat turun Parquet</button><button class="btn" type="button" id="btnDlX">Muat turun JSON</button></div>`;
+    $("#btnDlX").onclick = downloadJSON; $("#btnDlXP").onclick = downloadParquet; notice(null);
   }catch(e){ out.innerHTML = `<span class="err">${esc(e.message)}</span>`; }
 }
-async function handleJSON(f){
+async function handleData(f){
   const out = $("#resJ"); out.innerHTML = "<span>Membaca " + esc(f.name) + "…</span>";
   try{
-    let d; try{ d = JSON.parse(await readFile(f, "text")); }catch(_){ throw new Error("Fail ini bukan JSON yang sah."); }
-    if (!d.sumber) d.sumber = f.name;
-    ingest(validate(d), "JSON: " + f.name, true);
+    await tick();
+    const buf = await readFile(f);
+    const head = new Uint8Array(buf.slice(0, 4)), isPq = String.fromCharCode(...head) === "PAR1";
+    let d;
+    if (isPq) d = await parquetToData(buf, f.name);
+    else{
+      try{ d = JSON.parse(new TextDecoder("utf-8").decode(buf)); }catch(_){ throw new Error("Fail ini bukan Parquet atau JSON yang sah."); }
+      if (!d.sumber) d.sumber = f.name;
+      validate(d);
+    }
+    ingest(d, (isPq ? "Parquet: " : "JSON: ") + f.name, true);
     out.innerHTML = `<span class="ok">Berjaya: ${d.Rekod.length} rekod dimuatkan.</span>`; notice(null);
   }catch(e){ out.innerHTML = `<span class="err">${esc(e.message)}</span>`; }
 }
@@ -490,7 +564,8 @@ function wireDrop(lab, input, fn){
   lab.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) fn(f); });
 }
 wireDrop($("#dropX"), $("#inX"), handleExcel);
-wireDrop($("#dropJ"), $("#inJ"), handleJSON);
+wireDrop($("#dropJ"), $("#inJ"), handleData);
+$("#btnDlP").onclick = downloadParquet;
 $("#btnDl").onclick = downloadJSON;
 $("#btnClear").onclick = () => { clearLocal(); $("#btnClear").textContent = "Dipadam dari pelayar"; setTimeout(() => $("#btnClear").textContent = "Padam data dari pelayar", 1800); };
 $("#remember").onchange = e => { if (e.target.checked){ if (DATA) saveLocal(DATA); } else clearLocal(); };
@@ -512,12 +587,17 @@ window.addEventListener("hashchange", () => { const h = decodeURIComponent(locat
 
 /* ---------- boot: ingatan pelayar, kemudian data.json di sebelah fail ini ---------- */
 (async function boot(){
-  const saved = loadLocal();
+  idb = await idbOpen();
+  let saved = await loadLocal();
   if (saved){ ingest(saved, "Disimpan dalam pelayar"); return; }
-  try{
-    const res = await fetch("data.json", { cache: "no-store" });
-    if (res.ok){ const d = validate(await res.json()); ingest(d, "data.json"); return; }
-  }catch(_){ }
+  for (const [file, kind] of [["data.parquet", "p"], ["data.json", "j"]]){
+    try{
+      const res = await fetch(file, { cache: "no-store" });
+      if (!res.ok) continue;
+      if (kind === "p"){ ingest(await parquetToData(await res.arrayBuffer(), file), file); return; }
+      ingest(validate(await res.json()), file); return;
+    }catch(_){ }
+  }
   $("#panel").open = true;
 })();
 </script>
